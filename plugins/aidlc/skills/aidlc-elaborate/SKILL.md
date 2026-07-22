@@ -58,7 +58,7 @@ Do not create Bugs unless explicitly requested by a human.
 | 6 | Confirm Epic boundaries | 5 | Phase 1 > Step 6 | Epics defined with scope, indicative work items, and inter-epic dependencies |
 | 7 | Propose Sprint groupings | 6 | Phase 1 > Step 7 | Initial Sprint proposals with phase/lane assignments presented; sprint execution plan included |
 | 8 | Suggest team size | 7 | Phase 1 > Step 7b | Team size recommendation generated and presented to user |
-| 9 | Create Epic documentation | 7, 8 | Phase 1 > Step 8 | GitLab: epic .md files committed / Linear: Projects created / Confluence: Epic pages created |
+| 9 | Create Epic documentation (PUBLISH GATE) | 7, 8 | Phase 1 > Step 8 | HARD STOP before creating anything. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Then GitLab: epic .md files committed / Linear: Projects created / Confluence: Epic pages created. |
 | 10 | Request team review | 9 | Phase 1 > Step 9 | User notified to review Epics and Sprint proposals |
 
 ### Phase 3: Comment Resolution (after human review)
@@ -426,6 +426,14 @@ After proposing sprint groupings and the initial execution plan, generate a team
 **Include the completed Team Size Recommendation section in the Epics Overview page** (Step 8) using the template from @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md.
 
 #### Step 8: Create Documentation Artifacts (Backend-Specific)
+
+> **HARD STOP — publish gate.** Before creating any Epic artifacts, present the final Epic boundaries, indicative work items, Sprint groupings, and team-size recommendation to the user, then STOP and ask an explicit, blocking confirmation:
+>
+> > "Here are the proposed Epics and Sprint groupings. Is everything correct? Reply **'publish'** and I'll create the [Confluence Epic pages / GitLab epic files + MR / Linear Projects]. I will not create or update anything until you confirm."
+>
+> - Do NOT create/commit/push any artifact until the user replies with explicit approval ("publish", "approved", "go ahead").
+> - Answering clarifying questions or refining boundaries is NOT approval.
+> - If the user requests changes, revise and re-ask the same confirmation. Loop until explicit approval is given in this session.
 
 Branch based on detected backend to create appropriate documentation artifacts.
 

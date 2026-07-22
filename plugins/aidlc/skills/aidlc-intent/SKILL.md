@@ -35,7 +35,7 @@ At the start of this skill, prompt the user to select a documentation backend us
 | 2 | Gather repo context | 1 | Workflow > Step 2 | Repo README and key files read, or N/A confirmed |
 | 3 | Confirm understanding | 1, 2 | Workflow > Step 3 | User confirms 5-8 bullet summary is correct |
 | 4 | Draft Level 1 doc | 3 | Workflow > Step 4 | Draft follows template, all sections populated |
-| 5 | Review and iterate | 4 | Workflow > Step 5 | User says "approved" or "looks good" |
+| 5 | Review and iterate (PUBLISH GATE) | 4 | Workflow > Step 5 | HARD STOP. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Answering clarifying questions does NOT count as approval. |
 | 6 | Create Feature artifact | 5 | Workflow > Step 6 | GitLab: MR created / Linear: Initiative created / Confluence: Page created |
 | 7 | Update document index | 6 | Workflow > Step 7 | Features Index updated with this Feature's entry |
 | 8 | Get explicit approval | 7 | Workflow > Step 8 | User explicitly approves the Feature |
@@ -134,10 +134,18 @@ Include in Confluence doc as a collapsible section or separate child page. See P
 4. **Draft Feature documentation**
    Use the template in @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md. Keep it concise and scannable.
 
-5. **Review and iterate**
-   Share the draft and ask for approval. Revise until approved.
+5. **Review and iterate (HARD STOP — publish gate)**
+   Share the FULL draft with the user. Then STOP and ask an explicit, blocking confirmation before any artifact is created:
+
+   > "Here is the complete Feature draft. Is everything captured and correct? Reply **'publish'** and I'll create the [Confluence page / GitLab MR / Linear Initiative]. I will not create or update anything until you confirm."
+
+   - Do NOT proceed to Step 6 until the user replies with explicit approval ("publish", "approved", "go ahead").
+   - Answering clarifying questions is NOT approval. Scope answers, edits, or extra context do not count as consent to publish.
+   - If the user requests changes, revise and re-ask the same confirmation. Loop until explicit approval is given in this session.
 
 6. **Create Feature artifact** (backend-specific)
+
+   > **Pre-condition (do not skip):** Only begin this step if Step 5's explicit publish approval was received in this session. If not, return to Step 5.
 
    **GitLab** (see @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md):
    1. Ensure repo cloned: `cd "$AIDLC_DOCS_PATH" && git pull origin main` (set AIDLC_DOCS_PATH env var or prompt user)

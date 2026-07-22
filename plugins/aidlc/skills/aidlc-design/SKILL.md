@@ -22,7 +22,7 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 5b | Produce Deviation Analysis | 4, 5 | Workflow > Step 5b | Deviations from existing patterns documented, user decisions recorded |
 | 6 | Create ADRs | 5b | Workflow > Step 6 | ADR created for each significant decision (including deviations) |
 | 7 | Get approval on designs | 4, 5, 5b, 6 | Workflow > Step 7 | User approves domain model and patterns |
-| 8 | Store design artifacts | 7 | Workflow > Step 8 | GitLab: files in design/+adrs/ / Linear: Design Doc issues / Confluence: child pages |
+| 8 | Store design artifacts (PUBLISH GATE) | 7 | Workflow > Step 8 | HARD STOP before creating anything. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Then GitLab: files in design/+adrs/ / Linear: Design Doc issues / Confluence: child pages. |
 | 9 | Update workflow status | 8 | Workflow > Step 9 | Status shows "Domain Design: ✅ Complete" |
 | 10 | **[Hard Gate] Await design approval** | 7, 8, 9 | Workflow > Step 10 | User explicitly approves design — REQUIRED before task generation begins |
 | 11 | Generate Task Specifications | 10 | Workflow > Step 11 | All tasks have valid id, title, sprint, size, ≥1 behaviour bullet |
@@ -32,7 +32,7 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 14a | Consolidate and validate test scopes | 14 | Workflow > Step 14a | No-gap and overlap checks pass; summary table approved by user |
 | 14b | Write test scopes to epic artifact | 14a | Workflow > Step 14b | `## Test Scope` written to each epic artifact with sprint subsections and integration scenarios |
 | 15 | Refine team size recommendation | 13 | Workflow > Step 15 | Estimate updated with sprint data; >30% delta confirmed by user |
-| 16 | Store Task Specification artefacts | 12, 13, 14b | Workflow > Step 16 | Tasks stored in backend (GitLab: .md files / Linear: Issues / Confluence: pages) |
+| 16 | Store Task Specification artefacts (PUBLISH GATE) | 12, 13, 14b | Workflow > Step 16 | HARD STOP before creating anything. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Then tasks stored in backend (GitLab: .md files / Linear: Issues / Confluence: pages). |
 
 | 17 | Update workflow status (tasks) | 16 | Workflow > Step 17 | Status shows "Task Specification: ✅ Complete" |
 
@@ -376,6 +376,13 @@ Before starting, validate:
 
 8. **Store artifacts** (backend-specific)
 
+   > **HARD STOP — publish gate.** Do not create/commit/push any design artifact until the user gives explicit approval. Ask a blocking confirmation:
+   >
+   > > "Here are the finalized design artifacts (domain model, logical design, ADRs). Reply **'publish'** and I'll store them in the [GitLab design/+adrs/ files / Linear Design Doc issues / Confluence child pages]. I will not create or update anything until you confirm."
+   >
+   > - Answering clarifying questions is NOT approval. Only "publish" / "approved" / "go ahead" proceeds.
+   > - If the user requests changes, revise, re-present, and re-ask. Loop until explicit approval is given in this session.
+
    **GitLab** (see @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md):
    1. Ensure on the Feature branch: `git checkout <intent-branch>`
    2. Create design files:
@@ -605,6 +612,13 @@ Before starting, validate:
     > Confirm the updated estimate to continue.
 
 16. **Store Task Specification artefacts** (backend-specific)
+
+    > **HARD STOP — publish gate.** Present the full set of Task Specifications and Sprint groupings, then STOP and ask a blocking confirmation before creating anything:
+    >
+    > > "Here are the Task Specifications and Sprint plan. Reply **'publish'** and I'll create the [GitLab task files / Linear Issues / Confluence Task pages]. I will not create or update anything until you confirm."
+    >
+    > - Answering clarifying questions is NOT approval. Only "publish" / "approved" / "go ahead" proceeds.
+    > - If the user requests changes, revise, re-present, and re-ask. Loop until explicit approval is given in this session.
 
     Spawn creator subagents in parallel — one per Epic. Pass the validated Task Specs for that Epic.
 
