@@ -12,6 +12,8 @@ Use this reference for the AI-DLC Feature → Epic planning flow. Supports three
 ## Confluence Feature Template
 
 - Feature Summary
+- Document Metadata (table) — Document ID | Status | AI-DLC Stage | Version | Last updated | Author(s); Source requirement (link to BRD/PRD, when source-derived); Related ADRs | Related QA Intent | Confluence/Repo target
+- Relationship to Source Document (§0, only when a source doc exists) — what is authoritative for business/UI detail (the source); what this Intent is for (delivery contract, not a second BRD); honest assessment if a prior version was revised. See `intent-doc-standard.md`.
 - Problem / Opportunity
 - Target Users
 - Assigned Amigos
@@ -64,7 +66,10 @@ Use this reference for the AI-DLC Feature → Epic planning flow. Supports three
   - [ ] Training materials needed?
   - [ ] Customer comms needed?
 - Open Questions
+- Review Outcomes (§8, when reviewed) — Confirmed Decisions log (# | Topic | Decision | FI impact, R1…); Comment disposition (Confirmed/Partial/Deferred); Open/Pending (# | Topic | Status | Owner/next step, P1…)
+- Validation & Source Traceability (§9, when source-derived) — Validation record (Date | Activity | Participants | Outcome); Validation checklist (V# | Item | Status | Evidence/owner); Source traceability (Source area | FI section | Coverage | Notes); MVP / first delivery slice (Build | In scope | Excluded | Rationale); Value-add vs source. See `intent-doc-standard.md` and `intent-validation-workflow.md`.
 - Proposed Epics (hypotheses only)
+- Version History (Version | Date | Summary of changes)
 - Workflow Status (see Workflow Status Tracking below)
 
 ## GitLab Feature Template
@@ -99,6 +104,62 @@ When using the Linear backend, the Feature is stored as a Linear Initiative. Cre
 - **owner**: Current user or "me"
 
 See @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md for full Linear object mapping and MCP tool usage.
+
+## Source Traceability Matrix (Feature)
+
+Use when the Feature Intent derives from a source requirement document (BRD/PRD). Prove every source area has an explicit disposition — nothing dropped silently.
+
+| Source area (from BRD/PRD) | FI section | Coverage | Notes |
+|----------------------------|-----------|----------|-------|
+| <e.g. Executive summary & actors> | §1–§3 | Covered (summary) | Detail in source |
+| <e.g. Phase 1 — Create/Edit job>  | §4     | Deferred to Design | Field rules in source |
+| <e.g. Integrations (SSO, WhatsApp)> | §1 out of scope / §6 | Out of MVP / phased | — |
+
+Coverage vocabulary: **Covered** | **Deferred to Design** | **Out of scope**.
+
+## Review Outcomes (Feature)
+
+### Confirmed decisions
+| # | Topic | Decision | FI impact |
+|---|-------|----------|-----------|
+| R1 | <topic> | <what was agreed> | <sections changed> |
+
+### Comment disposition
+| Comment topic | Status |
+|---------------|--------|
+| <inline comment> | Confirmed → R# / Partial / Deferred |
+
+### Open / pending
+| # | Topic | Status | Owner / next step |
+|---|-------|--------|-------------------|
+| P1 | <topic> | Pending / Partial | <owner> |
+
+## Validation Record (Feature)
+
+| Date | Activity | Participants | Outcome |
+|------|----------|--------------|---------|
+| YYYY-MM-DD | <review / workshop / remediation> | <names> | <result> |
+
+### Validation checklist
+| ID | Item | Status | Evidence / owner |
+|----|------|--------|------------------|
+| V1 | Source version confirmed | Done/Pending | <link> |
+| V2 | Source traceability complete | Done/Pending | <ref> |
+| V3 | Stakeholder + engineering review | Done/Pending | <ref> |
+| V4 | MVP slice reviewed | Done/Pending | <ref> |
+| V5 | Out-of-scope explicit | Done/Pending | <ref> |
+| V6 | Open questions have owners | Done/Pending | <ref> |
+| V7 | Intent-phase AC distinct from source | Done/Pending | <ref> |
+| V8 | Review feedback addressed | Done/Pending | <ref> |
+
+## MVP / First Delivery Slice (Feature)
+
+| Build | In scope | Excluded from this build |
+|-------|----------|--------------------------|
+| MVP-A | <core slice> | <deferred capabilities> |
+| Rationale | <why this cut> | |
+
+Mark "proposal — requires validation" until signed off at the validation session.
 
 ## Workflow Status Tracking
 

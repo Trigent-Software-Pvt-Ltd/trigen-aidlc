@@ -15,6 +15,16 @@ Produce the Feature documentation as the single source of truth for the project 
 > - Epic breakdown happens later in `/aidlc-elaborate` (Mob Elaboration)
 > - You may include "Proposed Epics (hypotheses only)" as rough scope indicators
 
+> **IMPORTANT: Source-derived Intents follow the full standard**
+>
+> If the Feature derives from an existing requirement document (BRD/PRD/discovery brief),
+> the Intent is a **delivery contract, not a second copy of the requirements**. Follow
+> @${CLAUDE_PLUGIN_ROOT}/references/intent-doc-standard.md (full section order incl. source
+> traceability, review outcomes, validation record, MVP slice) and
+> @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md (how to validate & record).
+> If there is NO source doc (pure green-field), the lightweight template below is enough and
+> the source-traceability/validation sections are optional.
+
 ## Backend Selection
 
 At the start of this skill, prompt the user to select a documentation backend using the guidance in @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md.
@@ -32,10 +42,11 @@ At the start of this skill, prompt the user to select a documentation backend us
 |---|------|------------|-------------------|---------------|
 | 0 | Select backend | — | Backend Selection | User selects GitLab, Linear, or Confluence |
 | 1 | Gather context | 0 | Workflow > Step 1 | All required fields collected (name, users, pathway, scope, NFRs, risks) |
+| 1a | Ingest source requirement (if any) | 1 | Workflow > Step 1a | Source doc read; version/date recorded; actors/phases/scope/NFRs extracted. Skip if no source doc. |
 | 2 | Gather repo context | 1 | Workflow > Step 2 | Repo README and key files read, or N/A confirmed |
-| 3 | Confirm understanding | 1, 2 | Workflow > Step 3 | User confirms 5-8 bullet summary is correct |
-| 4 | Draft Level 1 doc | 3 | Workflow > Step 4 | Draft follows template, all sections populated |
-| 5 | Review and iterate (PUBLISH GATE) | 4 | Workflow > Step 5 | HARD STOP. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Answering clarifying questions does NOT count as approval. |
+| 3 | Confirm understanding | 1, 1a, 2 | Workflow > Step 3 | User confirms 5-8 bullet summary is correct |
+| 4 | Draft doc + source traceability | 3 | Workflow > Step 4 | Draft follows template; if source doc exists, §9.3 traceability matrix populated and MVP slice (§9.4) proposed |
+| 5 | Review round + record validation (PUBLISH GATE) | 4 | Workflow > Step 5 | HARD STOP. Feedback dispositioned into decisions (R#)/pending (P#); validation record (§9.1) + checklist (§9.2) updated; version bumped. User gives explicit publish approval. |
 | 6 | Create Feature artifact | 5 | Workflow > Step 6 | GitLab: MR created / Linear: Initiative created / Confluence: Page created |
 | 7 | Update document index | 6 | Workflow > Step 7 | Features Index updated with this Feature's entry |
 | 8 | Get explicit approval | 7 | Workflow > Step 8 | User explicitly approves the Feature |
@@ -75,12 +86,15 @@ At each step, AI should:
 
 - "Create a Feature doc for the new authentication system"
 - "Draft an feature document for adding dark mode"
+- "Create an Intent from this BRD: <link>"  ← source-derived; uses full standard
 - "Help me create a Confluence feature brief for the billing overhaul"
 - "Start a new initiative doc for the API migration"
 
 ## References
 
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Templates, prompts, and tool names
+- @${CLAUDE_PLUGIN_ROOT}/references/intent-doc-standard.md - Full source-derived Intent structure (§0–§9)
+- @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md - Validation rounds & recording
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend selection flow and detection
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab-specific operations
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear-specific operations
@@ -110,6 +124,7 @@ Include in Confluence doc as a collapsible section or separate child page. See P
    - Known risks (use Organizational Risk Taxonomy in shared ref; prioritize Data & Privacy and Security Posture)
    - Testing strategy preferences (see Testing Strategy Guidance in shared ref)
    - Repositories/services in scope (local paths or remote URLs)
+   - **Source requirement** — is there an existing BRD/PRD/discovery doc this derives from? If yes, capture the link (drives Step 1a).
    - **Service inventory** — for each service/repository involved, capture:
 
      | Service | Pathway | Repo Link |
@@ -125,23 +140,44 @@ Include in Confluence doc as a collapsible section or separate child page. See P
    - **Linear**: Team name (use `list_teams` to find)
    - **Confluence**: Space key (default `<CONFLUENCE_SPACE_KEY>` — from `aidlc.config.yaml`; run `/aidlc-init`), existing pages to reference
 
+1a. **Ingest source requirement (only if a source doc exists)**
+   Follow @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md Step 1:
+   - Fetch/read the source document (Confluence page, file, or URL).
+   - Record its **version and date** in the Intent metadata header.
+   - Extract actors, delivery phases, in/out scope, NFRs, data/PII, integrations.
+   - Note candidate out-of-scope / deferred items to confirm during review.
+   - This unlocks §0 (relationship to source), §9.3 (traceability), and §9.4 (MVP slice).
+
+   If there is **no** source doc, skip this step and use the lightweight template.
+
 2. **Gather repo context (if applicable)**
    When the Feature involves code changes, follow the Repo Context Gathering guidance in @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md to understand the technical landscape.
 
 3. **Confirm understanding**
-   Summarize in 5-8 bullets and ask for corrections before drafting.
+   Summarize in 5-8 bullets and ask for corrections before drafting. If a source doc was
+   ingested, explicitly state what will be summarized-and-linked vs deferred to Design.
 
 4. **Draft Feature documentation**
-   Use the template in @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md. Keep it concise and scannable.
+   - **No source doc:** use the lightweight Feature template in @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md.
+   - **Source-derived:** use the full structure in @${CLAUDE_PLUGIN_ROOT}/references/intent-doc-standard.md. As you draft, populate the **§9.3 source traceability matrix** (every source area → FI section → Covered / Deferred to Design / Out of scope) and propose the **§9.4 MVP / first delivery slice** (marked "proposal — requires validation"). Keep §4 at summary depth; link to the source for field-level detail.
 
-5. **Review and iterate (HARD STOP — publish gate)**
+5. **Review round + record validation (HARD STOP — publish gate)**
    Share the FULL draft with the user. Then STOP and ask an explicit, blocking confirmation before any artifact is created:
 
    > "Here is the complete Feature draft. Is everything captured and correct? Reply **'publish'** and I'll create the [Confluence page / GitLab MR / Linear Initiative]. I will not create or update anything until you confirm."
 
+   Before/while iterating, when the Feature is source-derived, run the validation round from
+   @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md:
+   - Disposition each piece of feedback → **Confirmed decisions (§8.1, `R#`)** or **Open/pending (§8.2, `P#`)** with an owner.
+   - Update affected sections (scope, NFRs, edge cases) to match confirmed decisions.
+   - Record the round in the **validation record (§9.1)** and tick the **validation checklist (§9.2)**.
+   - Bump the document **Version** and add a "last updated" note + Version History row.
+
+   Approval rules (all backends):
    - Do NOT proceed to Step 6 until the user replies with explicit approval ("publish", "approved", "go ahead").
    - Answering clarifying questions is NOT approval. Scope answers, edits, or extra context do not count as consent to publish.
    - If the user requests changes, revise and re-ask the same confirmation. Loop until explicit approval is given in this session.
+   - For source-derived Intents, do not set **Status: Approved** while a **blocking** `P#` item remains open.
 
 6. **Create Feature artifact** (backend-specific)
 
@@ -151,7 +187,7 @@ Include in Confluence doc as a collapsible section or separate child page. See P
    1. Ensure repo cloned: `cd "$AIDLC_DOCS_PATH" && git pull origin main` (set AIDLC_DOCS_PATH env var or prompt user)
    2. Create branch: `git checkout -b "intent/<project-slug>/<intent-slug>"`
    3. Create directory: `mkdir -p "Projects/<Project>/Feature <N> - <Title>"`
-   4. Write `intent.md` with frontmatter using template
+   4. Write `intent.md` with frontmatter using template (include `document_id`, `version`, `source_requirement` when source-derived)
    5. Commit and push: `git add . && git commit -m "feat(feature): ..." && git push -u origin <branch>`
    6. Create draft MR: `glab mr create --draft --title "[Feature <N>] <Title>" ...`
 
@@ -162,11 +198,13 @@ Include in Confluence doc as a collapsible section or separate child page. See P
       - `status`: "Planned"
       - `owner`: current user or "me"
    2. Store Initiative ID and URL for subsequent phases
+   3. If source-derived, track each `P#` pending item as a sub-issue.
 
    **Confluence** (see @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md):
    1. Use Atlassian MCP to create page in chosen space
    2. If parent page needed, ask where to place it
    3. Include Workflow Status table from planning-shared.md
+   4. If source-derived, render §0–§9 numbered sections and resolve merged inline comment threads.
 
 7. **Update Features Index**
 
@@ -258,6 +296,7 @@ Include in Confluence doc as a collapsible section or separate child page. See P
   - **Linear**: Initiative created with status "Active"
   - **Confluence**: Feature page exists with "✅ Approved" status
 - Risks, NFRs, measurement criteria, and testing strategy are explicitly documented.
+- **If source-derived:** source traceability matrix (§9.3) complete, validation record (§9.1) + checklist (§9.2) present, review outcomes (§8) logged, MVP slice (§9.4) proposed, no blocking `P#` items open.
 - Features Index updated with this Feature's entry (registered at creation, before approval).
 - Work tracking setup complete (GitLab/Confluence: Jira Project created or declined; Linear: N/A - native).
 - Approval to proceed to elaboration is explicitly confirmed.
@@ -279,6 +318,11 @@ Include in Confluence doc as a collapsible section or separate child page. See P
 - **Space not found**: Confirm the space key and permissions.
 - **Parent page missing**: Ask for the correct parent or create at space root.
 - **Conflicting docs**: Ask whether to update or create a new page.
+
+### Source-derived Intent
+- **No source doc provided but expected**: Ask for the BRD/PRD link, or proceed with the lightweight template and note "no source doc" in §0.
+- **§4 growing too large**: You are copying the source — summarize and link instead; push field-level detail to Design.
+- **Pending items unresolved**: Keep as `P#` with an owner; block approval only on blocking items.
 
 ### VCS Note
 - When using **Linear** or **Confluence** backends, the Feature skill does not interact with VCS — no `glab` or `gh` commands are used.
