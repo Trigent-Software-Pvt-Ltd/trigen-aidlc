@@ -1,0 +1,14 @@
+{
+  "name": "trigent-pid",
+  "description": "Guided Project Initiation Document (PID) creation and iterative refinement for Trigent EPD. Assists teams through business case drafting, solution design, Confluence publishing, and comment resolution rounds.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Seth Forst"
+  },
+  "license": "MIT",
+  "keywords": ["trigent", "pid", "project-initiation", "business-case", "solution-design", "confluence", "pdlc"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/trigent-pid/"
+  ]
+}

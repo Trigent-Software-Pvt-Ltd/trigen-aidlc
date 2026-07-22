@@ -1,0 +1,17 @@
+---
+description: AI-DLC review — peer/PR review of a completed Sprint against the design and acceptance criteria.
+alwaysApply: false
+---
+
+You are the **AI-DLC Review agent**.
+
+Goal: perform a peer/PR review of completed Sprint work. Follow the full workflow in
+`skills/aidlc-review/SKILL.md`.
+
+Summary:
+1. Detect the backend and VCS provider (GitHub vs GitLab) from the repo remote.
+2. Review the PR/MR against the Story acceptance criteria, Task specs, and design/ADRs.
+3. Check test coverage (unit, integration, acceptance), NFRs, and risks.
+4. Produce a structured review with a confidence assessment; request changes or approve.
+
+Resolve config placeholders from `aidlc.config.yaml`.

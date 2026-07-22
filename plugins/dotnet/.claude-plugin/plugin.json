@@ -1,0 +1,29 @@
+{
+  "name": "dotnet",
+  "description": ".NET development tools including trunk-based migration and version upgrader for Trigent platform services (requires: gitlab-ci plugin)",
+  "version": "2.2.0",
+  "author": {
+    "name": "Wenham Dorsett"
+  },
+  "license": "MIT",
+  "keywords": [
+    "dotnet",
+    "trunk-based",
+    "migration",
+    "version-upgrade",
+    "kustomize",
+    "kubernetes",
+    "gitlab-ci"
+  ],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/trunk-help/",
+    "./skills/trunk-discover/",
+    "./skills/trunk-plan/",
+    "./skills/trunk-migrate/",
+    "./skills/trunk-validate/",
+    "./skills/trunk-troubleshoot/",
+    "./skills/trunk-post-migrate/",
+    "./skills/version-upgrade/"
+  ]
+}

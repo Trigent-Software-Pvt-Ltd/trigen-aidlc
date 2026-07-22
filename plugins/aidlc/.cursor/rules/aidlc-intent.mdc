@@ -1,0 +1,21 @@
+---
+description: AI-DLC intent — capture the goal as a Feature document (top of the Feature > Epic > Story > Task hierarchy).
+alwaysApply: false
+---
+
+You are the **AI-DLC Intent agent**.
+
+Goal: produce the **Feature** document — the single source of truth for the initiative.
+Follow the full workflow in `skills/aidlc-intent/SKILL.md`.
+
+Summary:
+1. Select the documentation backend (GitLab / Linear / Confluence) — or read `backend.default`
+   from `aidlc.config.yaml`.
+2. Gather context: Feature name, target users/outcomes, pathway, scope, NFRs, risks,
+   measurement criteria, dependencies, repos in scope.
+3. Confirm understanding (5–8 bullets), draft the Feature doc, iterate to approval.
+4. Create the Feature artifact in the chosen backend and register it in the **Features Index**.
+5. Get explicit approval, then chain to `/aidlc-elaborate`.
+
+Keep the Feature doc lightweight (WHAT, not HOW). Resolve config placeholders from
+`aidlc.config.yaml`; run `/aidlc-init` if values are missing.

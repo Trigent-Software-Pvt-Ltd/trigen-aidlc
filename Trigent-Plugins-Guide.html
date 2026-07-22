@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigent Plugins — Installation Guide &amp; Playbook</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#161d2e; --panel2:#1c2740; --ink:#e8edf7; --muted:#9aa7c2;
+    --line:#2a3550; --accent:#5b8cff; --accent2:#38d39f; --warn:#ffb454; --danger:#ff6b6b;
+    --code:#0b0f1a; --chip:#233152; --pid:#d1a3ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;font-size:16px}
+  .wrap{display:grid;grid-template-columns:288px 1fr;min-height:100vh}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:var(--panel);
+    border-right:1px solid var(--line);padding:24px 18px}
+  nav h1{font-size:15px;letter-spacing:.5px;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+  nav .ver{font-size:12px;color:var(--muted);margin-bottom:18px}
+  nav a{display:block;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:7px;font-size:14px;margin:2px 0}
+  nav a:hover{background:var(--panel2);color:var(--ink)}
+  nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#6b7695;margin:16px 8px 4px}
+  nav .grp.a{color:var(--accent2)} nav .grp.p{color:var(--pid)}
+  main{padding:48px 56px;max-width:980px}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px}
+  header.hero h1{font-size:34px;margin:0 0 8px;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  header.hero p{color:var(--muted);font-size:17px;margin:6px 0 0;max-width:72ch}
+  .badges{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+  .badge{background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:12.5px;font-weight:600}
+  section{margin:0 0 46px;scroll-margin-top:20px}
+  h2{font-size:25px;margin:0 0 14px;border-top:1px solid var(--line);padding-top:26px}
+  h2 .k{font-size:13px;font-weight:700;padding:3px 10px;border-radius:20px;vertical-align:middle;margin-left:10px}
+  .kv-a{background:rgba(56,211,159,.14);color:var(--accent2);border:1px solid rgba(56,211,159,.4)}
+  .kv-p{background:rgba(209,163,255,.14);color:var(--pid);border:1px solid rgba(209,163,255,.4)}
+  .plugin-head{border-left:4px solid var(--accent2);padding-left:16px;margin:0 0 8px}
+  .plugin-head.pid{border-left-color:var(--pid)}
+  h3{font-size:18.5px;margin:26px 0 10px;color:#cfe0ff}
+  p{margin:12px 0}
+  code{background:var(--code);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;font-size:13.5px;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;color:#a8d1ff}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto;font-size:13.5px;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;line-height:1.55}
+  pre code{background:none;border:none;padding:0;color:#d6e3ff}
+  .cmt{color:#66759c}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:#cfe0ff;font-weight:700}
+  tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+  .cmd{color:var(--accent2);font-weight:700;white-space:nowrap}
+  .cmd.pid{color:var(--pid)}
+  .callout{border-radius:10px;padding:14px 18px;margin:18px 0;border:1px solid var(--line)}
+  .callout.tip{background:rgba(56,211,159,.08);border-color:rgba(56,211,159,.35)}
+  .callout.warn{background:rgba(255,180,84,.08);border-color:rgba(255,180,84,.4)}
+  .callout.note{background:rgba(91,140,255,.08);border-color:rgba(91,140,255,.35)}
+  .callout .t{font-weight:800;display:block;margin-bottom:4px}
+  .callout.tip .t{color:var(--accent2)} .callout.warn .t{color:var(--warn)} .callout.note .t{color:var(--accent)}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0}
+  .step{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-weight:700;font-size:14px}
+  .step small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+  .arrow{color:var(--accent);font-size:20px;font-weight:800}
+  .tree{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:18px 22px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:14px;line-height:1.8}
+  .tree .lvl1{color:var(--accent)} .tree .lvl2{color:var(--accent2)} .tree .lvl3{color:#d1a3ff} .tree .lvl4{color:var(--muted)}
+  .tag{display:inline-block;background:var(--code);border:1px solid var(--line);border-radius:5px;padding:0 7px;font-size:12px;color:#a8d1ff;font-family:monospace}
+  ul,ol{margin:12px 0;padding-left:24px} li{margin:6px 0}
+  .new{color:var(--accent2);font-weight:700}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:16px 18px}
+  .card h4{margin:0 0 6px;font-size:16px}
+  .card.a h4{color:var(--accent2)} .card.p h4{color:var(--pid)}
+  .card p{margin:6px 0;font-size:14px;color:var(--muted)}
+  footer{border-top:1px solid var(--line);margin-top:40px;padding-top:20px;color:var(--muted);font-size:13px}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}nav{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}main{padding:30px 22px}.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <h1>Trigent Plugins</h1>
+  <div class="ver">Marketplace: trigent-plugins</div>
+  <div class="grp">Getting started</div>
+  <a href="#overview">Overview</a>
+  <a href="#prereqs">Prerequisites</a>
+  <div class="grp">Installation</div>
+  <a href="#install">Add marketplace &amp; install</a>
+  <a href="#install-cursor">Using in Cursor</a>
+  <div class="grp a">Plugin · aidlc</div>
+  <a href="#aidlc">What it is</a>
+  <a href="#aidlc-hierarchy">Hierarchy</a>
+  <a href="#aidlc-init">Config (/aidlc-init)</a>
+  <a href="#aidlc-commands">Commands</a>
+  <a href="#aidlc-backends">Backends</a>
+  <a href="#aidlc-terminology">Terminology</a>
+  <a href="#aidlc-playbook">Playbook &amp; example</a>
+  <div class="grp p">Plugin · trigent-pid</div>
+  <a href="#pid">What it is</a>
+  <a href="#pid-config">Config (placeholders)</a>
+  <a href="#pid-playbook">Playbook</a>
+  <div class="grp">Help</div>
+  <a href="#troubleshoot">Troubleshooting</a>
+  <a href="#files">Repo layout</a>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>Trigent Plugins — Installation Guide &amp; Playbook</h1>
+  <p>Install and use the Trigent Claude Code / Cursor plugins from the <code>trigent-plugins</code> marketplace. This guide covers the shared install flow, then a dedicated section for each plugin.</p>
+  <div class="badges">
+    <span class="badge">Marketplace: trigent-plugins</span>
+    <span class="badge">Claude Code · Cowork · Cursor</span>
+    <span class="badge">aidlc v4.4.0</span>
+    <span class="badge">trigent-pid v1.1.0</span>
+  </div>
+</header>
+
+<section id="overview">
+  <h2>Overview</h2>
+  <p>The <code>trigent-plugins</code> marketplace bundles two governed-delivery plugins. This guide documents both.</p>
+  <div class="cards">
+    <div class="card a">
+      <h4>aidlc — AI-Driven Development Lifecycle</h4>
+      <p>Nine chained commands that take work from a goal to tracked Jira/Linear artifacts and TDD implementation, using Jira terminology (Feature → Epic → Story → Task, scheduled in Sprints).</p>
+    </div>
+    <div class="card p">
+      <h4>trigent-pid — Project Initiation Document</h4>
+      <p>Guides creation and iterative refinement of a Project Initiation Document (business case + solution design) in Confluence, through to final approval.</p>
+    </div>
+  </div>
+  <div class="callout note"><span class="t">One marketplace, install what you need</span>Both plugins live in the same repo and are installed from the same marketplace. You can install one or both.</div>
+</section>
+
+<section id="prereqs">
+  <h2>Prerequisites</h2>
+  <table>
+    <tr><th>Requirement</th><th>Needed for</th></tr>
+    <tr><td>Claude Code (CLI) or the Claude desktop app (Cowork), or Cursor</td><td>Running either plugin</td></tr>
+    <tr><td>Access to the <code>trigent-plugins</code> marketplace repo</td><td>Installation</td></tr>
+    <tr><td>Atlassian MCP (Jira + Confluence) connected</td><td>Confluence/Jira work in both plugins</td></tr>
+    <tr><td><code>glab</code> CLI + a checkout of the docs repo</td><td>aidlc GitLab backend</td></tr>
+    <tr><td>Linear MCP connected</td><td>aidlc Linear backend</td></tr>
+  </table>
+</section>
+
+<section id="install">
+  <h2>Add the marketplace &amp; install</h2>
+  <h3>1. Add the marketplace</h3>
+  <pre><code>claude plugin marketplace add git@gitlab.com:trigent/aidevops/claude-plugins.git</code></pre>
+  <p>Or from inside a Claude Code session:</p>
+  <pre><code>/plugin marketplace add git@gitlab.com:trigent/aidevops/claude-plugins.git</code></pre>
+  <p>From a <strong>local checkout</strong> instead (point at the folder that contains <code>.claude-plugin/marketplace.json</code>):</p>
+  <pre><code>/plugin marketplace add D:\Project-Dev-Space\CodexAI\iGenFactory\Tri-AIDLC-Plugin\claude-plugins-main</code></pre>
+  <h3>2. Install the plugin(s)</h3>
+  <pre><code><span class="cmt"># the AI-DLC lifecycle plugin</span>
+/plugin install aidlc@trigent-plugins
+
+<span class="cmt"># the PID (Project Initiation Document) plugin</span>
+/plugin install trigent-pid@trigent-plugins</code></pre>
+  <p>Reload when prompted, then confirm the commands are available by typing <code>/</code>.</p>
+</section>
+
+<section id="install-cursor">
+  <h2>Using in Cursor</h2>
+  <p>Cursor reads rule files (<code>.mdc</code>) from a workspace's <code>.cursor/rules/</code> folder rather than Claude <code>SKILL.md</code> files. The <strong>aidlc</strong> plugin ships a ready-made Cursor layer under <code>plugins/aidlc/.cursor/</code>. Copy it into your project:</p>
+  <pre><code>mkdir -p .cursor/rules
+cp -r plugins/aidlc/.cursor/rules/* .cursor/rules/
+cp plugins/aidlc/aidlc.config.example.yaml ./aidlc.config.example.yaml</code></pre>
+  <p>Reload Cursor — the always-on lifecycle gate applies automatically; invoke a command by referencing it (e.g. <em>"run aidlc-intent"</em>).</p>
+</section>
+
+<!-- ============ AIDLC PLUGIN ============ -->
+<section id="aidlc">
+  <div class="plugin-head"><h2 style="border:none;padding-top:0">aidlc <span class="k kv-a">Plugin</span></h2></div>
+  <p>AI-DLC is a governed lifecycle: capture the goal, decompose it, design it, verify readiness, build test-first, and review. AI proposes at each step; a human approves before the workflow advances. This edition uses standard Jira terminology and reads all organisation settings from <code>aidlc.config.yaml</code> — nothing is hardcoded.</p>
+  <div class="callout note"><span class="t">Anytime commands</span><code>/aidlc-help</code>, <code>/aidlc-progress</code>, and <code>/aidlc-init</code> can run at any point; the rest follow the phase order.</div>
+</section>
+
+<section id="aidlc-hierarchy">
+  <h3>Concepts &amp; hierarchy</h3>
+  <div class="tree">
+<span class="lvl1">Feature</span>            <span class="cmt">the goal / initiative — created by /aidlc-intent</span>  <span class="tag">aidlc:feature</span>
+└── <span class="lvl2">Epic</span>          <span class="cmt">self-contained, loosely coupled work area</span>    <span class="tag">aidlc:epic</span>
+    └── <span class="lvl3">Story</span>      <span class="cmt">user story ("As a… I want… so that…")</span>     <span class="tag">aidlc:story</span>
+        └── <span class="lvl4">Task</span>   <span class="cmt">implementation task / sub-task (Task Spec)</span>   <span class="tag">aidlc:task</span>
+
+<span class="tag">aidlc:sprint</span>  <span class="cmt">Sprint = groups Stories/Tasks for scheduling (not a hierarchy level)</span>
+  </div>
+</section>
+
+<section id="aidlc-init">
+  <h3>Configuration — <code>/aidlc-init</code></h3>
+  <p>Run <code>/aidlc-init</code> once per project. It asks a few questions and writes <code>aidlc.config.yaml</code> to your project root; every other skill reads it, so no organisation details are hardcoded.</p>
+  <pre><code>backend:
+  default: "gitlab"          <span class="cmt"># gitlab | linear | confluence</span>
+atlassian:
+  cloudId: ""                <span class="cmt"># e.g. yourcompany.atlassian.net</span>
+confluence:
+  spaceKey: ""               <span class="cmt"># e.g. ENG</span>
+  featureIndexPageId: ""     <span class="cmt"># blank on first run; auto-created</span>
+jira:
+  projectKey: ""             <span class="cmt"># e.g. PROJ</span>
+gitlab:
+  docsRepoUrl: ""            <span class="cmt"># https://gitlab.com/org/group/ai-dlc-docs</span>
+  docsRepoSsh: ""
+  docsPath: ""               <span class="cmt"># or $AIDLC_DOCS_PATH</span>
+linear:
+  teamKey: ""
+links:
+  performanceStandards: ""</code></pre>
+  <p>These resolve the placeholder tokens used across the skills: <code>&lt;ATLASSIAN_CLOUD_ID&gt;</code>, <code>&lt;CONFLUENCE_SPACE_KEY&gt;</code>, <code>&lt;FEATURE_INDEX_PAGE_ID&gt;</code>, <code>&lt;GITLAB_DOCS_REPO_URL&gt;</code>, <code>&lt;GITLAB_DOCS_REPO_SSH&gt;</code>, <code>&lt;PERFORMANCE_STANDARDS_URL&gt;</code>.</p>
+  <div class="callout warn"><span class="t">Keep secrets out of git</span>If <code>aidlc.config.yaml</code> holds internal URLs/keys, add it to <code>.gitignore</code>; commit the <code>aidlc.config.example.yaml</code> template instead.</div>
+</section>
+
+<section id="aidlc-commands">
+  <h3>Command reference</h3>
+  <table>
+    <tr><th>Command</th><th>Phase</th><th>What it does</th></tr>
+    <tr><td class="cmd">/aidlc-help</td><td>anytime</td><td>Explains methodology, commands, hierarchy.</td></tr>
+    <tr><td class="cmd">/aidlc-init</td><td>setup</td><td>Writes <code>aidlc.config.yaml</code>. Run first.</td></tr>
+    <tr><td class="cmd">/aidlc-intent</td><td>1 · Intent</td><td>Captures the goal as a <strong>Feature</strong>; registers it in the Features Index.</td></tr>
+    <tr><td class="cmd">/aidlc-elaborate</td><td>2 · Elaborate</td><td>Decomposes the Feature into <strong>Epics</strong> and <strong>Stories</strong>.</td></tr>
+    <tr><td class="cmd">/aidlc-design</td><td>3 · Design</td><td>Domain design, ADRs, implementation <strong>Task</strong> specs.</td></tr>
+    <tr><td class="cmd">/aidlc-verify</td><td>4 · Verify</td><td>Readiness check + creates the Jira/Linear hierarchy.</td></tr>
+    <tr><td class="cmd">/aidlc-sprint</td><td>5 · Sprint</td><td>TDD build of one Story/Task within a Sprint.</td></tr>
+    <tr><td class="cmd">/aidlc-review</td><td>6 · Review</td><td>Peer/PR review against acceptance criteria &amp; specs.</td></tr>
+    <tr><td class="cmd">/aidlc-progress</td><td>anytime</td><td>Per-phase dashboard with Epic/Story/Task &amp; Sprint rollups.</td></tr>
+  </table>
+</section>
+
+<section id="aidlc-backends">
+  <h3>Backends</h3>
+  <table>
+    <tr><th></th><th>GitLab (recommended)</th><th>Linear</th><th>Confluence</th></tr>
+    <tr><td>Document storage</td><td>.md files in a git repo</td><td>Native Linear objects</td><td>Confluence pages</td></tr>
+    <tr><td>Work tracking</td><td>Jira (via <code>/aidlc-verify</code>)</td><td>Linear (built-in)</td><td>Jira (via <code>/aidlc-verify</code>)</td></tr>
+    <tr><td>Tooling</td><td><code>glab</code> CLI</td><td>Linear MCP</td><td>Atlassian MCP</td></tr>
+    <tr><td>Offline</td><td>Yes (git)</td><td>No</td><td>No</td></tr>
+  </table>
+</section>
+
+<section id="aidlc-terminology">
+  <h3>Terminology mapping (from the original AWS AI-DLC)</h3>
+  <table>
+    <tr><th>Original</th><th>This edition</th><th>Notes</th></tr>
+    <tr><td>Intent</td><td class="new">Feature</td><td>Command stays <code>/aidlc-intent</code>; artifact is a Feature.</td></tr>
+    <tr><td>Unit</td><td class="new">Epic</td><td>Self-contained, loosely coupled work area.</td></tr>
+    <tr><td>(story-format items)</td><td class="new">Story</td><td>Produced in <code>/aidlc-elaborate</code>.</td></tr>
+    <tr><td>(implementation specs)</td><td class="new">Task</td><td>Produced in <code>/aidlc-design</code>.</td></tr>
+    <tr><td>Bolt</td><td class="new">Sprint</td><td><code>/aidlc-bolt</code> → <code>/aidlc-sprint</code>; scheduling grouping.</td></tr>
+  </table>
+</section>
+
+<section id="aidlc-playbook">
+  <h3>Playbook &amp; worked example</h3>
+  <div class="flow">
+    <span class="step">/aidlc-init<small>configure</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-intent<small>Feature</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-elaborate<small>Epics + Stories</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-design<small>ADRs + Tasks</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-verify<small>create in Jira</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-sprint<small>TDD build</small></span><span class="arrow">→</span>
+    <span class="step">/aidlc-review<small>PR review</small></span>
+  </div>
+  <pre><code><span class="cmt"># one-time setup in the project repo</span>
+/aidlc-init  → backend: gitlab, jira.projectKey: AUTH
+
+/aidlc-intent      <span class="cmt"># Create a Feature for OAuth2 login → "approved"</span>
+/aidlc-elaborate   <span class="cmt"># Epics + Stories with acceptance criteria</span>
+/aidlc-design      <span class="cmt"># domain model + ADRs + Task specs</span>
+/aidlc-verify      <span class="cmt"># creates AUTH Feature→Epic→Story→Task with labels + story points</span>
+/aidlc-sprint AUTH-124   <span class="cmt"># TDD plan + feature branch + implementation</span>
+/aidlc-review      <span class="cmt"># structured PR review with confidence score</span></code></pre>
+  <div class="callout note"><span class="t">Approval gates</span>Each phase needs explicit approval: <code>approve intent</code>, <code>approve elaborate</code>, <code>approve design</code>, <code>approve verify</code>.</div>
+</section>
+
+<!-- ============ TRIGENT-PID PLUGIN ============ -->
+<section id="pid">
+  <div class="plugin-head pid"><h2 style="border:none;padding-top:0">trigent-pid <span class="k kv-p">Plugin</span></h2></div>
+  <p>The <strong>trigent-pid</strong> plugin guides a team through creating or refining a <strong>Project Initiation Document (PID)</strong> — a structured Confluence page capturing the business case and solution design for significant projects, features, risky refactors, or large cross-team initiatives. It's a single command, <code class="cmd pid">/trigent-pid</code>, that runs an AI-led interview, publishes to Confluence, and manages comment-resolution rounds through to approval.</p>
+  <h3>Install &amp; invoke</h3>
+  <pre><code>/plugin install trigent-pid@trigent-plugins
+
+<span class="cmt"># then, in a session:</span>
+/trigent-pid</code></pre>
+  <p>On start it asks which <strong>mode</strong> you want:</p>
+  <table>
+    <tr><th>Mode</th><th>What happens</th></tr>
+    <tr><td><strong>New PID</strong></td><td>AI interviews you for the Business Case, does market/competitive research, cross-references related initiatives, drafts and iterates, then publishes to Confluence — optionally continuing into the Solution Design.</td></tr>
+    <tr><td><strong>Refine existing PID</strong></td><td>AI reads the published page's comments and runs a comment-resolution round: proposes resolutions, applies accepted changes, records what was addressed/deferred.</td></tr>
+  </table>
+</section>
+
+<section id="pid-config">
+  <h3>Configuration — space-agnostic placeholders</h3>
+  <p>The plugin is <strong>not tied to any single Confluence space</strong>. Three placeholders must be resolved before any Confluence operation (the <code>cloudId</code> is fetched at runtime automatically):</p>
+  <table>
+    <tr><th>Placeholder</th><th>Meaning</th></tr>
+    <tr><td><code>&lt;CONFLUENCE_SPACE_KEY&gt;</code></td><td>Target Confluence space key (e.g. <code>ENG</code>)</td></tr>
+    <tr><td><code>&lt;CONFLUENCE_SPACE_ID&gt;</code></td><td>Numeric space ID for that space</td></tr>
+    <tr><td><code>&lt;PID_PARENT_PAGE_ID&gt;</code></td><td>Page ID of the parent folder PIDs publish under (e.g. "Business Cases — In Review")</td></tr>
+  </table>
+  <p>They resolve in this order of preference:</p>
+  <ol>
+    <li>From a <code>pid.config.yaml</code> in the project root (template: <code>pid.config.example.yaml</code> in the plugin).</li>
+    <li>If an <code>aidlc.config.yaml</code> exists, reuse its <code>atlassian.cloudId</code> and <code>confluence.spaceKey</code>.</li>
+    <li>Otherwise, the skill asks for the space key, resolves the space ID via <code>getConfluenceSpaces</code>, and asks which parent page PIDs should live under.</li>
+  </ol>
+  <pre><code><span class="cmt"># pid.config.yaml</span>
+atlassian:
+  cloudId: ""              <span class="cmt"># usually auto-detected at runtime</span>
+confluence:
+  spaceKey: ""             <span class="cmt"># -&gt; &lt;CONFLUENCE_SPACE_KEY&gt;  e.g. "ENG"</span>
+  spaceId: ""              <span class="cmt"># -&gt; &lt;CONFLUENCE_SPACE_ID&gt;   numeric</span>
+  pidParentPageId: ""      <span class="cmt"># -&gt; &lt;PID_PARENT_PAGE_ID&gt;    parent folder page id</span></code></pre>
+</section>
+
+<section id="pid-playbook">
+  <h3>Playbook</h3>
+  <div class="flow">
+    <span class="step">/trigent-pid<small>choose mode</small></span><span class="arrow">→</span>
+    <span class="step">Business Case<small>interview + research</small></span><span class="arrow">→</span>
+    <span class="step">Publish<small>to Confluence</small></span><span class="arrow">→</span>
+    <span class="step">Solution Design<small>optional</small></span><span class="arrow">→</span>
+    <span class="step">Refine<small>resolve comments</small></span><span class="arrow">→</span>
+    <span class="step">Approval</span>
+  </div>
+  <ol>
+    <li><strong>Configure</strong> the Confluence space once (<code>pid.config.yaml</code>) or let the skill prompt you.</li>
+    <li><strong>New PID</strong> → answer the Business Case interview; the AI researches the market and cross-references related initiatives, drafts, and iterates to your approval.</li>
+    <li><strong>Publish</strong> the draft to your configured Confluence space/parent folder; share the URL with stakeholders for comments.</li>
+    <li><strong>Solution Design</strong> (optional) continues the interview and drafting for the technical design.</li>
+    <li><strong>Refine</strong> → run <code>/trigent-pid</code> again, choose "Refine existing PID", and the AI resolves reviewer comments round by round until final approval.</li>
+  </ol>
+  <div class="callout tip"><span class="t">Human-in-the-loop</span>Like aidlc, the AI proposes and you approve — nothing is published or resolved without your confirmation.</div>
+</section>
+
+<!-- ============ SHARED ============ -->
+<section id="troubleshoot">
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Symptom</th><th>Fix</th></tr>
+    <tr><td>Commands don't appear after install</td><td>Reload the IDE/session; confirm the marketplace was added and <code>/plugin install &lt;name&gt;@trigent-plugins</code> succeeded.</td></tr>
+    <tr><td>aidlc: unresolved placeholder (e.g. <code>&lt;CONFLUENCE_SPACE_KEY&gt;</code>)</td><td>Run <code>/aidlc-init</code> — the value is blank in <code>aidlc.config.yaml</code>.</td></tr>
+    <tr><td>trigent-pid: "which space?" / unresolved space placeholder</td><td>Create <code>pid.config.yaml</code> from the example, or let the skill prompt you for the space key.</td></tr>
+    <tr><td>Confluence write fails</td><td>Confirm the Atlassian account has edit permission on the target space and that the space key/ID are correct.</td></tr>
+    <tr><td>aidlc GitLab: repo not cloned / <code>glab</code> missing</td><td>Set <code>gitlab.docsPath</code> (or <code>$AIDLC_DOCS_PATH</code>), install <code>glab</code>, run <code>glab auth login</code>.</td></tr>
+    <tr><td>Cursor doesn't pick up the workflow</td><td>Ensure the <code>.mdc</code> files are in your project's <code>.cursor/rules/</code> and reload Cursor.</td></tr>
+  </table>
+</section>
+
+<section id="files">
+  <h2>Repo layout</h2>
+  <pre><code>claude-plugins-main/
+├── .claude-plugin/marketplace.json   <span class="cmt"># marketplace: trigent-plugins</span>
+├── Trigent-Plugins-Guide.html        <span class="cmt"># this guide</span>
+└── plugins/
+    ├── aidlc/                         <span class="cmt"># AI-DLC lifecycle plugin (v4.4.0)</span>
+    │   ├── .claude-plugin/plugin.json
+    │   ├── aidlc.config.example.yaml
+    │   ├── skills/  agents/  references/
+    │   └── .cursor/rules/*.mdc        <span class="cmt"># Cursor layer</span>
+    └── trigent-pid/                   <span class="cmt"># PID plugin (v1.1.0)</span>
+        ├── .claude-plugin/plugin.json
+        ├── pid.config.example.yaml
+        ├── skills/trigent-pid/SKILL.md
+        └── references/pid-reference.md</code></pre>
+</section>
+
+<footer>
+  Trigent Plugins marketplace <code>trigent-plugins</code> · aidlc v4.4.0 (Feature → Epic → Story → Task, scheduled in Sprints) · trigent-pid v1.1.0 ·
+  Maintained by Jagadish (Jagadish_a@trigent.com). Generated installation guide &amp; playbook.
+</footer>
+</main>
+</div>
+</body>
+</html>

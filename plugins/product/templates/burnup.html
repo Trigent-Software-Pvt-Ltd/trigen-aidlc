@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Project Burn-Up Metrics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a2e; padding: 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #6c757d; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .chart-wrapper { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat { background: #fff; border-radius: 10px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
+    .stat .value { font-size: 2rem; font-weight: 700; }
+    .stat .label { font-size: 0.8rem; color: #6c757d; margin-top: 0.25rem; }
+    .merged { color: #198754; }
+    .on-branch { color: #0d6efd; }
+    .in-progress { color: #fd7e14; }
+    .todo { color: #6c757d; }
+    .bolt-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .bolt-table th { background: #1a1a2e; color: #fff; padding: 0.5rem 0.6rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+    .bolt-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; font-size: 0.75rem; vertical-align: top; }
+    .bolt-table td:nth-child(1), .bolt-table td:nth-child(3), .bolt-table td:nth-child(4) { white-space: nowrap; }
+    .bolt-table td:nth-child(8) { white-space: nowrap; }
+    .bolt-table tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
+    .badge-merged { background: #d1e7dd; color: #0f5132; }
+    .badge-branch { background: #cfe2ff; color: #084298; }
+    .badge-wip { background: #fff3cd; color: #664d03; }
+    .badge-todo { background: #e9ecef; color: #495057; }
+    .badge-warn { background: #fff3cd; color: #664d03; font-size: 0.7rem; margin-left: 0.4rem; }
+    .badge-na { background: #e9ecef; color: #adb5bd; }
+    .badge-no-mr { background: #f5baff; color: #6a0080; }
+    .discrepancy-section { margin-bottom: 1.5rem; }
+    .discrepancy-card { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.5rem; font-size: 0.85rem; color: #664d03; }
+    .discrepancy-card strong { font-weight: 700; }
+    .discrepancy-header { font-size: 0.95rem; font-weight: 600; color: #664d03; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: #fff3cd; border: 1px solid #ffecb5; border-radius: 10px; padding: 0.75rem 1rem; }
+    .collapse-btn { background: none; border: none; color: #664d03; cursor: pointer; font-size: 1.2rem; padding: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+    .collapse-btn.collapsed { transform: rotate(-90deg); }
+    .discrepancy-content { overflow: hidden; transition: max-height 0.3s ease; margin-top: 0.5rem; }
+    .discrepancy-content.collapsed { max-height: 0; margin-top: 0; }
+    .jira-link { color: #0d6efd; text-decoration: none; font-weight: 500; }
+    .jira-link:hover { text-decoration: underline; }
+    .data-source { font-size: 0.75rem; color: #adb5bd; margin-left: 0.5rem; }
+    footer { text-align: center; color: #adb5bd; font-size: 0.75rem; margin-top: 2rem; }
+    .bugs-section { margin-bottom: 1.5rem; }
+    .bugs-header { font-size: 0.95rem; font-weight: 600; color: #842029; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: #f8d7da; border: 1px solid #f5c2c7; border-radius: 10px; padding: 0.75rem 1rem; }
+    .bugs-header .collapse-btn { color: #842029; }
+    .bugs-content { overflow: hidden; transition: max-height 0.3s ease; }
+    .bugs-content.collapsed { max-height: 0; }
+    .bug-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 0 0 10px 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .bug-table th { background: #842029; color: #fff; padding: 0.5rem 0.6rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+    .bug-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; font-size: 0.75rem; vertical-align: top; }
+    .bug-table tr:last-child td { border-bottom: none; }
+    .cancelled-section { margin-bottom: 1.5rem; }
+    .cancelled-header { font-size: 0.95rem; font-weight: 600; color: #495057; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; background: #e9ecef; border: 1px solid #dee2e6; border-radius: 10px; padding: 0.75rem 1rem; }
+    .cancelled-header .collapse-btn { color: #495057; }
+    .cancelled-content { overflow: hidden; transition: max-height 0.3s ease; }
+    .cancelled-content.collapsed { max-height: 0; }
+    .cancelled-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 0 0 10px 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .cancelled-table th { background: #6c757d; color: #fff; padding: 0.5rem 0.6rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+    .cancelled-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; font-size: 0.75rem; vertical-align: top; }
+    .cancelled-table tr:last-child td { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="project-heading">Burn-Up Metrics</h1>
+    <p class="subtitle" id="subtitle">Loading data&hellip;</p>
+    <div class="discrepancy-section" id="discrepancies" style="display: none;"></div>
+    <div class="bugs-section" id="bugs-section" style="display: none;"></div>
+    <div class="cancelled-section" id="cancelled-section" style="display: none;"></div>
+    <div class="stats" id="stats"></div>
+    <div class="chart-wrapper">
+      <canvas id="burnup" height="100"></canvas>
+    </div>
+    <table class="bolt-table" id="bolt-table">
+      <thead>
+        <tr>
+          <th>Bolt</th>
+          <th>Description</th>
+          <th>Unit</th>
+          <th>Jira Key</th>
+          <th>Assignee</th>
+          <th>Jira Status</th>
+          <th>Git Status</th>
+          <th>Time to Merge</th>
+          <th>Completed</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <footer id="footer">Burn-Up Chart &middot; Generated by /product:project-burnup</footer>
+
+  <script>
+    // ============================================================
+    // PROJECT CONFIG — updated by /product:project-burnup
+    // ============================================================
+    const PROJECT_CONFIG = {
+      name:        "",
+      description: "",
+      jiraBaseUrl: "",
+      dataFile:    "",
+    };
+
+    // ============================================================
+    // FALLBACK DATA — updated by /product:project-burnup
+    // Used when fetch fails (e.g. file:// protocol)
+    // ============================================================
+    const FALLBACK_DATA = {
+      "generatedAt": "",
+      "project": {},
+      "bugs": [],
+      "bolts": [],
+      "scopeEvents": [],
+      "discrepancies": [],
+      "units": []
+    };
+
+    // ============================================================
+    // DATA LOADING
+    // ============================================================
+    async function loadData() {
+      const dataFile = PROJECT_CONFIG.dataFile;
+      if (dataFile) {
+        try {
+          const response = await fetch(dataFile);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          renderChart(data, 'live');
+          return;
+        } catch (e) {
+          console.warn('Fetch failed, using fallback data:', e.message);
+        }
+      }
+      renderChart(FALLBACK_DATA, 'fallback');
+    }
+
+    // ============================================================
+    // RENDERING
+    // ============================================================
+    const STATUS_CONFIG = {
+      "merged":      { label: "Merged",      badgeClass: "badge-merged", cssClass: "merged" },
+      "on-branch":   { label: "On Branch",   badgeClass: "badge-branch", cssClass: "on-branch" },
+      "in-progress": { label: "In Progress", badgeClass: "badge-wip",    cssClass: "in-progress" },
+      "todo":        { label: "To Do",       badgeClass: "badge-todo",   cssClass: "todo" },
+      "none":        { label: "&mdash;",     badgeClass: "badge-na",     cssClass: "" },
+    };
+
+    function renderChart(data, source) {
+      const project     = data.project || {};
+      const bolts       = data.bolts || [];
+      const scopeEvents = data.scopeEvents || [];
+      const discrepancies = data.discrepancies || [];
+      const bugs        = data.bugs || [];
+
+      const projectName = project.name || PROJECT_CONFIG.name || 'Project';
+      const projectDesc = project.description || PROJECT_CONFIG.description || '';
+      const jiraBaseUrl = project.jiraBaseUrl || PROJECT_CONFIG.jiraBaseUrl || '';
+
+      // Page title & heading
+      document.title = `${projectName}: Burn-Up Metrics`;
+      document.getElementById('project-heading').textContent = `${projectName}: Burn-Up Metrics`;
+
+      // Footer
+      document.getElementById('footer').innerHTML =
+        `${projectName} &middot; ${projectDesc} &middot; Burn-Up Chart`;
+
+      // Subtitle
+      const generatedAtUK = data.generatedAt
+        ? new Date(data.generatedAt).toLocaleDateString('en-GB')
+        : 'Unknown';
+      document.getElementById('subtitle').innerHTML =
+        `Updated: ${generatedAtUK} <span class="data-source">(${source} data)</span>${projectDesc ? ' &middot; ' + projectDesc : ''}`;
+
+      // Discrepancies
+      const discEl = document.getElementById('discrepancies');
+      if (discrepancies.length > 0) {
+        discEl.style.display = 'block';
+        discEl.innerHTML = `
+          <div class="discrepancy-header" onclick="toggleDiscrepancies()">
+            <span>Discrepancies Found (${discrepancies.length})</span>
+            <button class="collapse-btn collapsed" id="disc-collapse-btn">&#9660;</button>
+          </div>
+          <div class="discrepancy-content collapsed" id="disc-content">
+            ${discrepancies.map(d =>
+              `<div class="discrepancy-card"><strong>Bolt ${d.boltId}:</strong> ${d.message}</div>`
+            ).join('')}
+          </div>`;
+      } else {
+        discEl.style.display = 'none';
+      }
+
+      // Stats
+      function countByStatus(status) { return bolts.filter(b => b.resolvedStatus === status).length; }
+      document.getElementById('stats').innerHTML = [
+        { value: bolts.filter(b => b.jiraStatus !== 'Rejected/Cancelled').length, label: "Total Bolts", cssClass: "" },
+        { value: countByStatus("merged"),      label: "Merged",      cssClass: "merged" },
+        { value: countByStatus("on-branch"),   label: "On Branch",   cssClass: "on-branch" },
+        { value: countByStatus("in-progress"), label: "In Progress", cssClass: "in-progress" },
+        { value: countByStatus("todo"),        label: "To Do",       cssClass: "todo" },
+      ].map(s =>
+        `<div class="stat"><div class="value ${s.cssClass}">${s.value}</div><div class="label">${s.label}</div></div>`
+      ).join('');
+
+      // Bolt table
+      const tbody = document.querySelector('#bolt-table tbody');
+      tbody.innerHTML = bolts.filter(b => b.resolvedStatus !== 'cancelled').map(b => {
+        const gitCfg = STATUS_CONFIG[b.gitStatus] || STATUS_CONFIG['todo'];
+        const activeJira = ['In Progress', 'In Review'].includes(b.jiraStatus);
+        const gitBadge = (b.gitStatus === 'none' && !b.mrOpenedAt && activeJira)
+          ? { label: 'No MR', badgeClass: 'badge-no-mr' }
+          : { label: gitCfg.label, badgeClass: gitCfg.badgeClass };
+        const jiraCell = b.jiraKey && jiraBaseUrl
+          ? `<a class="jira-link" href="${jiraBaseUrl}${b.jiraKey}" target="_blank">${b.jiraKey}</a>`
+          : (b.jiraKey || '&mdash;');
+        const warnBadge = b.discrepancy
+          ? ` <span class="badge badge-warn" title="${b.discrepancy}">${b.discrepancy}</span>`
+          : '';
+        let timeToMergeCell = '&mdash;';
+        if (b.mrOpenedAt) {
+          const diffMs = (b.mrMergedAt ? new Date(b.mrMergedAt) : new Date()) - new Date(b.mrOpenedAt);
+          const days = Math.floor(diffMs / 86400000);
+          const hours = Math.floor((diffMs % 86400000) / 3600000);
+          timeToMergeCell = b.mrMergedAt ? `${days}d ${hours}h` : `${days}d ${hours}h (ongoing)`;
+        } else if (b.gitStatus === 'todo' || b.gitStatus === 'in-progress') {
+          timeToMergeCell = 'No MR open';
+        }
+        const completedDateUK = b.completedDate
+          ? new Date(b.completedDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+          : '&mdash;';
+        return `<tr>
+          <td><strong>Bolt ${b.id}</strong></td>
+          <td>${b.name}</td>
+          <td>Unit ${b.unit}</td>
+          <td>${jiraCell}</td>
+          <td>${b.assignee || '&mdash;'}</td>
+          <td>${b.jiraStatus || '&mdash;'}${warnBadge}</td>
+          <td><span class="badge ${gitBadge.badgeClass}">${gitBadge.label}</span></td>
+          <td title="${b.mrOpenedAt ? (b.mrMergedAt ? 'Completed' : 'In progress') : 'No MR'}">${timeToMergeCell}</td>
+          <td>${completedDateUK}</td>
+        </tr>`;
+      }).join('');
+
+      // Bugs
+      const bugsEl = document.getElementById('bugs-section');
+      const openBugs = bugs.filter(b => b.status !== 'Closed' && b.status !== 'Done');
+      if (bugs.length > 0) {
+        bugsEl.style.display = 'block';
+        bugsEl.innerHTML = `
+          <div class="bugs-header" onclick="toggleBugs()">
+            <span>Bugs Raised (${bugs.length} total &middot; ${openBugs.length} open)</span>
+            <button class="collapse-btn collapsed" id="bugs-collapse-btn">&#9660;</button>
+          </div>
+          <div class="bugs-content collapsed" id="bugs-content">
+            <table class="bug-table">
+              <thead>
+                <tr>
+                  <th>Related Bolt</th>
+                  <th>Description</th>
+                  <th>Jira Key</th>
+                  <th>Assignee</th>
+                  <th>Reported By</th>
+                  <th>Jira Status</th>
+                  <th>Git Status</th>
+                  <th>Time to Merge</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${bugs.map(bug => {
+                  const keyLink = jiraBaseUrl
+                    ? `<a class="jira-link" href="${jiraBaseUrl}${bug.key}" target="_blank">${bug.key}</a>`
+                    : bug.key;
+                  const gitCfg = STATUS_CONFIG[bug.gitStatus] || STATUS_CONFIG['todo'];
+                  let bugTTM = '&mdash;';
+                  if (bug.mrOpenedAt) {
+                    const diffMs = (bug.mrMergedAt ? new Date(bug.mrMergedAt) : new Date()) - new Date(bug.mrOpenedAt);
+                    const days = Math.floor(diffMs / 86400000);
+                    const hours = Math.floor((diffMs % 86400000) / 3600000);
+                    bugTTM = bug.mrMergedAt ? `${days}d ${hours}h` : `${days}d ${hours}h (ongoing)`;
+                  } else if (!bug.mrOpenedAt) {
+                    bugTTM = 'No MR open';
+                  }
+                  return `<tr>
+                    <td style="white-space:nowrap">${bug.relatedBolt ? `Bolt ${bug.relatedBolt}` : '&mdash;'}</td>
+                    <td>${bug.summary}</td>
+                    <td style="white-space:nowrap">${keyLink}</td>
+                    <td>${bug.assignee || '&mdash;'}</td>
+                    <td>${bug.reporter || '&mdash;'}</td>
+                    <td style="white-space:nowrap">${bug.status || '&mdash;'}</td>
+                    <td><span class="badge ${gitCfg.badgeClass}">${gitCfg.label}</span></td>
+                    <td style="white-space:nowrap">${bugTTM}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>`;
+      } else {
+        bugsEl.style.display = 'none';
+      }
+
+      // Cancelled bolts
+      const cancelledEl = document.getElementById('cancelled-section');
+      const cancelledBolts = bolts.filter(b => b.resolvedStatus === 'cancelled');
+      if (cancelledBolts.length > 0) {
+        cancelledEl.style.display = 'block';
+        cancelledEl.innerHTML = `
+          <div class="cancelled-header" onclick="toggleCancelled()">
+            <span>Rejected / Cancelled Bolts (${cancelledBolts.length})</span>
+            <button class="collapse-btn collapsed" id="cancelled-collapse-btn">&#9660;</button>
+          </div>
+          <div class="cancelled-content collapsed" id="cancelled-content">
+            <table class="cancelled-table">
+              <thead>
+                <tr>
+                  <th>Bolt</th>
+                  <th>Description</th>
+                  <th>Unit</th>
+                  <th>Jira Key</th>
+                  <th>Assignee</th>
+                  <th>Jira Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${cancelledBolts.map(b => {
+                  const jiraCell = b.jiraKey && jiraBaseUrl
+                    ? `<a class="jira-link" href="${jiraBaseUrl}${b.jiraKey}" target="_blank">${b.jiraKey}</a>`
+                    : (b.jiraKey || '&mdash;');
+                  return `<tr>
+                    <td><strong>Bolt ${b.id}</strong></td>
+                    <td>${b.name}</td>
+                    <td>Unit ${b.unit}</td>
+                    <td>${jiraCell}</td>
+                    <td>${b.assignee || '&mdash;'}</td>
+                    <td>${b.jiraStatus || '&mdash;'}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>`;
+      } else {
+        cancelledEl.style.display = 'none';
+      }
+
+      // Chart
+      const mergedBolts = bolts
+        .filter(b => b.completedDate)
+        .sort((a, b) => a.completedDate.localeCompare(b.completedDate));
+
+      function dateRange(startStr, endStr, extra = []) {
+        const dates = new Set(extra);
+        let d = new Date(startStr);
+        const end = new Date(endStr);
+        while (d <= end) {
+          dates.add(d.toISOString().slice(0, 10));
+          d.setDate(d.getDate() + 7);
+        }
+        dates.add(endStr);
+        return Array.from(dates).sort();
+      }
+
+      const today = new Date().toISOString().slice(0, 10);
+      const chartStart = scopeEvents[0]?.date || today;
+      const futureEnd = new Date();
+      futureEnd.setDate(futureEnd.getDate() + 56);
+      const chartEnd = futureEnd.toISOString().slice(0, 10);
+      const labels = dateRange(chartStart, chartEnd, mergedBolts.map(b => b.completedDate));
+
+      const scopeLine = labels.map(date => {
+        let scope = 0;
+        [...scopeEvents].sort((a, b) => a.date.localeCompare(b.date))
+          .forEach(e => { if (date >= e.date) scope = e.totalBolts; });
+        return scope;
+      });
+
+      const completedLine = labels.map(date =>
+        mergedBolts.filter(b => b.completedDate <= date).length
+      );
+
+      new Chart(document.getElementById('burnup').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Total Scope',
+              data: scopeLine,
+              borderColor: '#6c757d',
+              backgroundColor: 'rgba(108,117,125,0.05)',
+              borderDash: [6, 3],
+              borderWidth: 2,
+              fill: true,
+              pointRadius: 0,
+              tension: 0,
+            },
+            {
+              label: 'Merged to main',
+              data: completedLine,
+              borderColor: '#198754',
+              backgroundColor: 'rgba(25,135,84,0.1)',
+              borderWidth: 3,
+              fill: true,
+              pointRadius: labels.map(d => mergedBolts.some(b => b.completedDate === d) ? 12 : 0),
+              pointBackgroundColor: '#198754',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointStyle: labels.map(d => mergedBolts.some(b => b.completedDate === d) ? 'star' : 'circle'),
+              tension: 0.1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                title: (items) => {
+                  const date = new Date(items[0].label);
+                  const ukDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                  return items[0].label === today ? `${ukDate} (today)` : ukDate;
+                },
+              },
+            },
+            annotation: {
+              annotations: {
+                todayLine: {
+                  type: 'line',
+                  xMin: today, xMax: today,
+                  borderColor: 'rgba(220, 53, 69, 0.5)',
+                  borderWidth: 2,
+                  borderDash: [4, 4],
+                  label: {
+                    display: true, content: 'Today', position: 'start',
+                    backgroundColor: 'rgba(220, 53, 69, 0.8)', color: '#fff',
+                    font: { size: 11 },
+                  },
+                },
+                ...mergedBolts.reduce((acc, bolt) => {
+                  acc[`bolt_${bolt.id.replace('.', '_')}`] = {
+                    type: 'label',
+                    xValue: bolt.completedDate,
+                    yValue: mergedBolts.filter(b => b.completedDate <= bolt.completedDate).length + 0.5,
+                    backgroundColor: 'rgba(25, 135, 84, 0.9)',
+                    borderColor: '#198754',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    color: '#fff',
+                    content: `${bolt.id}`,
+                    font: { size: 10, weight: 'bold' },
+                    padding: 4,
+                  };
+                  return acc;
+                }, {}),
+              },
+            },
+          },
+          scales: {
+            x: {
+              title: { display: true, text: 'Date' },
+              grid: { display: false },
+              ticks: {
+                callback: function(value) {
+                  const date = new Date(this.getLabelForValue(value));
+                  return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+                },
+              },
+            },
+            y: {
+              title: { display: true, text: 'Bolts' },
+              min: 0,
+              max: bolts.length + 1,
+              ticks: { stepSize: 1 },
+            },
+          },
+        },
+      });
+    }
+
+    // ============================================================
+    // TOGGLE FUNCTIONS
+    // ============================================================
+    function toggleBugs() {
+      const content = document.getElementById('bugs-content');
+      const btn = document.getElementById('bugs-collapse-btn');
+      content.classList.toggle('collapsed');
+      btn.classList.toggle('collapsed');
+    }
+
+    function toggleDiscrepancies() {
+      const content = document.getElementById('disc-content');
+      const btn = document.getElementById('disc-collapse-btn');
+      content.classList.toggle('collapsed');
+      btn.classList.toggle('collapsed');
+    }
+
+    function toggleCancelled() {
+      const content = document.getElementById('cancelled-content');
+      const btn = document.getElementById('cancelled-collapse-btn');
+      content.classList.toggle('collapsed');
+      btn.classList.toggle('collapsed');
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    loadData();
+  </script>
+</body>
+</html>

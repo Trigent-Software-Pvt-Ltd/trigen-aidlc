@@ -1,0 +1,254 @@
+{
+  "name": "trigent",
+  "owner": {
+    "name": "Jagadish",
+    "email": "Jagadish_a@trigent.com"
+  },
+  "metadata": {
+    "description": "Claude Code plugins for Trigent development"
+  },
+  "plugins": [
+    {
+      "name": "trigent-pid",
+      "source": "./plugins/trigent-pid",
+      "description": "Guided Project Initiation Document (PID) creation and iterative refinement for Trigent EPD. Assists teams through business case drafting, solution design, Confluence publishing, and comment resolution rounds.",
+      "version": "1.1.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "ruby",
+      "source": "./plugins/ruby",
+      "description": "Ruby development tools including rubocop linting",
+      "version": "1.0.1",
+      "author": {
+        "name": "DevTools Team"
+      }
+    },
+    {
+      "name": "issues",
+      "source": "./plugins/issues",
+      "description": "Jira issues and GitLab merge requests",
+      "version": "1.0.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "pair-programming",
+      "source": "./plugins/pair-programming",
+      "description": "Get second opinions from AI providers (Grok, ChatGPT, Gemini) on implementation plans, code, or architecture decisions",
+      "version": "1.0.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "epistemic-reasoning",
+      "source": "./plugins/epistemic-reasoning",
+      "description": "Enforces evidence-based reasoning with [FACT], [INFERRED], [ASSUMED] labeling",
+      "version": "1.0.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "aidlc",
+      "source": "./plugins/aidlc",
+      "description": "AI-DLC (AI-Driven Development Lifecycle) planning skills using Jira terminology (Feature > Epic > Story > Task, scheduled in Sprints), supporting GitLab, Linear, and Confluence backends. Run /aidlc-init first to configure Jira/Confluence/GitLab.",
+      "version": "4.4.0",
+      "author": {
+        "name": "Jagadish",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "standards",
+      "source": "./plugins/standards",
+      "description": "Trigent organisational coding and architectural standards for global, .NET, Rails, IaC, and Vue projects. Includes skills to view, load, and audit standards conformance.",
+      "version": "1.3.0",
+      "author": {
+        "name": "Architecture Guild"
+      }
+    },
+    {
+      "name": "planning",
+      "source": "./plugins/planning",
+      "description": "DEPRECATED: This plugin has been renamed to 'aidlc'. Please uninstall and install 'aidlc' instead.",
+      "version": "1.9.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "context-init",
+      "source": "./plugins/context-init",
+      "description": "Set up project context environments for non-developers with GitLab repos, Confluence, and Jira integration",
+      "version": "1.1.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "jira-improve",
+      "source": "./plugins/jira-improve",
+      "description": "Find and improve poorly written Jira issues using a quality rubric",
+      "version": "1.1.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "behavioral-diff",
+      "source": "./plugins/behavioral-diff",
+      "description": "Behavioural diff analysis to detect logic inversions, control flow changes, and semantic alterations that could break business logic. Catch bugs like inverted if-clauses before they reach production.",
+      "version": "1.2.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "dotnet",
+      "source": "./plugins/dotnet",
+      "description": ".NET development tools including trunk-based migration and version upgrader for Trigent platform services (requires: gitlab-ci plugin)",
+      "version": "2.2.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "security",
+      "source": "./plugins/security",
+      "description": "Security audit tools - vulnerability scanning, secrets detection, SAST analysis.",
+      "version": "1.0.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "gitlab-ci",
+      "source": "./plugins/gitlab-ci",
+      "description": "GitLab CI/CD pipeline standards, best practices, and guidelines for Trigent projects",
+      "version": "1.1.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "product",
+      "source": "./plugins/product",
+      "description": "Product management skills to support AI-DLC projects",
+      "version": "1.0.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "support-tools",
+      "source": "./plugins/support-tools",
+      "description": "Tools to assist support and oncall engineers with issue diagnostics and resolution workflows",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jagadish",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "terragrunt-migrate",
+      "source": "./plugins/terragrunt-migrate",
+      "description": "Terraform to Terragrunt migration orchestration. Six-phase workflow with human checkpoints covering analysis, scaffolding, environment population, state import, validation, and pipeline cutover. Requires the terragrunt-migration-server MCP server.",
+      "version": "1.0.0",
+      "author": {
+        "name": "DevOps Team"
+      }
+    },
+    {
+      "name": "consider",
+      "source": "./plugins/consider",
+      "description": "Force structured comparison of multiple approaches before implementing. Presents pros/cons table, interviews user, then plans the chosen approach.",
+      "version": "1.1.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "sentry-triage",
+      "source": "./plugins/sentry-triage",
+      "description": "Triage Sentry issues with a 3-skill chain: gather context, analyze severity, execute action",
+      "version": "1.2.0",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "flaky-test-triage",
+      "source": "./plugins/flaky-test-triage",
+      "description": "Triage flaky tests from Confluence into AI project Jira Bug tickets",
+      "version": "1.4.1",
+      "author": {
+        "name": "AJ"
+      }
+    },
+    {
+      "name": "ai-sre",
+      "source": "./plugins/ai-sre",
+      "description": "Site Reliability Engineering tools for all Trigent products \u2014 EM, Training, PSW (AWS us-east-1 or ca-central-1 \u2014 region inferred from symptom), Visitor Management, Volunteer Management (also: VolunteerSafe), DismissalSafe, CPOMS (UK), SmartPass, SchoolPass Legacy, EventSafe, Badge Alert, Platform, Integrations, and Trigent Safe. All products are KB-managed via GitLab sre-kb. AI-assisted incident triage, blameless postmortems, SLO management, runbook authoring, and toil reduction. Usage: /ai-sre:sre-incident [em|training|psw|vm|volunteer|volunteersafe|dismissal|cpoms|smartpass|schoolpass|eventsafe|badge|platform|integrations|trigent-safe] SYMPTOM",
+      "version": "3.4.5",
+      "author": {
+        "name": "AJ",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "memory-doctor",
+      "source": "./plugins/memory-doctor",
+      "description": "Consolidate Claude Code auto-memory storage in one pass. Shrinks the preloaded MEMORY.md index, trims memory file bodies, and reports token savings with a single keep/undo decision.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jagadish",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "verify-claim",
+      "source": "./plugins/verify-claim",
+      "description": "On-demand deep verification of a user-supplied claim against codebase, docs, and web. Returns a sourced verdict with rubric-based confidence via a dedicated opus investigator agent.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jagadish",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "mr-review-companion",
+      "source": "./plugins/mr-review-companion",
+      "description": "Build a single self-contained HTML review companion for a GitLab merge request with three tabs: a plain-language Summary for non-technical readers (includes a rollback plan when the MR has migrations), a Diff tab with individually collapsible files and cross-impact WHY prose, and a QA tab written in plain user-action language with checkbox checklists so QA engineers know exactly what to click and what to look for.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Jagadish",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "cost-anomalies",
+      "source": "./plugins/cost-anomalies",
+      "description": "Collect and track Azure cost anomaly alerts from Outlook email and Jira tickets, storing data in trigent1/devsecops/cost-anomalies under Azure/SUBSCRIPTION/RG/RESOURCE.csv for trend analysis and investigation.",
+      "version": "2.43.1",
+      "author": {
+        "name": "AJ",
+        "email": "Jagadish_a@trigent.com"
+      }
+    },
+    {
+      "name": "change-management",
+      "source": "./plugins/change-management",
+      "description": "Trigent CI/CD change-management assistant — explains the Komodo Monitor deployment gate, diagnoses blocked pipelines (genuine pending approval vs system bug), files DevOps issue reports, requests manual changes via the Jira service desk, and provides DevOps with diagnostic and remediation tools for gate automation issues.",
+      "version": "0.4.0",
+      "author": {
+        "name": "AJ",
+        "email": "Jagadish_a@trigent.com"
+      }
+    }
+  ]
+}

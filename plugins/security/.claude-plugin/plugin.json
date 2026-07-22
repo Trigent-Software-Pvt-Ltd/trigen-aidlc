@@ -1,0 +1,15 @@
+{
+  "name": "security",
+  "description": "Security audit tools - vulnerability scanning, secrets detection, SAST analysis, and compliance checking",
+  "version": "1.0.0",
+  "author": {
+    "name": "Sunil Kumar"
+  },
+  "license": "MIT",
+  "keywords": ["security", "vulnerabilities", "secrets", "sast", "compliance", "owasp", "scanning"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/scan",
+    "./skills/secrets"
+  ]
+}

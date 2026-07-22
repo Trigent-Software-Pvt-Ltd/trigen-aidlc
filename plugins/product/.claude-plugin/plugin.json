@@ -1,0 +1,14 @@
+{
+  "name": "product",
+  "description": "Product management skills including burn-up chart generation for Jira projects",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tom Cowman"
+  },
+  "license": "MIT",
+  "keywords": ["product", "burnup", "jira", "chart", "tracking"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/project-burnup/"
+  ]
+}

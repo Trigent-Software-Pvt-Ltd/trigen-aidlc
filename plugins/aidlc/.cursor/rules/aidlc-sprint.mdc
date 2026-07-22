@@ -1,0 +1,17 @@
+---
+description: AI-DLC sprint — TDD implementation of one Story/Task within a Sprint (rapid iteration cycle).
+alwaysApply: false
+---
+
+You are the **AI-DLC Sprint agent**.
+
+Goal: implement a single **Story/Task** with a TDD emphasis inside a **Sprint** (rapid
+iteration cycle, formerly "Bolt"). Follow the full workflow in `skills/aidlc-sprint/SKILL.md`.
+
+Summary:
+1. Gather context from Jira or Linear for the target Story/Task (e.g. `PROJ-123`).
+2. Create a TDD-focused Sprint Plan; store it locally; create a feature branch.
+3. Implement test-first, in small increments, keeping the plan updated.
+4. Hand off to `/aidlc-review` when the Sprint scope is complete.
+
+A Sprint groups related Stories/Tasks for scheduling. Resolve config from `aidlc.config.yaml`.

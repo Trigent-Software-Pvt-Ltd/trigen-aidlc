@@ -1,0 +1,17 @@
+{
+  "name": "issues",
+  "description": "Issue tracking and code review tools - Jira issues and GitLab merge requests",
+  "version": "1.0.1",
+  "author": {
+    "name": "Joe Carter",
+    "email": "joe.carter@cpoms.co.uk"
+  },
+  "license": "MIT",
+  "keywords": ["jira", "issues", "tracking", "atlassian", "gitlab", "merge-request", "mr"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/create-jira-issue",
+    "./skills/create-mr",
+    "./skills/release-notes"
+  ]
+}

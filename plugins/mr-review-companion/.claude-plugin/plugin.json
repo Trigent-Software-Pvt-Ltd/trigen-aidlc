@@ -1,0 +1,12 @@
+{
+  "name": "mr-review-companion",
+  "description": "Build a single self-contained HTML review companion for a GitLab merge request with three tabs: a plain-language Summary for non-technical readers (includes a rollback plan when the MR has migrations), a Diff tab with individually collapsible files and cross-impact WHY prose, and a QA tab written in plain user-action language with checkbox checklists so QA engineers know exactly what to click and what to look for.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Michael Petrov",
+    "email": "michael.petrov@cpoms.co.uk"
+  },
+  "license": "MIT",
+  "keywords": ["gitlab", "merge-request", "code-review", "qa", "test-coverage", "html", "review", "self-contained", "offline"],
+  "skills": "./skills/"
+}

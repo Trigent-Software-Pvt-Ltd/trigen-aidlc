@@ -1,0 +1,41 @@
+# AI-DLC configuration
+#
+# Copy this file to `aidlc.config.yaml` in your project root (or run `/aidlc-init`,
+# which will generate it for you by asking a few questions).
+#
+# All AIDLC skills read these values instead of hardcoded organisation details.
+# Leave a value blank ("") if you don't use that backend/integration.
+
+# Which documentation backend to use by default: gitlab | linear | confluence
+backend:
+  default: "gitlab"
+
+# Atlassian (Jira + Confluence) connection
+atlassian:
+  # Your Atlassian cloud id or site host, e.g. "yourcompany.atlassian.net"
+  cloudId: ""            # -> <ATLASSIAN_CLOUD_ID>
+
+# Confluence documentation backend
+confluence:
+  spaceKey: ""           # e.g. "ENG"        -> <CONFLUENCE_SPACE_KEY>
+  # Page id of the "Features Index" registry page.
+  # Leave blank on first run; /aidlc-intent will create it and you can paste the id here.
+  featureIndexPageId: "" # -> <FEATURE_INDEX_PAGE_ID>
+
+# Jira work tracking
+jira:
+  projectKey: ""         # default Jira project key, e.g. "PROJ"
+
+# GitLab documentation backend (the ai-dlc-docs repo, NOT your source code repo)
+gitlab:
+  docsRepoUrl: ""        # e.g. "https://gitlab.com/org/group/ai-dlc-docs"   -> <GITLAB_DOCS_REPO_URL>
+  docsRepoSsh: ""        # e.g. "git@gitlab.com:org/group/ai-dlc-docs.git"    -> <GITLAB_DOCS_REPO_SSH>
+  docsPath: ""           # local checkout path (also settable via AIDLC_DOCS_PATH env var)
+
+# Linear documentation/work backend
+linear:
+  teamKey: ""            # e.g. "ENG"
+
+# Optional reference links surfaced in planning docs
+links:
+  performanceStandards: "" # e.g. "https://yourcompany.atlassian.net/wiki/.../Performance+Standards" -> <PERFORMANCE_STANDARDS_URL>

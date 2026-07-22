@@ -1,0 +1,51 @@
+---
+description: AI-DLC lifecycle for Cursor — Jira terminology (Feature > Epic > Story > Task, scheduled in Sprints). Nine commands, phase order, and approval gates.
+alwaysApply: true
+---
+
+# AI-DLC Lifecycle Gate (Cursor)
+
+This is the Cursor rules layer for the AI-DLC plugin. It mirrors the Claude skills in
+`../../skills/`. Each command below maps to a matching rule in this folder and to the
+authoritative `SKILL.md` under `skills/<command>/`.
+
+## Terminology (Jira-aligned)
+
+```
+Feature   (top-level goal / initiative)     label aidlc:feature
+└── Epic   (self-contained work area)         label aidlc:epic
+    └── Story  (user-story, "As a…")          label aidlc:story
+        └── Task / Sub-task (implementation)  label aidlc:task
+Sprint    = a scheduling grouping of Stories/Tasks within an Epic (NOT a hierarchy level)   label aidlc:sprint
+```
+
+## Commands (use only these)
+
+| Command | Purpose |
+|---------|---------|
+| `/aidlc-help` | Methodology & workflow help |
+| `/aidlc-init` | Configure Jira/Confluence/GitLab/Linear into `aidlc.config.yaml` (run first) |
+| `/aidlc-intent` | Capture the goal as a **Feature** |
+| `/aidlc-elaborate` | Decompose Feature into **Epics** and **Stories** |
+| `/aidlc-design` | Domain design, ADRs, **Task** specs |
+| `/aidlc-verify` | Readiness check + create artifacts in Jira/Linear |
+| `/aidlc-sprint` | TDD build one Story/Task within a **Sprint** |
+| `/aidlc-review` | Peer review / PR review |
+| `/aidlc-progress` | Phase progress dashboard |
+
+## Phase order
+
+Init → Intent → Elaborate → Design → Verify → Sprint → Review
+(with `/aidlc-help` and `/aidlc-progress` available anytime)
+
+## Configuration
+
+All organisation-specific values (Atlassian cloud id, Confluence space, GitLab docs repo,
+Jira project key, etc.) are read from `aidlc.config.yaml`. Never hardcode them. If a skill
+references a placeholder like `<CONFLUENCE_SPACE_KEY>` or `<ATLASSIAN_CLOUD_ID>` and no value
+is configured, run `/aidlc-init`.
+
+## Approval gates
+
+Each phase requires explicit human approval before proceeding. Use phrases like
+`approve intent`, `approve elaborate`, `approve design`, `approve verify`.

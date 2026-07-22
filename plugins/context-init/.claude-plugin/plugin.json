@@ -1,0 +1,12 @@
+{
+  "name": "context-init",
+  "description": "Set up project context environments for non-developers with GitLab repos, Confluence, and Jira integration",
+  "version": "1.1.1",
+  "author": { "name": "Andy Kay" },
+  "license": "MIT",
+  "keywords": ["context", "setup", "gitlab", "confluence", "jira", "onboarding"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/context-init"
+  ]
+}

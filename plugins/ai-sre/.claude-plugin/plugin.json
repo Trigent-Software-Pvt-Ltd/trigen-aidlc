@@ -1,0 +1,32 @@
+{
+  "name": "ai-sre",
+  "description": "Site Reliability Engineering tools for all Trigent products \u2014 EM, Training, PSW (AWS), VM, Volunteer, DismissalSafe, CPOMS (UK), SmartPass, SchoolPass Legacy (SchoolPass), Platform, Integrations. AI-assisted incident triage, blameless postmortems, SLO management, runbook authoring, and toil reduction.",
+  "version": "3.4.5",
+  "author": {
+    "name": "David Park",
+    "email": "david.park@trigent.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "sre",
+    "incident",
+    "postmortem",
+    "slo",
+    "runbook",
+    "toil",
+    "aws",
+    "azure",
+    "reliability",
+    "psw",
+    "publicschoolworks"
+  ],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/sre-incident/",
+    "./skills/sre-postmortem/",
+    "./skills/sre-slo/",
+    "./skills/sre-runbook/",
+    "./skills/sre-toil/",
+    "./skills/sre-refresh/"
+  ]
+}

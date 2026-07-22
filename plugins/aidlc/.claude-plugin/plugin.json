@@ -1,0 +1,33 @@
+{
+  "name": "aidlc",
+  "description": "AI-DLC (AI-Driven Development Lifecycle) planning skills using Jira terminology (Feature > Epic > Story > Task, scheduled in Sprints), supporting GitLab, Linear, and Confluence backends. Run /aidlc-init first to configure Jira/Confluence/GitLab.",
+  "version": "4.4.0",
+  "author": {
+    "name": "Jagadish",
+    "email": "Jagadish_a@trigent.com"
+  },
+  "license": "MIT",
+  "keywords": ["aidlc", "planning", "confluence", "jira", "feature", "epic", "story", "sprint", "roadmap", "delivery"],
+  "skills": "./skills/",
+  "agents": [
+    "./agents/task-spec-generator.md",
+    "./agents/confluence-creator.md",
+    "./agents/gitlab-creator.md",
+    "./agents/linear-creator.md",
+    "./agents/doc-verifier.md",
+    "./agents/task-creator.md",
+    "./agents/sprint-plan-architect.md",
+    "./agents/sprint-plan-critic.md"
+  ],
+  "commands": [
+    "./skills/aidlc-help/",
+    "./skills/aidlc-init/",
+    "./skills/aidlc-intent/",
+    "./skills/aidlc-elaborate/",
+    "./skills/aidlc-design/",
+    "./skills/aidlc-verify/",
+    "./skills/aidlc-sprint/",
+    "./skills/aidlc-review/",
+    "./skills/aidlc-progress/"
+  ]
+}

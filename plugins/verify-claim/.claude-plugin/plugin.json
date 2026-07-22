@@ -1,0 +1,14 @@
+{
+  "name": "verify-claim",
+  "description": "Deeply verify a user-supplied claim against codebase, documentation, and the web. Delegates to a dedicated opus investigator agent and returns a sourced verdict with rubric-based confidence. Use when the user asks to verify, fact-check, confirm, disprove, or source-check a claim. (Triggers: verify claim, verify-claim, fact check, fact-check, is this true, can you confirm, prove this, disprove this, source check)",
+  "version": "1.0.0",
+  "author": {
+    "name": "Michael Petrov"
+  },
+  "license": "MIT",
+  "keywords": ["verification", "evidence", "confidence", "fact-check", "epistemic"],
+  "skills": "./skills/",
+  "agents": [
+    "./agents/claim-verifier.md"
+  ]
+}

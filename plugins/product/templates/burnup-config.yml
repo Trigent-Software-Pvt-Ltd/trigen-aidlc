@@ -1,0 +1,37 @@
+project:
+  name: ""                        # e.g. "Chatham"
+  description: ""                 # e.g. "Staff Concerns"
+  cloudId: ""                     # Atlassian Cloud ID
+  jiraBaseUrl: ""                 # e.g. "https://yourorg.atlassian.net/browse/"
+  primaryProjectKey: ""           # e.g. "CHAT" — used for git branches and MR searches
+  trackingProjectKey: ""          # e.g. "UKE" — set equal to primaryProjectKey if no migration occurred
+  rootIntent: ""                  # e.g. "CHAT-6" — the root Intent ticket
+  additionalRepos: []             # e.g. ["trigent1/trigent/cpoms/studentsafe-ui"] — extra GitLab repos to search for MRs
+  outputJsonFile: "docs/burnup-data.json"
+  outputHtmlFile: "docs/burnup.html"
+
+# Define all Units. jiraKey is the Jira ticket for each Unit.
+units:
+  - id: 1
+    name: ""
+    jiraKey: ""                   # e.g. "CHAT-8"
+
+# Define all Bolts.
+# jiraKey:         use "—" for cancelled bolts, "TBD" if not yet created
+# branchKey:       always the primaryProjectKey ticket, even after migration
+# relatedJiraKeys: additional tickets that must ALL be merged for the bolt to count as merged
+bolts:
+  - id: "1.1"
+    name: ""
+    unit: 1
+    jiraKey: ""
+    branchKey: ""
+    relatedJiraKeys: []
+    notes: ""
+
+# Scope events track when the total bolt count changed.
+# Add one entry for the initial scope, and one for each scope change.
+scopeEvents:
+  - date: ""                      # e.g. "2026-01-20"
+    totalBolts: 0
+    note: "Initial scope"

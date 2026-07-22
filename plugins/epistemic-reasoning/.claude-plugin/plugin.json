@@ -1,0 +1,11 @@
+{
+  "name": "epistemic-reasoning",
+  "description": "Enforces evidence-based reasoning with [FACT], [INFERRED], [ASSUMED] labeling on all claims",
+  "version": "1.0.0",
+  "author": {
+    "name": "DevTools Team",
+    "email": "devtools@example.com"
+  },
+  "license": "MIT",
+  "keywords": ["reasoning", "epistemic", "verification", "claims"]
+}

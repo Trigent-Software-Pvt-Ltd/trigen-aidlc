@@ -1,0 +1,9 @@
+{
+  "name": "behavioral-diff",
+  "version": "1.2.0",
+  "description": "Behavioral diff analysis to detect logic inversions, control flow changes, and semantic alterations that could break business logic. Features dual-analyzer architecture, context-aware confidence scoring, and CodeRabbit integration for automatic MR reviews.",
+  "author": {
+    "name": "Mobile Team",
+    "email": "matthew.bailey@trigent.com"
+  }
+}

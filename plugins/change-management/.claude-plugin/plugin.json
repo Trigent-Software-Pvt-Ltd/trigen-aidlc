@@ -1,0 +1,29 @@
+{
+  "name": "change-management",
+  "description": "Trigent CI/CD change-management assistant — explains the Komodo Monitor deployment gate, diagnoses blocked pipelines, files DevOps reports, requests manual changes, and gives DevOps the tools to investigate and fix automation issues.",
+  "version": "0.4.0",
+  "author": {
+    "name": "Caio Venturini Braga",
+    "email": "caio.braga@cpoms.co.uk"
+  },
+  "license": "MIT",
+  "keywords": [
+    "change-management",
+    "ci-cd",
+    "deployment-gate",
+    "komodo-monitor",
+    "pipeline",
+    "devops",
+    "trigent",
+    "jira",
+    "gitlab"
+  ],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/cm-help/",
+    "./skills/cm-diagnose/",
+    "./skills/cm-report-devops/",
+    "./skills/cm-request-change/",
+    "./skills/cm-devops-fix/"
+  ]
+}

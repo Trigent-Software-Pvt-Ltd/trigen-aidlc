@@ -1,0 +1,22 @@
+{
+  "name": "terragrunt-migrate",
+  "description": "Terraform to Terragrunt migration orchestration. Six-phase workflow with human checkpoints covering analysis, scaffolding, environment population, state import, validation, and pipeline cutover. Requires the terragrunt-migration-server MCP server.",
+  "version": "1.0.0",
+  "author": {
+    "name": "DevOps Team"
+  },
+  "license": "MIT",
+  "keywords": ["terraform", "terragrunt", "migration", "iac", "azure"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/tg-migrate-help/",
+    "./skills/tg-migrate-analyse/",
+    "./skills/tg-migrate-scaffold/",
+    "./skills/tg-migrate-populate/",
+    "./skills/tg-migrate-import/",
+    "./skills/tg-migrate-validate/",
+    "./skills/tg-migrate-pipeline/",
+    "./skills/tg-migrate-fix/",
+    "./skills/tg-migrate-status/"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "sentry-triage",
+  "description": "Triage Sentry issues with a 3-skill chain: gather context from Sentry and Slack, analyze severity across five dimensions, then execute an action (archive, create or link Jira ticket, escalate to Slack, send to Automaton, or get diagnostics).",
+  "version": "1.2.0",
+  "author": {
+    "name": "Michael Petrov"
+  },
+  "skills": "./skills/"
+}

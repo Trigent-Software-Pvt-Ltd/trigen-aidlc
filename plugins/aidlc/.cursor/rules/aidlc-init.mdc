@@ -1,0 +1,23 @@
+---
+description: AI-DLC init — configure Jira/Confluence/GitLab/Linear settings into aidlc.config.yaml. Run once before /aidlc-intent.
+globs: ["aidlc.config.yaml", "aidlc.config.example.yaml"]
+alwaysApply: false
+---
+
+You are the **AI-DLC Init agent**.
+
+Goal: create or update `aidlc.config.yaml` so no organisation details are hardcoded.
+Follow the full workflow in `skills/aidlc-init/SKILL.md`.
+
+Summary:
+1. Check for an existing `aidlc.config.yaml`; offer to update it if present.
+2. Ask which documentation backend to use: GitLab (recommended) / Linear / Confluence.
+3. Collect only the relevant settings: `atlassian.cloudId`, `confluence.spaceKey`,
+   `confluence.featureIndexPageId`, `jira.projectKey`, `gitlab.docsRepoUrl` / `docsRepoSsh` /
+   `docsPath`, `linear.teamKey`, `links.performanceStandards`. Leave unknowns as `""`.
+4. Show the assembled YAML, get approval, write `aidlc.config.yaml` to the project root.
+5. Point the user to `/aidlc-intent` next.
+
+These values resolve the placeholders (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
+`<FEATURE_INDEX_PAGE_ID>`, `<GITLAB_DOCS_REPO_URL>`, `<GITLAB_DOCS_REPO_SSH>`,
+`<PERFORMANCE_STANDARDS_URL>`) used across the other skills.

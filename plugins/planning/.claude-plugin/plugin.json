@@ -1,0 +1,11 @@
+{
+  "name": "planning",
+  "description": "DEPRECATED: This plugin has been renamed to 'aidlc'. Please uninstall this plugin and install 'aidlc' instead.",
+  "version": "1.9.1",
+  "author": {
+    "name": "Andy Kay"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "commands": []
+}

@@ -1,0 +1,33 @@
+{
+  "skill_name": "memory-doctor",
+  "evals": [
+    {
+      "id": 1,
+      "name": "explicit-invocation-happy-path",
+      "prompt": "/memory-doctor",
+      "expected_output": "Skill resolves the memory directory (autoMemoryDirectory if set, else ~/.claude/projects/<encoded-cwd>/memory/), creates a timestamped snapshot under ~/.claude/backups/memory-doctor/, runs the consolidate + trim phases, and renders the Run Summary table. If any changes were applied, prompts the user with a keep/undo decision; if zero changes, prints 'No changes detected. Snapshot removed.' and skips the prompt. Output never claims exact token counts (always labels them as estimated).",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "implicit-keyword-invocation",
+      "prompt": "my session context feels really heavy lately and the memory files all look noisy with old session ids and 'Michael said' provenance. can you clean this up?",
+      "expected_output": "Skill triggers without explicit /memory-doctor mention (matches the description's trigger phrases 'session context feels heavy', 'memory files are noisy'). Same flow as eval 1: preflight, snapshot, consolidate, trim, summary, decision. The body-trimming step strips originSessionId, redundant name fields, and provenance patterns from **Why:** lines.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "preflight-fails-no-memory-dir",
+      "prompt": "/memory-doctor",
+      "expected_output": "Skill resolves the memory directory and finds it does not exist or is empty (no .md files). Exits cleanly with the documented preflight message containing the resolved path, the failure reason, and instructions for enabling auto-memory in ~/.claude/settings.json. No snapshot created, no further work, no Run Summary rendered.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "truncation-cliff-warning",
+      "prompt": "/memory-doctor",
+      "expected_output": "MEMORY.md exceeds 200 lines on entry. Skill renders the Run Summary with a CRITICAL truncation banner above the Headline table reporting the line count and the count of lines past 200 (currently invisible to Claude). Consolidation runs as normal and aggressive MERGE is preferred to bring the index under 200 lines.",
+      "files": []
+    }
+  ]
+}

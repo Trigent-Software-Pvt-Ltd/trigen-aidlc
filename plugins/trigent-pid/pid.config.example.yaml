@@ -1,0 +1,14 @@
+# trigent-pid configuration
+#
+# Copy this file to `pid.config.yaml` in your project root and fill in your values.
+# The /trigent-pid skill reads these instead of any hardcoded Confluence space.
+# (If you already use the aidlc plugin, its aidlc.config.yaml confluence values can be reused.)
+
+atlassian:
+  # Retrieved at runtime via getAccessibleAtlassianResources(); set only to override.
+  cloudId: ""              # e.g. yourcompany.atlassian.net
+
+confluence:
+  spaceKey: ""             # -> <CONFLUENCE_SPACE_KEY>   e.g. "ENG"
+  spaceId: ""              # -> <CONFLUENCE_SPACE_ID>    numeric space id
+  pidParentPageId: ""      # -> <PID_PARENT_PAGE_ID>     page id of the folder PIDs publish under

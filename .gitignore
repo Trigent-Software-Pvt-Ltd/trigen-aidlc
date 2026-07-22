@@ -1,0 +1,8 @@
+.vscode/
+.idea/
+.DS_Store
+.omc/
+docs/superpowers/
+
+# Backup folders (not for the repo)
+plugins/*.backup-*

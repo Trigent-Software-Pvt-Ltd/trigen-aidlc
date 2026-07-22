@@ -1,0 +1,15 @@
+{
+  "name": "ruby",
+  "description": "Ruby development tools including rubocop linting and code style enforcement",
+  "version": "1.0.1",
+  "author": {
+    "name": "DevTools Team",
+    "email": "devtools@example.com"
+  },
+  "license": "MIT",
+  "keywords": ["ruby", "rubocop", "linting", "code-style"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/rubocop"
+  ]
+}

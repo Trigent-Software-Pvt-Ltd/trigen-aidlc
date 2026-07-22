@@ -1,0 +1,12 @@
+{
+  "name": "jira-improve",
+  "description": "Find and improve poorly written Jira issues using a quality rubric and codebase context",
+  "version": "1.1.1",
+  "author": { "name": "Andy Kay" },
+  "license": "MIT",
+  "keywords": ["jira", "quality", "improvement", "issues", "backlog"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/jira-improve"
+  ]
+}

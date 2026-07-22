@@ -1,0 +1,24 @@
+{
+  "providers": {
+    "grok": {
+      "model": "grok-4-1-fast-reasoning",
+      "api_key": "",
+      "description": "Grok (xAI) - Set api_key here or XAI_API_KEY env var"
+    },
+    "chatgpt": {
+      "model": "gpt-5.1",
+      "api_key": "",
+      "description": "ChatGPT (OpenAI) - Set api_key here or OPENAI_API_KEY env var"
+    },
+    "gemini": {
+      "model": "gemini-3-pro-preview",
+      "api_key": "",
+      "description": "Gemini (Google) - Set api_key here or GEMINI_API_KEY env var"
+    }
+  },
+  "defaults": {
+    "provider": "grok",
+    "temperature": 0.7,
+    "max_tokens": 4096
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "support-tools",
+  "version": "1.0.0",
+  "description": "Tools to assist support and oncall engineers with issue diagnostics and resolution workflows",
+  "author": {
+    "name": "Connor Parris",
+    "email": "connor.parris@cpoms.co.uk"
+  },
+  "repository": "https://gitlab.com/trigent1/aidevops/claude-plugins",
+  "keywords": ["sentry", "cpoms", "staffsafe", "diagnostics", "scripts"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/sentry-diagnose/"
+  ]
+}

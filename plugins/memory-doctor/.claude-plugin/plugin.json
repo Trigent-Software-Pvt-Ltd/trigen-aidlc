@@ -1,0 +1,13 @@
+{
+  "name": "memory-doctor",
+  "description": "Consolidate Claude Code auto-memory storage in one pass. Shrinks the preloaded MEMORY.md index, trims memory file bodies, and reports token savings with a single keep/undo decision.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Michael Petrov",
+    "email": "michael.petrov@cpoms.co.uk"
+  },
+  "license": "MIT",
+  "keywords": ["memory", "auto-memory", "tokens", "consolidation", "cleanup", "MEMORY.md"],
+  "skills": "./skills/",
+  "commands": ["./skills/memory-doctor"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "gitlab-ci",
+  "description": "GitLab CI/CD pipeline standards, best practices, and guidelines for Trigent projects (requires: glab CLI for pipeline-monitor skill)",
+  "version": "1.1.0",
+  "author": {
+    "name": "Dave Juba"
+  },
+  "license": "MIT",
+  "keywords": [
+    "gitlab",
+    "ci-cd",
+    "pipeline",
+    "standards",
+    "best-practices"
+  ],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/pipeline-edit/",
+    "./skills/standards-audit/",
+    "./skills/standards-list/",
+    "./skills/standards-load/",
+    "./skills/standards-view/",
+    "./skills/pipeline-monitor/"
+  ]
+}

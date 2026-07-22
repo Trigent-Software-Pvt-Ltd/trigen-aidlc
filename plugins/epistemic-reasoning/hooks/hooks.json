@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -n --rawfile content ${CLAUDE_PLUGIN_ROOT}/epistemic-reasoning.md '{\"hookSpecificOutput\": {\"hookEventName\": \"SessionStart\", \"additionalContext\": $content}}'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Epistemic Protocol Active: Label all claims [FACT]/[INFERRED]/[ASSUMED]. Unlabeled responses are invalid.'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -Rsr 'if test(\"\\\\[(FACT|ASSUMED|INFERRED)\\\\]\") then empty else \"<protocol-violation>\\nRESPONSE INVALID: Missing epistemic labels.\\nEvery claim must be labeled [FACT], [INFERRED], or [ASSUMED].\\nFix before sending.\\n</protocol-violation>\" end'"
+          }
+        ]
+      }
+    ]
+  }
+}

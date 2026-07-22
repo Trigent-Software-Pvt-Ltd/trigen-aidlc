@@ -1,0 +1,18 @@
+{
+  "name": "standards",
+  "description": "Trigent organisational coding and architectural standards. Reference files used by aidlc-design (architecture) and aidlc-bolt (implementation). Covers global, .NET, Rails, IaC, and Vue projects.",
+  "version": "1.3.0",
+  "author": {
+    "name": "Architecture Guild"
+  },
+  "license": "MIT",
+  "keywords": ["standards", "conventions", "dotnet", "rails", "iac", "architecture", "guidance"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/standards-help/",
+    "./skills/list/",
+    "./skills/view/",
+    "./skills/load/",
+    "./skills/audit/"
+  ]
+}

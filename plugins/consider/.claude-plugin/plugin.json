@@ -1,0 +1,12 @@
+{
+  "name": "consider",
+  "description": "Force structured comparison of multiple approaches before implementing. Prevents jumping to the easiest solution by requiring a pros/cons table, user interview, and planning phase.",
+  "version": "1.1.0",
+  "author": { "name": "Michael Petrov" },
+  "license": "MIT",
+  "keywords": ["planning", "decision", "options", "comparison", "approaches"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/consider"
+  ]
+}

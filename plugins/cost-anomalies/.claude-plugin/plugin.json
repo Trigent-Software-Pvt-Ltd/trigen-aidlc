@@ -1,0 +1,20 @@
+{
+  "name": "cost-anomalies",
+  "description": "Collect and track Azure cost anomaly alerts from email, stored as CSVs in GitLab for trend analysis",
+  "version": "2.43.1",
+  "author": {
+    "name": "Viacheslav Frolov",
+    "email": "viacheslav.frolov@trigent.com"
+  },
+  "license": "MIT",
+  "keywords": ["cost", "anomaly", "azure", "cloud", "spend", "trend"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/cost-extract",
+    "./skills/cost-investigate",
+    "./skills/cost-report",
+    "./skills/cost-budget",
+    "./skills/cost-actions",
+    "./skills/cost-advisor"
+  ]
+}

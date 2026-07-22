@@ -1,0 +1,16 @@
+{
+  "name": "flaky-test-triage",
+  "description": "Triage flaky tests from the CPOMS StudentSafe Flaky Tests Hub Confluence page into AI project Jira Bug tickets",
+  "version": "1.4.1",
+  "author": {
+    "name": "Dan Russell",
+    "email": "dan.russell@cpoms.co.uk"
+  },
+  "license": "MIT",
+  "keywords": ["flaky-tests", "triage", "jira", "confluence", "cpoms", "studentsafe"],
+  "skills": "./skills/",
+  "commands": [
+    "./skills/triage-flaky-tests",
+    "./skills/add-flaky-test-to-hub"
+  ]
+}
