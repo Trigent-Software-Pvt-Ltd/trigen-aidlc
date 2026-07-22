@@ -57,7 +57,7 @@
       "name": "aidlc",
       "source": "./plugins/aidlc",
       "description": "AI-DLC (AI-Driven Development Lifecycle) planning skills using Jira terminology (Feature > Epic > Story > Task, scheduled in Sprints), supporting GitLab, Linear, and Confluence backends. Run /aidlc-init first to configure Jira/Confluence/GitLab.",
-      "version": "4.4.0",
+      "version": "4.4.1",
       "author": {
         "name": "Jagadish",
         "email": "Jagadish_a@trigent.com"
