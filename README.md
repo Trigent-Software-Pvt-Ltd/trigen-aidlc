@@ -72,13 +72,13 @@ Or just ask about pipeline editing—the skill auto-triggers on phrases like "ad
 Add this marketplace to Claude Code:
 
 ```bash
-claude plugin marketplace add git@gitlab.com:trigent1/aidevops/claude-plugins.git
+claude plugin marketplace add Trigent-Software-Pvt-Ltd/trigen-aidlc
 ```
 
 Or from within Claude Code:
 
 ```
-/plugin marketplace add git@gitlab.com:trigent1/aidevops/claude-plugins.git
+/plugin marketplace add Trigent-Software-Pvt-Ltd/trigen-aidlc
 ```
 
 Then install individual plugins:
@@ -389,41 +389,41 @@ Enforces evidence-based reasoning by requiring `[FACT]`, `[INFERRED]`, and `[ASS
   - **macOS**: Install via Homebrew (`brew install git`) or download from [git-scm.com](https://git-scm.com/download/mac)
   - **Linux**: Install via package manager (e.g., `sudo apt install git` or `sudo yum install git`)
   - Verify installation: Run `git --version` in terminal
-- **Repository access** - Permission to access this GitLab repository
+- **Repository access** - Permission to access this GitHub repository
 
 ### Add the Marketplace
 
 Choose the appropriate URL based on your Git configuration:
 
-**Option 1: SSH URL** (recommended if you have SSH keys configured)
+**Option 1: Shorthand** (recommended)
 
 From command line:
 
 ```bash
-claude plugin marketplace add git@gitlab.com:trigent1/aidevops/claude-plugins.git
+claude plugin marketplace add Trigent-Software-Pvt-Ltd/trigen-aidlc
 ```
 
 Or in Claude Code:
 
 ```
-/plugin marketplace add git@gitlab.com:trigent1/aidevops/claude-plugins.git
+/plugin marketplace add Trigent-Software-Pvt-Ltd/trigen-aidlc
 ```
 
-**Option 2: HTTPS URL** (recommended for non-developers or users without SSH keys)
+**Option 2: Full URL**
 
 From command line:
 
 ```bash
-claude plugin marketplace add https://gitlab.com/trigent1/aidevops/claude-plugins.git
+claude plugin marketplace add https://github.com/Trigent-Software-Pvt-Ltd/trigen-aidlc.git
 ```
 
 Or in Claude Code:
 
 ```
-/plugin marketplace add https://gitlab.com/trigent1/aidevops/claude-plugins.git
+/plugin marketplace add https://github.com/Trigent-Software-Pvt-Ltd/trigen-aidlc.git
 ```
 
-> **Note**: HTTPS may prompt for GitLab credentials on first use. SSH requires [SSH key setup](https://docs.gitlab.com/ee/user/ssh.html) but provides passwordless access once configured.
+> **Note**: This is a private repository, so you may be prompted for GitHub credentials on first use. Ensure your GitHub account has access to the `Trigent-Software-Pvt-Ltd` organization.
 
 ### Install Plugins
 
