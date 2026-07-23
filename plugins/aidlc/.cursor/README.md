@@ -20,12 +20,22 @@ Copy the rules into your project's Cursor rules folder:
 # from your project root
 mkdir -p .cursor/rules
 cp -r /path/to/plugins/aidlc/.cursor/rules/* .cursor/rules/
+# copy the shared references so the deeper standards resolve
+# (e.g. references/intent-doc-standard.md, references/intent-validation-workflow.md)
+mkdir -p references
+cp -r /path/to/plugins/aidlc/references/* references/
 # also copy the config template
 cp /path/to/plugins/aidlc/aidlc.config.example.yaml ./aidlc.config.example.yaml
 ```
 
 Then reload Cursor. The lifecycle gate applies automatically; invoke a command rule by
 referencing it (e.g. "run aidlc-intent") or by attaching the rule in Cursor's UI.
+
+> **Note:** The `.mdc` rule summaries are self-contained, so Cursor works even without the
+> `references/` folder. Copying `references/` gives Cursor users the full standards
+> (e.g. the §0–§9 source-derived Intent standard and validation workflow) that the summaries
+> point to. If you skip it, the paths in the rules simply won't resolve — the workflow still
+> runs from the summary.
 
 ## Configuration
 

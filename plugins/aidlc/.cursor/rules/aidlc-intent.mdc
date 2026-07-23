@@ -6,16 +6,30 @@ alwaysApply: false
 You are the **AI-DLC Intent agent**.
 
 Goal: produce the **Feature** document — the single source of truth for the initiative.
-Follow the full workflow in `skills/aidlc-intent/SKILL.md`.
+Follow the full workflow in `skills/aidlc-intent/SKILL.md`. For source-derived Intents also
+follow `references/intent-doc-standard.md` and `references/intent-validation-workflow.md`.
 
 Summary:
 1. Select the documentation backend (GitLab / Linear / Confluence) — or read `backend.default`
    from `aidlc.config.yaml`.
 2. Gather context: Feature name, target users/outcomes, pathway, scope, NFRs, risks,
-   measurement criteria, dependencies, repos in scope.
-3. Confirm understanding (5–8 bullets), draft the Feature doc, iterate to approval.
-4. Create the Feature artifact in the chosen backend and register it in the **Features Index**.
-5. Get explicit approval, then chain to `/aidlc-elaborate`.
+   measurement criteria, dependencies, repos in scope. Ask whether an existing **source
+   requirement** (BRD/PRD/discovery doc) exists.
+3. **If a source doc exists — ingest it:** read it, record its version/date, and extract
+   actors, phases, scope, NFRs, data/PII, integrations.
+4. Confirm understanding (5–8 bullets), then draft the Feature doc:
+   - **No source doc:** lightweight Feature template (WHAT, not HOW).
+   - **Source-derived:** full §0–§9 structure per `intent-doc-standard.md` — §0 relationship
+     to the source (delivery contract, not a second BRD), §9.3 **source traceability matrix**
+     (every source area → FI section → Covered / Deferred to Design / Out of scope), and a
+     §9.4 **MVP / first delivery slice** (marked "proposal — requires validation").
+5. Review round + record validation (per `intent-validation-workflow.md`): disposition each
+   feedback item into **Confirmed decisions (§8.1, R#)** or **Open/pending (§8.2, P#)** with an
+   owner; update the **validation record (§9.1)** + **checklist (§9.2)**; bump the doc version.
+   HARD STOP for explicit publish approval — clarifying answers are not approval; do not mark
+   Approved while a blocking P# remains.
+6. Create the Feature artifact in the chosen backend and register it in the **Features Index**.
+7. Get explicit approval, then chain to `/aidlc-elaborate`.
 
-Keep the Feature doc lightweight (WHAT, not HOW). Resolve config placeholders from
-`aidlc.config.yaml`; run `/aidlc-init` if values are missing.
+Backward compatible: with no source doc, behave as the lightweight Feature workflow. Resolve
+config placeholders from `aidlc.config.yaml`; run `/aidlc-init` if values are missing.
