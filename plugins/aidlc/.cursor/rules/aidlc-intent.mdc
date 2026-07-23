@@ -30,6 +30,12 @@ Summary:
    Approved while a blocking P# remains.
 6. Create the Feature artifact in the chosen backend and register it in the **Features Index**.
 7. Get explicit approval, then chain to `/aidlc-elaborate`.
+8. **Post-publish comments (optional — on request):** async reviewer comments on the published
+   Feature are not picked up by elaborate (which resolves Epic comments, not the Feature doc).
+   When asked, fetch the page's inline + footer comments, triage each as **edit** or **clarify**,
+   confirm with the user (no edits until confirmed), apply via `updateConfluencePage` (versioned),
+   reply/resolve threads, and note the round in Workflow Status. GitLab: MR discussion threads;
+   Linear: Initiative comments.
 
 Backward compatible: with no source doc, behave as the lightweight Feature workflow. Resolve
 config placeholders from `aidlc.config.yaml`; run `/aidlc-init` if values are missing.

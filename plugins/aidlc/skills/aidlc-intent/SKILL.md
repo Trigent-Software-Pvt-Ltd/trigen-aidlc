@@ -52,6 +52,7 @@ At the start of this skill, prompt the user to select a documentation backend us
 | 8 | Get explicit approval | 7 | Workflow > Step 8 | User explicitly approves the Feature |
 | 9 | Update workflow status | 8 | Workflow > Step 9 | Status shows "Feature: ✅ Approved" |
 | 10 | Create work tracking project (optional) | 9 | Workflow > Step 10 | GitLab/Confluence: Jira Project created / Linear: N/A (built-in) |
+| 12 | Resolve post-publish review comments (optional) | 8 | Workflow > Step 12 | On request only: comments fetched, triaged (edit vs clarify), confirmed edits applied (versioned), threads replied/resolved, Workflow Status noted |
 
 ## Task Tracking
 
@@ -284,6 +285,36 @@ Include in Confluence doc as a collapsible section or separate child page. See P
 
     Also pass along the Feature name, Project key (if created for GitLab/Confluence), and any context gathered. Note: For GitLab/Confluence, Jira artifacts are created later in `/aidlc-verify`. For Linear, work tracking is already native.
 
+12. **Resolve post-publish review comments (optional — on request, may be a later session)**
+
+    The pre-publish gate (Step 5) only captures feedback discussed live. Reviewers usually
+    comment **asynchronously on the published artifact** — the moment otherwise unsupported.
+    When the user asks to process review comments on an already-published Feature, run this
+    lightweight loop.
+
+    > **Scope note:** This is NOT `/aidlc-elaborate`'s comment resolution. Elaborate operates
+    > on the Epic artifacts it created, never on the Feature/Intent document — so comments left
+    > on the Feature page are not picked up anywhere downstream. This step closes that gap.
+    > Keep it proportionate: the Intent is one document, so no parallel/phase-gated review
+    > machinery is needed.
+
+    **Confluence** (tools in @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md):
+    1. Fetch comments: `getConfluencePageInlineComments` + `getConfluencePageFooterComments`
+       for the Feature page.
+    2. Triage each comment: **edit** (changes the doc — scope/NFR/risk/decision) vs
+       **clarify** (reply only, no doc change).
+    3. Present the triage to the user and get confirmation. **HARD STOP** — apply no edits
+       until the user confirms (inherits the publish-gate discipline).
+    4. Apply confirmed edits via `updateConfluencePage` (creates a new version). Reflect any
+       material decisions in §8 (R#/P#) and bump the doc Version + Version History row.
+    5. Reply to and/or resolve each thread (`createConfluenceFooterComment` /
+       `createConfluenceInlineComment`).
+    6. Note the round in the Workflow Status table (and §9.1 validation record if source-derived).
+
+    **GitLab:** process discussion threads on the Feature MR; apply edits to `intent.md`,
+    commit and push, then resolve the threads.
+    **Linear:** process comments on the Initiative; edit the description and reply to each.
+
 ## Workflow Chain
 
 - **This is the first step** in the AI-DLC planning workflow
@@ -300,6 +331,7 @@ Include in Confluence doc as a collapsible section or separate child page. See P
 - Features Index updated with this Feature's entry (registered at creation, before approval).
 - Work tracking setup complete (GitLab/Confluence: Jira Project created or declined; Linear: N/A - native).
 - Approval to proceed to elaboration is explicitly confirmed.
+- **Post-publish comments (if any were raised and the user asked to process them):** triaged, confirmed edits applied (versioned), and threads replied/resolved per Step 12.
 
 ## Troubleshooting
 
