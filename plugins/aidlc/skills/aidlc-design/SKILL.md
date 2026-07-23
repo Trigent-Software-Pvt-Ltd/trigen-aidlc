@@ -22,9 +22,10 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 5b | Produce Deviation Analysis | 4, 5 | Workflow > Step 5b | Deviations from existing patterns documented, user decisions recorded |
 | 6 | Create ADRs | 5b | Workflow > Step 6 | ADR created for each significant decision (including deviations) |
 | 7 | Get approval on designs | 4, 5, 5b, 6 | Workflow > Step 7 | User approves domain model and patterns |
-| 8 | Store design artifacts (PUBLISH GATE) | 7 | Workflow > Step 8 | HARD STOP before creating anything. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Then GitLab: files in design/+adrs/ / Linear: Design Doc issues / Confluence: child pages. |
-| 9 | Update workflow status | 8 | Workflow > Step 9 | Status shows "Domain Design: ✅ Complete" |
-| 10 | **[Hard Gate] Await design approval** | 7, 8, 9 | Workflow > Step 10 | User explicitly approves design — REQUIRED before task generation begins |
+| 8 | Store design artifacts as "In Review" (PUBLISH GATE) | 7 | Workflow > Step 8 | HARD STOP before creating anything. User gives explicit publish approval. Artifacts stored in **"In Review"** state (Confluence: page published, Status field = In Review). |
+| 9 | Update workflow status → In Review | 8 | Workflow > Step 9 | Status shows "Domain Design: 🟡 In Review" |
+| 9a | Team review & comment resolution | 9 | Workflow > Step 9a | On request: comments fetched, triaged, confirmed edits applied (versioned), threads resolved; loop until no blocking comments |
+| 10 | **[Hard Gate] Final design approval → Approved** | 7, 8, 9, 9a | Workflow > Step 10 | User explicitly approves; status flips to "Domain Design: ✅ Approved". REQUIRED before task generation. |
 | 11 | Generate Task Specifications | 10 | Workflow > Step 11 | All tasks have valid id, title, sprint, size, ≥1 behaviour bullet |
 | 12 | Validate Task Spec schema | 11 | Workflow > Step 12 | All specs pass validation against references/task-spec.md |
 | 13 | Propose Sprint groupings | 11 | Workflow > Step 13 | Sprint plan produced; every task assigned to a sprint |
@@ -32,9 +33,10 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 14a | Consolidate and validate test scopes | 14 | Workflow > Step 14a | No-gap and overlap checks pass; summary table approved by user |
 | 14b | Write test scopes to epic artifact | 14a | Workflow > Step 14b | `## Test Scope` written to each epic artifact with sprint subsections and integration scenarios |
 | 15 | Refine team size recommendation | 13 | Workflow > Step 15 | Estimate updated with sprint data; >30% delta confirmed by user |
-| 16 | Store Task Specification artefacts (PUBLISH GATE) | 12, 13, 14b | Workflow > Step 16 | HARD STOP before creating anything. User gives explicit publish approval ("publish" / "approved" / "go ahead"). Then tasks stored in backend (GitLab: .md files / Linear: Issues / Confluence: pages). |
-
-| 17 | Update workflow status (tasks) | 16 | Workflow > Step 17 | Status shows "Task Specification: ✅ Complete" |
+| 16 | Store Task Specs as "In Review" (PUBLISH GATE) | 12, 13, 14b | Workflow > Step 16 | HARD STOP before creating anything. User gives explicit publish approval. Tasks stored in **"In Review"** state (Confluence: pages published, Status = In Review). |
+| 17 | Update workflow status → In Review | 16 | Workflow > Step 17 | Status shows "Task Specification: 🟡 In Review" |
+| 17a | Team review & comment resolution (task specs) | 17 | Workflow > Step 17a | On request: comments fetched, triaged, confirmed edits applied (versioned), threads resolved; loop until no blocking comments |
+| 17b | **[Hard Gate] Final task-spec approval → Approved** | 17a | Workflow > Step 17b | User explicitly approves; status flips to "Task Specification: ✅ Approved". REQUIRED before offering /aidlc-verify. |
 
 ## Task Tracking
 
@@ -378,10 +380,16 @@ Before starting, validate:
 
    > **HARD STOP — publish gate.** Do not create/commit/push any design artifact until the user gives explicit approval. Ask a blocking confirmation:
    >
-   > > "Here are the finalized design artifacts (domain model, logical design, ADRs). Reply **'publish'** and I'll store them in the [GitLab design/+adrs/ files / Linear Design Doc issues / Confluence child pages]. I will not create or update anything until you confirm."
+   > > "Here are the finalized design artifacts (domain model, logical design, ADRs). Reply **'publish'** and I'll store them **as \"In Review\"** in the [GitLab design/+adrs/ files / Linear Design Doc issues / Confluence child pages] so the team can review and comment. This is **not** final sign-off — I'll ask for that in Step 10 after comments are resolved. I will not create or update anything until you confirm."
    >
    > - Answering clarifying questions is NOT approval. Only "publish" / "approved" / "go ahead" proceeds.
    > - If the user requests changes, revise, re-present, and re-ask. Loop until explicit approval is given in this session.
+
+   > **Draft → Review → Approve lifecycle.** Publishing here does NOT mark the design approved.
+   > It stores the artifacts in an **"In Review"** state so the team can comment. A true
+   > *unpublished* Confluence draft is invisible to reviewers and can't be commented on, so we
+   > publish the page and use a **Status field/label of "In Review"** instead. Final approval
+   > (Step 10) flips the status to "✅ Approved" after comments are resolved (Step 9a).
 
    **GitLab** (see @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md):
    1. Ensure on the Feature branch: `git checkout <intent-branch>`
@@ -410,14 +418,45 @@ Before starting, validate:
    - Guidance deviation ADRs: Include reference to the standard being deviated from
    - Link back to Epic page in Confluence
    - Update Epic page with design doc links
+   - **Publish in review state:** the page is published (visible to reviewers) but its
+     **Status field is set to "In Review"**, not "Approved". Do NOT create an unpublished
+     Confluence draft — reviewers cannot see or comment on it.
 
 9. **Update workflow status** (backend-specific)
 
+   Set the design status to **In Review** (published for team review, not yet approved):
+
    | Backend | Action |
    |---------|--------|
-   | GitLab | Update `intent.md` frontmatter: set design phase status to "✅ Complete" |
-   | Linear | Update Initiative description: set "Domain Design" to "✅ Complete" |
-   | Confluence | Update Confluence page status table: set "Domain Design" to "✅ Complete" |
+   | GitLab | Update `intent.md` frontmatter: set design phase status to "🟡 In Review" |
+   | Linear | Update Initiative description: set "Domain Design" to "🟡 In Review" |
+   | Confluence | Update Confluence page status table: set "Domain Design" to "🟡 In Review" |
+
+   > Status flips to "✅ Approved" in Step 10, after the comment round in Step 9a.
+
+9a. **Team review & comment resolution (before final approval)**
+
+    The design is now published "In Review." Reviewers comment asynchronously on the artifact.
+    When the user asks to process review comments (or before requesting final approval), run
+    this lightweight loop — the same pattern as `/aidlc-intent` Step 12.
+
+    **Confluence** (tools in @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md):
+    1. Fetch comments: `getConfluencePageInlineComments` + `getConfluencePageFooterComments`
+       on each design/ADR page.
+    2. Triage each comment: **edit** (changes the design — model/pattern/ADR decision) vs
+       **clarify** (reply only, no change).
+    3. Present the triage and get confirmation. **HARD STOP** — apply no edits until confirmed.
+    4. Apply confirmed edits via `updateConfluencePage` (creates a new version). If an ADR
+       decision changes, update/supersede the ADR accordingly.
+    5. Reply to and/or resolve each thread (`createConfluenceFooterComment` /
+       `createConfluenceInlineComment`).
+    6. Note the round on the Epic/design page.
+
+    **GitLab:** process discussion threads on the design MR; apply edits to `design/`+`adrs/`,
+    commit and push, then resolve the threads.
+    **Linear:** process comments on the Design Doc issues; edit the description and reply.
+
+    Loop review rounds until no blocking comments remain, then proceed to Step 10.
 
 10. **Hard gate: Await explicit design approval before task generation**
 
@@ -432,13 +471,17 @@ Before starting, validate:
     > - Deviation Analysis: [summary of decisions]
     >
     > Before generating Task Specifications, please confirm:
-    > 1. The domain model accurately reflects the intended scope
-    > 2. The architectural patterns are acceptable
-    > 3. ADRs have been reviewed and decisions are recorded
+    > 1. Team review comments have been resolved (Step 9a)
+    > 2. The domain model accurately reflects the intended scope
+    > 3. The architectural patterns are acceptable
+    > 4. ADRs have been reviewed and decisions are recorded
     >
-    > **Reply "approved" or "yes" to proceed to task generation, or provide feedback to revise.**
+    > **Reply "approved" or "yes" to finalize the design and proceed to task generation, or provide feedback to revise.**
 
-    Do not proceed to step 11 until explicit approval is received. If the user provides feedback, return to the relevant design step, revise, re-store, and re-present.
+    On explicit approval, **flip the design status from "🟡 In Review" to "✅ Approved"** in the
+    backend (GitLab frontmatter / Linear description / Confluence status table) before continuing.
+
+    Do not proceed to step 11 until explicit approval is received. If the user provides feedback, return to the relevant design step (or Step 9a for comment items), revise, re-store, and re-present.
 
 11. **Generate Task Specifications**
 
@@ -615,10 +658,14 @@ Before starting, validate:
 
     > **HARD STOP — publish gate.** Present the full set of Task Specifications and Sprint groupings, then STOP and ask a blocking confirmation before creating anything:
     >
-    > > "Here are the Task Specifications and Sprint plan. Reply **'publish'** and I'll create the [GitLab task files / Linear Issues / Confluence Task pages]. I will not create or update anything until you confirm."
+    > > "Here are the Task Specifications and Sprint plan. Reply **'publish'** and I'll create the [GitLab task files / Linear Issues / Confluence Task pages] **as \"In Review\"** so the team can review and comment. This is **not** final sign-off — I'll ask for that in Step 17b after comments are resolved. I will not create or update anything until you confirm."
     >
     > - Answering clarifying questions is NOT approval. Only "publish" / "approved" / "go ahead" proceeds.
     > - If the user requests changes, revise, re-present, and re-ask. Loop until explicit approval is given in this session.
+
+    > **Draft → Review → Approve lifecycle.** As with the design artifacts, publishing stores
+    > the Task Specs in an **"In Review"** state (Confluence: page published with Status field
+    > "In Review", never an unpublished draft). Final approval (Step 17b) flips to "✅ Approved".
 
     Spawn creator subagents in parallel — one per Epic. Pass the validated Task Specs for that Epic.
 
@@ -628,13 +675,38 @@ Before starting, validate:
 
     **Confluence**: Create Task child pages under each Epic page using the Task Page Template from `references/planning-shared.md`. See `@${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md`.
 
-17. **Update workflow status** (backend-specific)
+17. **Update workflow status → In Review** (backend-specific)
+
+    Set the task-spec status to **In Review** (published for team review, not yet approved):
 
     | Backend | Action |
     |---------|--------|
-    | GitLab | Update `intent.md` frontmatter: set task spec status to "✅ Complete" |
-    | Linear | Update Initiative description: set "Task Specification" to "✅ Complete" |
-    | Confluence | Update Confluence page status table: set "Task Specification" to "✅ Complete" |
+    | GitLab | Update `intent.md` frontmatter: set task spec status to "🟡 In Review" |
+    | Linear | Update Initiative description: set "Task Specification" to "🟡 In Review" |
+    | Confluence | Update Confluence page status table: set "Task Specification" to "🟡 In Review" |
+
+17a. **Team review & comment resolution (task specs)**
+
+    Task Specs are now published "In Review." When the user asks to process review comments
+    (or before requesting final approval), run the same lightweight loop as Step 9a:
+    - **Confluence:** `getConfluencePageInlineComments` + `getConfluencePageFooterComments` on
+      each Task page → triage edit vs clarify → confirm (HARD STOP, no edits until confirmed) →
+      `updateConfluencePage` (versioned) → reply/resolve threads.
+    - **GitLab:** MR discussion threads on the task files; edit, commit/push, resolve.
+    - **Linear:** comments on the Task Issues; edit descriptions and reply.
+
+    Loop until no blocking comments remain, then proceed to Step 17b.
+
+17b. **Final approval → Approved** (hard gate)
+
+    Present the resolved Task Specs and ask a blocking confirmation:
+
+    > **Task Specifications — Review complete.** Comments have been resolved. Reply
+    > **"approved"** to finalize the Task Specifications, or provide feedback to revise.
+
+    On explicit approval, **flip the task-spec status from "🟡 In Review" to "✅ Approved"**
+    (GitLab frontmatter / Linear description / Confluence status table). Do not offer
+    `/aidlc-verify` until this approval is received.
 
     Then provide links to all created artefacts and offer to run `/aidlc-verify`:
     - **GitLab/Confluence**: Jira transfer
@@ -663,9 +735,10 @@ Before starting, validate:
 - Design artifacts stored in correct backend (GitLab: files committed / Linear: Issues created / Confluence: pages created)
 - Artifacts linked to Epic (GitLab: epic .md updated / Linear: Issues linked / Confluence: page links)
 - Brown-field ACL designed (if applicable)
-- Workflow status updated: "Domain Design: ✅ Complete"
+- Design published in **"In Review"** state; team review comments resolved (Step 9a)
+- Workflow status updated: "Domain Design: ✅ Approved" (flipped from In Review at Step 10 after final approval)
 
-**Task specification phase (steps 10-17):**
+**Task specification phase (steps 10-17b):**
 - Explicit design approval received from user (hard gate)
 - Task Specifications generated for all Epics (using `task-spec-generator` subagents)
 - All Task Specs validated against `references/task-spec.md` schema
@@ -676,8 +749,9 @@ Before starting, validate:
 - Test scope summary table presented and approved by user
 - Complete `## Test Scope` written to each epic artifact (GitLab: `epic.md` / Linear: Project comment / Confluence: Epic page) with per-sprint subsections and `### Epic-Level Integration Scenarios`
 - Team size recommendation refined with sprint data; >30% delta confirmed by user
-- Task Specification artefacts stored in correct backend
-- Workflow status updated: "Task Specification: ✅ Complete"
+- Task Specification artefacts stored in correct backend in **"In Review"** state
+- Team review comments on task specs resolved (Step 17a)
+- Final task-spec approval received (Step 17b); workflow status updated: "Task Specification: ✅ Approved"
 
 ## Troubleshooting
 

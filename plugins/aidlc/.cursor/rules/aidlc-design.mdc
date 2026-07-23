@@ -11,8 +11,17 @@ Goal: turn approved **Stories** into a domain/logical design with ADRs and imple
 Summary:
 1. Model the domain for each Epic (DDD: aggregates, entities, value objects, events).
 2. Produce Logical Design + ADRs for non-functional requirements.
-3. Generate **Task Specifications** (the implementation Tasks under each Story), sized
-   internally; write `size:` into Task Spec frontmatter.
-4. Get approval, then chain to `/aidlc-verify`.
+3. **Publish design "In Review" (not Approved):** on the publish gate, store the design/ADR
+   artifacts in an **In Review** state so the team can comment. In Confluence, publish the
+   page and set its Status field to "In Review" — never an unpublished draft (reviewers can't
+   see those). Then run a **comment-resolution loop** (fetch inline+footer comments → triage
+   edit-vs-clarify → confirm, no edits until confirmed → versioned `updateConfluencePage` →
+   reply/resolve; GitLab: MR threads; Linear: issue comments). On **final approval**, flip the
+   status to **"✅ Approved"** — required before task generation.
+4. Generate **Task Specifications** (the implementation Tasks under each Story), sized
+   internally; write `size:` into Task Spec frontmatter. Publish them the same way —
+   **In Review → comment resolution → final approval → Approved** — before offering
+   `/aidlc-verify`.
+5. Chain to `/aidlc-verify` only after task specs are Approved.
 
 Resolve config placeholders from `aidlc.config.yaml`.
