@@ -20,8 +20,9 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 4 | Create Domain Design | 3 | Workflow > Step 4 | Aggregates, entities, value objects, events defined (informed by existing patterns) |
 | 5 | Create Logical Design | 4 | Workflow > Step 5 | Patterns selected, NFR solutions documented |
 | 5b | Produce Deviation Analysis | 4, 5 | Workflow > Step 5b | Deviations from existing patterns documented, user decisions recorded |
+| 5c | Assemble design doc per template | 4, 5, 5b | Workflow > Step 5c | §1 MVP alignment + codebase decision, §2 architecture summary + Mermaid diagram, §10 Carried-from-Intent open items, §11 design AC checklist present (optional §4/§5/§8 when warranted) |
 | 6 | Create ADRs | 5b | Workflow > Step 6 | ADR created for each significant decision (including deviations) |
-| 7 | Get approval on designs | 4, 5, 5b, 6 | Workflow > Step 7 | User approves domain model and patterns |
+| 7 | Get approval on designs | 4, 5, 5b, 5c, 6 | Workflow > Step 7 | User approves domain model and patterns |
 | 8 | Store design artifacts as "In Review" (PUBLISH GATE) | 7 | Workflow > Step 8 | HARD STOP before creating anything. User gives explicit publish approval. Artifacts stored in **"In Review"** state (Confluence: page published, Status field = In Review). |
 | 9 | Update workflow status → In Review | 8 | Workflow > Step 9 | Status shows "Domain Design: 🟡 In Review" |
 | 9a | Team review & comment resolution | 9 | Workflow > Step 9a | On request: comments fetched, triaged, confirmed edits applied (versioned), threads resolved; loop until no blocking comments |
@@ -155,6 +156,8 @@ Before starting, validate:
    - **Service inventory** from the Feature document — identifies which repos are in scope and their pathway types (brown-field vs. green-field)
    - **Elaborate's structural findings** (if available) — look for "Service Context: \<name\>" child pages under the Epics Overview. These provide structural orientation (directory layout, naming conventions, module inventory) from the elaborate phase. Use for orientation only — Design conducts its own implementation-pattern analysis in Step 2b.
    - Project-level technical guidance (from Feature doc "Technical Guidance" section)
+   - **Intent MVP slice** — read the Feature/Intent doc's MVP / first-delivery slice (Intent §9.4 if the Intent was source-derived). The design **implements this MVP**, explicitly deferring the rest. If no MVP slice exists, treat the full approved scope as the build.
+   - **Intent open items** — read the Intent's open/pending items (§8.2 `P#`). Each is carried into the design with a concrete design action (see the "Carried from Intent" section of the Design Document Template).
 
 2. **Detect and confirm project type**
 
@@ -346,6 +349,29 @@ Before starting, validate:
    **Record the full deviation analysis table** (with a "Decision" column added) in the design documentation stored in Confluence (Step 8). This provides traceability — the team can see what was proposed, what existed, and what was decided.
 
    **If no pattern baseline exists** (green-field with no reference): Skip this step. The design is evaluated only against the technical guidance hierarchy.
+
+5c. **Assemble the design document per the Design Document Template**
+
+   Structure the design output using the **Design Document Template** in
+   @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md. Beyond the domain/logical model
+   already produced, ensure these sections are present:
+
+   - **§1 Design scope & MVP alignment** — restate the Intent MVP slice (from Step 1) as an
+     **In-MVP-vs-Deferred** table, and state the **codebase decision** (green-field vs
+     brown-field; for green-field, the target repo/module layout).
+   - **§2 Architecture summary** — architecture style + a **system architecture diagram as a
+     Mermaid ```mermaid flowchart```** (renders in GitHub and Confluence) + a layer/component
+     responsibilities table + external integrations.
+   - **§10 Carried from Intent (open in Design)** — a table of the Intent open items (`P#`
+     from Step 1), each with a concrete **design action** (resolve now with ADR / defer to
+     Tasks / config-driven / no code impact).
+   - **§11 Design acceptance criteria (phase gate)** — a checkbox list proving the design
+     phase is complete (MVP boundary reflected, domain model supports required behaviour, NFR
+     targets traceable to Intent/BRD, ADRs recorded, open items dispositioned).
+
+   Include the optional sections (§4 State machines, §5 Functional design by area, §8 API
+   surface) **when the domain warrants them** — e.g. entities with non-trivial lifecycles,
+   or a design that defines service endpoints.
 
 6. **Create ADRs**
    For each significant decision, create an ADR:
@@ -735,6 +761,7 @@ Before starting, validate:
 - Design artifacts stored in correct backend (GitLab: files committed / Linear: Issues created / Confluence: pages created)
 - Artifacts linked to Epic (GitLab: epic .md updated / Linear: Issues linked / Confluence: page links)
 - Brown-field ACL designed (if applicable)
+- Design document assembled per the Design Document Template: **§1 MVP alignment** (In-MVP-vs-Deferred + codebase decision), **§2 architecture summary with a Mermaid diagram**, **§10 Carried-from-Intent** open items (each with a design action), and **§11 design acceptance-criteria** checklist (optional §4 state machines / §5 functional-by-area / §8 API surface where warranted)
 - Design published in **"In Review"** state; team review comments resolved (Step 9a)
 - Workflow status updated: "Domain Design: ✅ Approved" (flipped from In Review at Step 10 after final approval)
 

@@ -1241,6 +1241,42 @@ What other options were evaluated?
 - Epic: <link>
 - Related ADRs: <links>
 
+## Design Document Template
+
+The design phase produces a domain/logical design plus ADRs. Whether stored as one page
+(Confluence) or split files (`design/domain-model.md`, `design/architecture.md`, `adrs/`),
+the design should cover the sections below. Sections marked *(optional — when applicable)*
+are included only when the domain warrants them.
+
+- **Metadata header** (table) — Document ID | Status (Draft/In Review/Approved) | AI-DLC Stage
+  (Stage 2 — Design) | Version | Date | Author(s) | **Prerequisites** (link to the approved
+  Intent + its version) | **Source BRD/requirement** (if any) | Confluence/Repo target
+- **§1 Design scope & MVP alignment** — restate the Intent MVP slice as an
+  **In-MVP-vs-Deferred** table so the build boundary is explicit. State the **codebase
+  decision** (green-field vs brown-field) and, for green-field, the target repo/module layout.
+- **§2 Architecture summary** — architecture style (e.g. modular monolith, microservices),
+  a **system architecture diagram** (Mermaid ```mermaid flowchart``` so it renders in
+  GitHub/Confluence), a component/layer-responsibilities table, and external integrations.
+- **§3 Domain model** — bounded contexts, aggregates & roots, entities, value objects, domain
+  events, repositories/factories (from the DDD guidance above).
+- **§4 State machines** *(optional — when entities have non-trivial lifecycles)* — key state
+  diagrams (e.g. application/session) with a transition-rules table.
+- **§5 Functional design by area** *(optional — when useful to trace to the source)* — per
+  functional area, mapped back to the source requirement's steps/sections.
+- **§6 Logical design & patterns** — architectural/integration patterns selected, with the
+  technical-guidance tiers applied and any deviations (see Deviation Analysis).
+- **§7 NFR design** — per-NFR design target traceable to Intent/BRD NFRs.
+- **§8 API surface** *(optional — when the design defines services/endpoints)* — high-level
+  method | path | purpose table; full OpenAPI deferred to Tasks.
+- **§9 ADRs** — links to the ADRs created for significant/deviation decisions.
+- **§10 Carried from Intent (open in Design)** — table of the Intent's open items (`P#`):
+  ID | Topic | **Design action** (resolve now with ADR / defer to Tasks / config-driven /
+  no code impact). Proves nothing from Intent was dropped silently.
+- **§11 Design acceptance criteria (phase gate)** — checkbox list proving the design phase is
+  complete (MVP boundary reflected, domain model supports the required behaviour, NFR targets
+  traceable, ADRs recorded, open items dispositioned). This is the in-document gate that
+  complements the skill's approval step.
+
 ## Atlassian MCP Operational Guidance
 
 **Atlassian Domain:** `<ATLASSIAN_CLOUD_ID>`

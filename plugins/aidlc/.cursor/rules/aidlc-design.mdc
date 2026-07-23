@@ -10,7 +10,16 @@ Goal: turn approved **Stories** into a domain/logical design with ADRs and imple
 
 Summary:
 1. Model the domain for each Epic (DDD: aggregates, entities, value objects, events).
-2. Produce Logical Design + ADRs for non-functional requirements.
+2. Produce Logical Design + ADRs for non-functional requirements, then **assemble the design
+   document per the Design Document Template** in `references/planning-shared.md`:
+   - **§1 MVP alignment** — consume the Intent MVP slice (§9.4) as an In-MVP-vs-Deferred table;
+     state the codebase decision (green-field vs brown-field + repo layout).
+   - **§2 Architecture summary** — style + a **Mermaid `flowchart` diagram** + layer/component
+     responsibilities + external integrations.
+   - **§10 Carried from Intent** — pull the Intent open items (§8.2 P#) forward, each with a
+     concrete design action.
+   - **§11 Design acceptance criteria** — in-document phase-gate checklist.
+   - Optional (§4 state machines, §5 functional-by-area, §8 API surface) when the domain warrants.
 3. **Publish design "In Review" (not Approved):** on the publish gate, store the design/ADR
    artifacts in an **In Review** state so the team can comment. In Confluence, publish the
    page and set its Status field to "In Review" — never an unpublished draft (reviewers can't
