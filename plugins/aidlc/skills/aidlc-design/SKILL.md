@@ -146,6 +146,15 @@ Before starting, validate:
    - Offer to run `/aidlc-elaborate` first (or `/aidlc-intent` if Feature missing)
    - Or allow override with explicit confirmation (see Override Pattern in @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md)
 
+5. **Resume detection (half-done design)**
+   Check the Feature status for this epic:
+   - **"Domain Design: ✅ Approved" but "Task Specification" not ✅** → the previous run stopped
+     at the Step 10 half-way point. **Skip the design half and resume at Step 11 (Generate Task
+     Specifications).** Tell the user: "Domain Design is already approved for this epic —
+     resuming at Task Specification generation."
+   - **Neither approved** → start from Step 1 (full run).
+   - **Both approved** → design is complete; point the user to `/aidlc-verify`.
+
 ## Workflow
 
 1. **Gather context**
@@ -506,6 +515,25 @@ Before starting, validate:
 
     On explicit approval, **flip the design status from "🟡 In Review" to "✅ Approved"** in the
     backend (GitLab frontmatter / Linear description / Confluence status table) before continuing.
+    At the same time, ensure the status table shows the **two distinct design outcomes** so it is
+    obvious the phase is only half done:
+
+    | Phase | Status |
+    |-------|--------|
+    | Domain Design | ✅ Approved |
+    | Task Specification | ⬜ Not started |
+
+    > **⚠️ HALF-WAY SIGNPOST — the design phase is NOT finished after this approval.**
+    > `/aidlc-design` has two halves in one run: **(1) Domain Design** (just approved) and
+    > **(2) Task Specifications** (steps 11–17b, not yet generated). If you continue now, proceed
+    > straight to Step 11. **If the run stops here (session ends / you step away), the epic is only
+    > half designed** — you must invoke `/aidlc-design` again for this epic to generate and approve
+    > the Task Specs. When pausing here, print this banner verbatim to the user:
+    >
+    > > ✅ **Domain Design approved for <Epic>.** Task Specifications are **NOT yet generated**.
+    > > This epic is **not ready for `/aidlc-verify`** until its Task Specifications are also
+    > > approved. To continue, run **`/aidlc-design`** again for this epic (it resumes at task
+    > > generation). Feature status now shows: **Domain Design ✅ / Task Specification ⬜**.
 
     Do not proceed to step 11 until explicit approval is received. If the user provides feedback, return to the relevant design step (or Step 9a for comment items), revise, re-store, and re-present.
 

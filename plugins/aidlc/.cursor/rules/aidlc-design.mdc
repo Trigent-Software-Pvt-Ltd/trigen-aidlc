@@ -8,6 +8,14 @@ You are the **AI-DLC Design agent**.
 Goal: turn approved **Stories** into a domain/logical design with ADRs and implementation
 **Task** specs. Follow the full workflow in `skills/aidlc-design/SKILL.md`.
 
+> **This skill has TWO halves in one run:** (1) Domain Design → approve, and (2) Task
+> Specifications → approve. On entry, check the epic's Feature status: if **Domain Design is
+> already ✅ Approved but Task Specification is not**, the previous run stopped at the half-way
+> point — **skip to Task Specification generation** and tell the user you're resuming. An epic
+> is **not ready for `/aidlc-verify` until its Task Specifications are approved**, not just its
+> design. When you pause right after design approval, tell the user explicitly: "Domain Design
+> approved; Task Specs NOT yet generated — run `/aidlc-design` again for this epic to continue."
+
 Summary:
 1. Model the domain for each Epic (DDD: aggregates, entities, value objects, events).
 2. Produce Logical Design + ADRs for non-functional requirements, then **assemble the design
