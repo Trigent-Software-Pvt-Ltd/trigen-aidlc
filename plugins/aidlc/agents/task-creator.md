@@ -322,57 +322,74 @@ Find the Task object in `tasks` array where `task_title` matches the current Tas
 
 **Task Spec format (v4.0+):** If `task.behaviour` is present, render from Task Spec fields:
 
+> **Ticket format (required).** Every Task/Story ticket MUST follow the full structure
+> below — the same section order for every ticket, so tickets read consistently across the
+> project. Task Specs deliberately omit Overview, User Story, and Goal, so **synthesize**
+> those: Overview = one line from the task title + primary behaviour; User Story = "As a
+> `<role from the Epic's Target Users>`, I want `<capability from the task title>`, so that
+> `<benefit tied to the Epic outcome>`"; Goal = one-line restatement of the deliverable.
+> Do NOT invent behaviour, files, or dependencies — only Overview/User Story/Goal/Scope
+> prose may be synthesized from existing Task Spec + Epic content. Omit an optional section
+> only when the source data is empty (write "None" for Dependencies/Out of Scope rather than
+> dropping the heading).
+
 ```bash
 cat > /tmp/task-description.md << 'EOF'
-**Task ID**: <task.task_id>
-**Size**: <score>
-**Sprint**: <task.sprint>
+## Overview
+<one line synthesized from task title + primary behaviour>
 
-## Behaviour
+## User Story
+As a <role from Epic Target Users>, I want <capability from task title>, so that <benefit tied to Epic outcome>.
 
-<for each item in task.behaviour>
-- [ ] <item>
-</for>
+## Scope
+<1-3 lines synthesized from task.behaviour — what this task delivers>
 
-<if task.rules is non-empty>
-## Rules
+## Out of Scope
+<if task.not_in_scope non-empty: one bullet per item; else: "None">
 
-<for each rule in task.rules>
-- <rule>
-</for>
-</if>
-
-<if task.files has any non-empty arrays>
-## Files
-
-<if task.files.modify> **Modify:** `<path>` (one per line) </if>
-<if task.files.create> **Create:** `<path>` (one per line) </if>
-<if task.files.reference> **Reference:** `<path>` (one per line) </if>
-</if>
-
-<if task.dependencies is non-empty>
 ## Dependencies
+<if task.dependencies non-empty: "- [<dep.type>] <dep.what> — <dep.rationale>" per dep; else: "None">
 
-<for each dep in task.dependencies>
-- [<dep.type>] <dep.what> — <dep.rationale>
-</for>
-</if>
+## What to build
+**Goal:** <one-line goal>
 
-<if task.risks is non-empty>
-## Risks
+**Implementation checklist (do all items):**
+<derive action items from task.files + task.behaviour>
+- CREATE <task.files.create path> — <purpose>
+- MODIFY <task.files.modify path> — <purpose>
+- <ADD/CONFIGURE ... per behaviour item, imperative voice>
 
-<for each risk in task.risks>
-- <risk>
-</for>
-</if>
+**Technical notes:**
+<from task.rules and design patterns; one bullet each; "None" if empty>
 
-<if task.not_in_scope is non-empty>
-## Not in Scope
+## Acceptance Criteria
+<group task.behaviour into logical AC groups; each observable outcome is a checkbox>
+**AC 1 — <group name>**
+- [ ] <behaviour item>
+**AC 2 — <group name>**
+- [ ] <behaviour item>
+**AC <n> — Verification steps**
+- [ ] Step 1: <manual check derived from a behaviour item>
+- [ ] Step 2: <...>
 
-<for each item in task.not_in_scope>
-- <item>
-</for>
-</if>
+## Test Cases
+<derive from the Epic's "## Test Scope" scenarios that map to this task/sprint; one line each>
+- TC-<AREA>-001: <scenario> (<Layer>, <Priority>)
+- TC-<AREA>-002: <scenario> (<Layer>, <Priority>)
+<if no scenarios resolve to this task, list the task's Sprint scenarios and note "sprint-level">
+
+## Definition of Done
+- Code merged to feature branch; PR description references <task.task_id>
+- Acceptance criteria demonstrated locally or via screen recording
+- Mapped test cases executed; evidence linked in a Jira comment
+- No P0/P1 bugs open for this task's scope
+
+## Metadata & References
+**Task ID:** <task.task_id> · **Size:** <score> · **Sprint:** <task.sprint>
+- Epic: <epic_jira_key>
+- Design doc: <design URL if available>
+- Task spec: <task source URL (Confluence page / GitLab file)>
+- Feature: <feature URL if available>
 EOF
 ```
 
