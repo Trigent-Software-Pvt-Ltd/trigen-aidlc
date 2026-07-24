@@ -36,7 +36,13 @@ Summary:
    reply/resolve; GitLab: MR threads; Linear: issue comments). On **final approval**, flip the
    status to **"✅ Approved"** — required before task generation.
 4. Generate **Task Specifications** (the implementation Tasks under each Story), sized
-   internally; write `size:` into Task Spec frontmatter. Publish them the same way —
+   internally; write `size:` into Task Spec frontmatter. **Generate at depth** per
+   `references/task-spec.md`: acceptance criteria with **concrete values** (Given/When/Then),
+   data contracts (typed fields + status codes), an error/edge-case table, UI states, and
+   per-task NFRs — no vague fillers. **Detail-sufficiency clarify gate:** for any value not
+   specified upstream (TTLs, thresholds, enum/feature lists, field sets), do NOT fabricate or
+   leave a silent placeholder — **ask the user** (with proposed defaults) or record it as an
+   explicit `[ASSUMED]` item; resolve all before publishing. Then publish the same way —
    **In Review → comment resolution → final approval → Approved** — before offering
    `/aidlc-verify`.
 5. Chain to `/aidlc-verify` only after task specs are Approved.

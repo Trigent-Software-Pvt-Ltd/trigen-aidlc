@@ -68,11 +68,14 @@ Rate each criterion 0-100:
 **Red flags**: "and other features", "etc.", "as needed", "TBD"
 
 ### 2. Task Quality (0-100)
-- Do all tasks have acceptance criteria?
+- Do all tasks have acceptance criteria **with concrete values** (not paraphrase)?
 - Are acceptance criteria testable (not vague)?
+- Do tasks with an API/data surface have a **data contract** (typed fields, status codes)?
+- Do tasks with inputs/state enumerate **error/edge cases** (not "handle gracefully")?
+- Are any `[ASSUMED]` values explicit rather than silently baked in?
 - Are user stories in proper format?
 
-**Red flags**: Missing AC, "should work correctly", no Given/When/Then
+**Red flags**: Missing AC, "should work correctly", no Given/When/Then, undefined data contracts, hand-waved error handling, silent placeholders. Treat vague-but-present sections as **High**-severity gaps (insufficient detail), not minor issues.
 
 ### 3. Technical Readiness (0-100)
 - Are integration points identified (APIs, services, databases)?

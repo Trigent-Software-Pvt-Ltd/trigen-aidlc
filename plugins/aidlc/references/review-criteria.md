@@ -71,9 +71,16 @@ These checklists are shared across skills. Each skill-specific rubric in Part 3 
 - [ ] `id` and `title` in frontmatter
 - [ ] `sprint` and `size` in frontmatter
 - [ ] `## Behaviour` section with at least one item
+- [ ] `## Acceptance Criteria` with concrete Given/When/Then values (required for size ≥ 2) — **not** paraphrase of Behaviour
+- [ ] `## Data Contract` present if the task has an API/data surface (typed fields + status codes)
+- [ ] `## Errors & Edge Cases` table present if the task has inputs/external calls/state
+- [ ] `## UI States` present for UI tasks; `## NFRs` present where a measurable target applies
+- [ ] `## Assumptions` — any `[ASSUMED]` items are explicit and were acknowledged (no silent placeholders)
 - [ ] `## Rules` section (optional — omit if no hard constraints)
 - [ ] `files` frontmatter (optional — omit if no file-level detail available)
 - [ ] `dependencies` frontmatter (optional)
+
+> **Insufficient detail is a gap, not just a missing section.** A spec that has the sections but fills them vaguely (contracts without types, ACs without values, "handle errors gracefully") fails completeness and is a **High**-severity finding — treat it the same as a missing requirement, not a style nit.
 
 **User story format (legacy, valid through AIDLC 3.9.x):**
 - [ ] Summary present
@@ -101,6 +108,8 @@ Flag and deduct points for any of the following patterns:
 | **Untestable criteria** | "should be fast", "user-friendly", "secure" | Add measurable targets |
 | **Missing specifics** | "connects to backend" without naming APIs/services | Identify specific APIs/services |
 | **Boilerplate content** | Sections copied without customisation | Rewrite with project-specific detail |
+| **Undefined contract** | "returns the data", "accepts the request" without field names/types/status codes | Specify the data contract |
+| **Hand-waved errors** | "handle errors gracefully", "validate input" without enumerated cases | Enumerate error/edge cases with codes |
 | **Unmeasurable NFRs** | "good performance", "high availability" | Add specific targets (see 2.3) |
 | **Undefined scope** | "the system should handle X" — which system? | Clarify system boundaries |
 | **Unclear referents** | Pronouns with unclear referents in technical context | Use explicit names |

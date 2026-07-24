@@ -49,13 +49,24 @@ You receive:
      - No match → `files.create` with a path inferred from the naming pattern (e.g. if handlers follow `src/<domain>/handlers/<Name>Handler.cs`, derive the new path from that convention)
      - Cannot determine → use a module-level hint (e.g. `src/billing/`) rather than omitting `files`
    - **Skip for green-field with no baseline** — derive paths from technical guidance naming conventions instead
-5. **Elaborate each task using Task Spec format**:
+5. **Elaborate each task using Task Spec format** (to the depth in `references/task-spec.md`):
    - `behaviour`: Observable outcomes derived from the domain model and Epic acceptance criteria
+   - `acceptance_criteria`: Given/When/Then scenarios with **concrete values** (not paraphrase of behaviour) — happy path + each error/edge scenario. Required for size ≥ 2.
+   - `data_contract`: For any task with an API/message/persistence surface — request/response shapes with **field names + types**, status codes, and which values are server-authoritative.
+   - `errors`: For any task with inputs/external calls/state — a table (as rows) of condition → result: validation (with codes), not-found, expiry, conflict/duplicate, rate limit, empty state, timeout. Enumerate; never write "handle errors gracefully".
+   - `ui_states`: For UI tasks — loading / empty / error / success / disabled states.
+   - `nfrs`: Per-task measurable targets with numbers (latency, rate limit, payload, retention), traceable to design/Intent NFRs.
    - `rules`: Hard constraints derived from NFRs, ADRs, and logical design decisions
    - `files`: Populated from the investigation in step 4 — use verified paths from tool lookups; fall back to module-level hints only when investigation is inconclusive; do not invent paths from the domain model alone
    - `dependencies`: Classify as blocking/non-blocking; include environment context
    - `risks`: Task-specific risks escalated from Epic-level risks or identified in the design
    - `not_in_scope`: Derived from Epic scope boundaries and out-of-scope items in the Feature
+
+5b. **Depth & clarify (no invented precision).** For each concrete value a spec needs (TTLs, rate-limit thresholds, field lists, enum values, status codes, size limits, feature entitlements), source it from the design/ADRs/Intent. If it is **not** specified there:
+   - Do **not** fabricate a confident value and do **not** leave a vague placeholder.
+   - Add it to that task's `assumptions` as an `[ASSUMED]` item with a proposed sensible default (e.g. `"[ASSUMED] session TTL = 30 min — confirm"`), **and**
+   - Surface it in the top-level `clarify_questions` array so the parent `/aidlc-design` skill can ask the user before publishing.
+   The spec is written with the assumed default so it is complete and testable, but every assumption is visible for confirmation.
 6. **Right-size tasks**:
    - Target the 3-5 range (Fibonacci)
    - Combine trivial work (size 1-2) unless it has a distinct concern
@@ -115,6 +126,24 @@ Return valid JSON. Each task must conform to the schema in `references/task-spec
         "<observable outcome 1>",
         "<observable outcome 2>"
       ],
+      "acceptance_criteria": [
+        "Given <concrete precondition> When <action with concrete values> Then <concrete result incl. status/values>"
+      ],
+      "data_contract": {
+        "request": "<fields + types, or n/a>",
+        "response": "<fields + types + status codes, or n/a>",
+        "server_authoritative": ["<values the server computes/ignores from client>"]
+      },
+      "errors": [
+        {"condition": "<e.g. invalid tier>", "result": "<e.g. 400 with error code>"}
+      ],
+      "ui_states": ["loading", "empty", "error", "success"],
+      "nfrs": [
+        "<measurable target with a number, e.g. rate limit 20/min/IP>"
+      ],
+      "assumptions": [
+        "[ASSUMED] <value> = <default> — confirm"
+      ],
       "rules": [
         "<hard constraint derived from NFR or ADR>"
       ],
@@ -124,6 +153,13 @@ Return valid JSON. Each task must conform to the schema in `references/task-spec
       "not_in_scope": [
         "<boundary item>"
       ]
+    }
+  ],
+  "clarify_questions": [
+    {
+      "task_id": "U01-T01",
+      "question": "<what value is missing and why it matters>",
+      "proposed_default": "<the [ASSUMED] value used so the spec stays complete>"
     }
   ],
   "cross_epic_concerns": [
@@ -146,13 +182,19 @@ Return valid JSON. Each task must conform to the schema in `references/task-spec
 ### Rendering Note
 
 When the parent agent stores artefacts, this JSON is rendered into the Task Spec markdown format defined in `references/task-spec.md`:
-- `behaviour`, `rules`, `risks`, `not_in_scope` → Markdown body sections
+- `behaviour`, `acceptance_criteria`, `data_contract`, `errors`, `ui_states`, `nfrs`, `rules`, `assumptions`, `risks`, `not_in_scope` → Markdown body sections (`## Acceptance Criteria`, `## Data Contract`, `## Errors & Edge Cases`, `## UI States`, `## NFRs`, `## Assumptions`, etc.)
+- `errors` renders as a two-column table (Condition | Result); `data_contract` as request/response blocks
 - All other fields → YAML frontmatter
+- `clarify_questions` is NOT rendered into the spec — it is returned to `/aidlc-design` for the sufficiency/clarify gate
 
 ## Quality Checks
 
 Before returning:
 - [ ] All tasks have at least one `behaviour` bullet
+- [ ] Every task with `size` ≥ 2 has `acceptance_criteria` with **concrete values** (Given/When/Then), not paraphrase
+- [ ] Tasks with an API/data surface have a `data_contract` (typed fields + status codes); tasks with inputs/state have an `errors` table; UI tasks have `ui_states`; measurable-NFR tasks have `nfrs` with numbers
+- [ ] No vague fillers ("appropriate", "as needed", "handle gracefully", "etc.") anywhere
+- [ ] Every value not specified upstream appears as an `[ASSUMED]` item AND in `clarify_questions` — no silent placeholders, no fabricated precision
 - [ ] `id` fields follow `U\d{2}-T\d{2}` format with no gaps in sequence
 - [ ] `title` is ≤80 characters for each task
 - [ ] `sprint` is assigned for every task (preliminary, confirmed by parent agent)

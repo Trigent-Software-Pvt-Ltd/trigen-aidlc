@@ -27,8 +27,9 @@ Bridge from planning to implementation by creating Domain Designs, Logical Desig
 | 9 | Update workflow status → In Review | 8 | Workflow > Step 9 | Status shows "Domain Design: 🟡 In Review" |
 | 9a | Team review & comment resolution | 9 | Workflow > Step 9a | On request: comments fetched, triaged, confirmed edits applied (versioned), threads resolved; loop until no blocking comments |
 | 10 | **[Hard Gate] Final design approval → Approved** | 7, 8, 9, 9a | Workflow > Step 10 | User explicitly approves; status flips to "Domain Design: ✅ Approved". REQUIRED before task generation. |
-| 11 | Generate Task Specifications | 10 | Workflow > Step 11 | All tasks have valid id, title, sprint, size, ≥1 behaviour bullet |
-| 12 | Validate Task Spec schema | 11 | Workflow > Step 12 | All specs pass validation against references/task-spec.md |
+| 11 | Generate Task Specifications | 10 | Workflow > Step 11 | Specs generated at required depth (AC with concrete values, data contracts, error/edge tables, UI states, NFRs); clarify_questions returned |
+| 11a | **[Hard Gate] Detail sufficiency & clarify** | 11 | Workflow > Step 11a | All clarify questions / `[ASSUMED]` items resolved with the user or explicitly accepted as labelled assumptions — no silent placeholders |
+| 12 | Validate Task Spec schema | 11a | Workflow > Step 12 | All specs pass validation against references/task-spec.md (incl. depth/sufficiency rules) |
 | 13 | Propose Sprint groupings | 11 | Workflow > Step 13 | Sprint plan produced; every task assigned to a sprint |
 | 14 | Spawn test scope sub-agents | 11, 13 | Workflow > Step 14 | One sub-agent per sprint + one per epic launched in parallel |
 | 14a | Consolidate and validate test scopes | 14 | Workflow > Step 14a | No-gap and overlap checks pass; summary table approved by user |
@@ -266,19 +267,20 @@ Before starting, validate:
    - [ ] At least 2 Tasks exist with acceptance criteria
    - [ ] NFRs have measurable targets (not just "fast" or "secure")
    - [ ] Integration points are identified (APIs, services, databases)
+   - [ ] **Implementation detail is resolvable** — data contracts (field names/types), concrete values (TTLs, thresholds, enum/entitlement lists), and error/edge cases are either specified upstream or can be turned into explicit clarify questions. Vague ACs and undefined contracts are gaps, not "documented."
    - [ ] For brownfield: existing code patterns are understood
 
    ### Confidence Scoring
 
-   Rate each factor 0-20 points:
+   Rate each factor 0-20 points. **Score for depth, not just presence** — a section that exists but is vague (e.g. an "API surface" with only method/path and no schemas, or ACs without concrete values) scores in the lower half, not full marks.
 
    | Factor | Score | Notes |
    |--------|-------|-------|
    | Epic scope clarity | /20 | Clear boundaries, defined outcomes |
-   | Task quality | /20 | Testable acceptance criteria |
+   | Task quality | /20 | Testable acceptance criteria **with concrete values**, not paraphrase |
+   | Detail sufficiency | /20 | Data contracts (typed fields, status codes) and error/edge cases specified or clarifiable — **not** hand-waved |
    | NFR specificity | /20 | Measurable targets with baselines |
-   | Technical context | /20 | Integration points, dependencies known |
-   | Architectural constraints | /20 | Patterns, limitations documented |
+   | Technical context | /20 | Integration points, dependencies, architectural constraints known |
    | **Total** | /100 | |
 
    ### Confidence Thresholds
@@ -558,6 +560,28 @@ Before starting, validate:
 
     If the project has existing user story tasks (detected by "As a..." or "Given/When/Then" content), offer to regenerate them as Task Specs. The user can decline and keep the old format — both are supported through AIDLC 3.9.x.
 
+    Each generator produces specs at the depth in `@${CLAUDE_PLUGIN_ROOT}/references/task-spec.md` (acceptance criteria with concrete values, data contracts, error/edge tables, UI states, per-task NFRs) and returns a `clarify_questions` array for any value it had to assume.
+
+11a. **[Hard Gate] Detail sufficiency & clarify — no silent placeholders**
+
+    Before validating and publishing specs, consolidate the `clarify_questions` returned by all
+    `task-spec-generator` agents (plus any `[ASSUMED]` items in the specs). Then:
+
+    1. If there are **no** open questions, continue to Step 12.
+    2. If there are open questions, **STOP and ask the user** — present each as a concrete
+       question with the proposed default, using `AskUserQuestion` where possible. For example:
+       > "A few details weren't specified upstream. I've filled sensible defaults — confirm or correct:
+       > • Session TTL — proposed **30 min**
+       > • Rate limit — proposed **20 req/min/IP**
+       > • Standard vs Enterprise feature list — proposed **[…]**"
+    3. Apply the user's answers to the affected specs. For any item the user chooses to leave as
+       a default, keep it under `## Assumptions` labelled `[ASSUMED]` so it stays visible.
+
+    **Do not proceed to Step 12 with unresolved, unlabelled gaps.** The goal: every spec is either
+    grounded in a confirmed value or carries an explicit, user-acknowledged assumption — never a
+    silent placeholder or vague filler. This is the sufficiency gate that keeps the downstream
+    Jira stories unambiguous.
+
 12. **Validate Task Spec schema**
 
     For each generated Task Spec, validate against `@${CLAUDE_PLUGIN_ROOT}/references/task-spec.md`:
@@ -795,7 +819,8 @@ Before starting, validate:
 
 **Task specification phase (steps 10-17b):**
 - Explicit design approval received from user (hard gate)
-- Task Specifications generated for all Epics (using `task-spec-generator` subagents)
+- Task Specifications generated for all Epics (using `task-spec-generator` subagents) at required depth — acceptance criteria with concrete values, data contracts, error/edge tables, UI states, and per-task NFRs where applicable
+- Detail-sufficiency gate cleared (Step 11a): every clarify question / `[ASSUMED]` item resolved with the user or explicitly accepted as a labelled assumption — no silent placeholders
 - All Task Specs validated against `references/task-spec.md` schema
 - Sprint plan produced with all tasks assigned to a sprint
 - Test scope sub-agents spawned in parallel (one per sprint + one per epic)

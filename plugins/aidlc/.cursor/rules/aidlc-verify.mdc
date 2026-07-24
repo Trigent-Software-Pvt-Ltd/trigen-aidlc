@@ -10,7 +10,10 @@ Goal: verify readiness and create the work-tracking artifacts. Follow the full w
 
 Summary:
 1. Detect the backend from existing artifacts (do not re-prompt).
-2. Run readiness checks (completeness, sizing, dependencies, risks).
+2. Run readiness checks (completeness, sizing, dependencies, risks). **Insufficient detail is a
+   gap, not a style nit:** flag vague acceptance criteria, undefined data contracts, hand-waved
+   error handling, and silent placeholders as High-severity gaps (same as a missing requirement),
+   not just missing sections.
 3. Create the work-tracker hierarchy: **Feature → Epic → grouping → leaf**. Types come from
    `aidlc.config.yaml` (`jira.issueTypes` / `ado.issueTypes`; defaults Epic → Story → Task).
    The grouping is tagged `aidlc:sprint` (the stable identifier, not the type). In Jira the leaf

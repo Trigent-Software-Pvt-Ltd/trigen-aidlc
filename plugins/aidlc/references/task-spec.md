@@ -52,7 +52,13 @@ Human-readable sections consumed by agents as natural language. Agents read thes
 | Section | Required | Purpose |
 |---------|----------|---------|
 | `## Behaviour` | Yes | Observable outcomes - the acceptance test list, what "done" looks like. At least one bullet point required. |
+| `## Acceptance Criteria` | **Yes** (unless size 1) | Given/When/Then scenarios with **concrete values**, not paraphrase. Each observable behaviour maps to at least one scenario. Include the happy path plus the error/edge scenarios from the Errors table. Example: "Given `{tier:"Standard"}` When `POST /x` Then `201` with `{id,token}`, TTL 30 min". |
+| `## Data Contract` | **Yes if** the task exposes/consumes an API, message, or persists data | Request and response shapes with **field names + types**, status codes, and which values are server-authoritative. Omit only for tasks with no data surface (pure UI layout, config). |
+| `## Errors & Edge Cases` | **Yes if** the task has inputs, external calls, or state | Table of condition → result: validation failures (with status codes), not-found, expiry, conflict/duplicate, rate limits, empty/zero states, timeouts. No "handle errors gracefully" hand-waving — enumerate them. |
+| `## UI States` | **Yes if** the task renders UI | The states the surface must handle: loading, empty, error, success, disabled/permission. |
+| `## NFRs` | **Yes if** a measurable target applies | Per-task non-functional targets with numbers (latency, rate limit, payload size, retention), traceable to the design/Intent NFRs. |
 | `## Rules` | No | Hard constraints that bound the solution. Include when constraints would not be obvious from Behaviour alone. |
+| `## Assumptions` | **Yes if** any detail was assumed | `[ASSUMED]`-labelled items filled with a default because the input did not specify (e.g. `[ASSUMED] session TTL = 30 min — confirm`). Never leave a silent placeholder; either the value is specified upstream or it appears here for confirmation. |
 | `## Risks` | No | One-liner per risk with mitigation. Escalates from Epic-level risks that affect this specific task. |
 | `## Not in Scope` | No | Explicit boundaries. Include when scope could be misread or is non-obvious. |
 
@@ -69,6 +75,13 @@ Human-readable sections consumed by agents as natural language. Agents read thes
 7. `type` in each dependency must be `blocking` or `non-blocking`.
 8. `## Behaviour` must be present and contain at least one bullet point.
 9. No other frontmatter fields are permitted (unknown fields cause a validation warning).
+10. **Sufficiency (depth) rules** — a spec fails validation (not just a warning) when:
+    - `size` ≥ 2 and `## Acceptance Criteria` is missing, or its scenarios are paraphrase without concrete values.
+    - the task has a data/API surface but no `## Data Contract` with typed fields and status codes.
+    - the task has inputs/external calls/state but no `## Errors & Edge Cases` table.
+    - the task renders UI but has no `## UI States`.
+    - a measurable NFR applies but no `## NFRs` numbers are given.
+11. **No silent placeholders.** Any value that was not specified upstream must appear as an `[ASSUMED]` item under `## Assumptions` (with a proposed default to confirm), or be resolved via a clarify question during `/aidlc-design`. Vague fillers ("appropriate", "as needed", "handle gracefully", "etc.") in Behaviour/AC/Rules fail validation.
 
 ---
 
