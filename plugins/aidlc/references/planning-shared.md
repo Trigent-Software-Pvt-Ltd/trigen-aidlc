@@ -288,28 +288,35 @@ Select an option to continue.
 
 ## Jira Artifact Hierarchy
 
-When transferring from Confluence to Jira, use this hierarchy:
+When transferring to the work tracker, the AI-DLC hierarchy maps to issue types that are **configurable** in `aidlc.config.yaml` (`jira.issueTypes` / `ado.issueTypes`). Defaults:
 
 ```
-Project ← Optional top-level container
-└── Feature
-    └── Epic
-        └── Story
-            └── Task / Sub-task
+Project (optional)        aidlc:project
+└── Feature               aidlc:feature
+    └── Epic              aidlc:epic
+        └── grouping      aidlc:sprint    (default type: Jira "Story" / ADO "User Story")
+            └── leaf                       (default type: "Task")
 ```
 
-**Sprint** is a scheduling grouping of Stories/Tasks within an Epic — it is not a hierarchy level. Sprints group related Stories/Tasks for scheduling and are tracked separately from the parent hierarchy.
+The **grouping** work-item is what earlier versions created as a literal "Sprint" issue type. It is now created as the configured `grouping` type (default **Story**) and is **always tagged `aidlc:sprint`**. Every skill finds grouping items by that **label, never by issue type** — so the type can vary per backend without breaking retrieval.
 
-### Jira Issue Types and Labels
+**Leaf attachment** depends on `leafAttach`:
+- **Jira** (`leafAttach: "link"`) — Story and Task are the same hierarchy level, so the Task is parented to the **Epic** and joined to its Story via an issue link (`linkType`, default "Relates").
+- **ADO** (`leafAttach: "parent"`) — Task nests natively under User Story.
 
-| Jira Issue Type | Label |
-|-----------------|-------|
-| Project | `aidlc:project` |
-| Feature | `aidlc:feature` |
-| Epic | `aidlc:epic` |
-| Story | `aidlc:story` |
-| Task / Sub-task | — |
-| Sprint (scheduling grouping) | `aidlc:sprint` |
+**Sprint** remains an internal *scheduling* concept (grouping tasks by phase/type for planning and the `/aidlc-sprint` build cycle); it is materialized as the grouping work-item above, not as a separate Jira issue type.
+
+### Issue Types and Labels
+
+| Role | Default Jira type | Default ADO type | Label |
+|------|-------------------|------------------|-------|
+| Project (optional) | Project | — | `aidlc:project` |
+| Feature | Feature | Feature | `aidlc:feature` |
+| Epic | Epic | Epic | `aidlc:epic` |
+| Grouping (was "Sprint") | Story | User Story | `aidlc:sprint` + `sprint-type:<backend\|frontend\|fullstack>` |
+| Leaf | Task | Task | — |
+
+Types come from `jira.issueTypes` / `ado.issueTypes`; the **labels are stable regardless of the configured type**. (The legacy `aidlc:story` label is retained only for backward compatibility and is not applied by the current transfer.)
 
 ## Jira Project (Initiative) Template
 
@@ -403,19 +410,23 @@ Project ← Optional top-level container
 
 See **Template Standardization** section for format details.
 
-## Jira Sprint Template
+## Jira Grouping (Sprint) Template
 
-- Summary: "Sprint: <Sprint Description>"
+Created as the configured `jira.issueTypes.grouping` type (default **Story**; ADO **User Story**), tagged `aidlc:sprint`.
+
+- Issue type: `jira.issueTypes.grouping` (default "Story")
+- Summary: "<Sprint Description>"
 - Description:
-  - Scope summary (what this Sprint delivers)
+  - Scope summary (what this grouping delivers)
   - Phase and Lane assignment (e.g., "Phase 1, Lane A")
-  - Tasks included (list of child Tasks)
-  - Dependencies (other Sprints — blocks/blocked by with Jira keys)
+  - Tasks included (list of leaf items)
+  - Dependencies (other groupings — blocks/blocked by with Jira keys)
   - Whether on the critical path (yes/no)
   - Team assignment (if specified)
   - Estimated duration
 - Parent: The Epic
-- Label: `aidlc:sprint`
+- Label: `aidlc:sprint` + `sprint-type:<backend|frontend|fullstack>`
+- Leaf items attach per `leafAttach` (Jira: linked; ADO: nested)
 
 ## Jira Task Template
 
@@ -1169,7 +1180,7 @@ Domain Design / ADRs
 (Optional) Project context → Jira Project (aidlc:project label)
 Confluence Feature Document → Jira Feature (aidlc:feature label, child of Project if exists)
 Confluence Epic Page → Jira Epic (aidlc:epic label, child of Feature)
-Proposed Sprints (Epics Overview) → Jira Sprint (aidlc:sprint label, grouping Tasks)
+Proposed Sprints (Epics Overview) → grouping work-item (default type Story, `aidlc:sprint` label, grouping the leaf Tasks)
 Confluence Task Page → Jira Task (child of Sprint)
 Sprint Execution Plan → Jira issue links ("blocks"/"is blocked by") + phase/lane metadata in Sprint descriptions
 ```
@@ -1308,9 +1319,9 @@ which acli || echo "acli not installed - see: https://developer.atlassian.com/cl
 If `acli` is available, use it for Jira operations:
 1. Confirm the Jira project key (never assume a default)
 2. View issues: `acli jira workitem view PROJ-123 --json`
-3. Create issues: `acli jira workitem create --project "PROJ" --type "Sprint" --summary "Title" --description-file desc.md`
+3. Create issues: `acli jira workitem create --project "PROJ" --type "Story" --summary "Title" --description-file desc.md` (grouping type is configurable; the `aidlc:sprint` label is the stable identifier)
 4. Edit issues: `acli jira workitem edit PROJ-123 --label "aidlc:epic"`
-5. Search issues: `acli jira workitem search --project "PROJ" --jql "type = Sprint"`
+5. Search issues: `acli jira workitem search --project "PROJ" --jql "labels = aidlc:sprint"` (find AI-DLC grouping items by their stable label, not by issue type — the type is configurable)
 
 If `acli` is not available, fall back to Atlassian MCP:
 1. Verify issue types using `getJiraProjectIssueTypesMetadata`
@@ -1536,10 +1547,10 @@ acli auth login  # Interactive login (one-time setup)
 |-----------|---------|
 | View issue | `acli jira workitem view PROJ-123 --json` |
 | View with fields | `acli jira workitem view PROJ-123 --fields summary,description,status,issuetype --json` |
-| Search issues | `acli jira workitem search --project "PROJ" --jql "type = Sprint AND status = Open"` |
-| Create issue | `acli jira workitem create --project "PROJ" --type "Sprint" --summary "Title" --description "Body"` |
-| Create from file | `acli jira workitem create --project "PROJ" --type "Sprint" --summary "Title" --description-file desc.md` |
-| Create with parent | `acli jira workitem create --project "PROJ" --type "Sprint" --summary "Title" --parent "PROJ-100"` |
+| Search issues | `acli jira workitem search --project "PROJ" --jql "labels = aidlc:sprint AND status = Open"` (grouping items are found by the `aidlc:sprint` label, not by issue type) |
+| Create issue | `acli jira workitem create --project "PROJ" --type "Story" --summary "Title" --description "Body"` |
+| Create from file | `acli jira workitem create --project "PROJ" --type "Story" --summary "Title" --description-file desc.md` |
+| Create with parent | `acli jira workitem create --project "PROJ" --type "Story" --summary "Title" --parent "PROJ-100"` |
 | Edit issue | `acli jira workitem edit PROJ-123 --summary "New Title"` |
 | Add label | `acli jira workitem edit PROJ-123 --label "aidlc:epic"` |
 | Add comment | `acli jira workitem comment add PROJ-123 --body "Comment text"` |
@@ -1678,11 +1689,11 @@ acli jira workitem create \
   --label "aidlc:epic" \
   --json
 
-# Parse the key from JSON output, then create child Sprints
+# Parse the key from JSON output, then create child grouping items (default type Story)
 acli jira workitem create \
   --project "PROJ" \
-  --type "Sprint" \
-  --summary "Sprint: Implement login form" \
+  --type "Story" \
+  --summary "Implement login form" \
   --description-file sprint-login.md \
   --label "aidlc:sprint" \
   --parent "PROJ-123"

@@ -64,6 +64,13 @@ You will receive a JSON object with the following structure:
     "field_name": "Story Points",
     "field_id": "customfield_10016"
   },
+  "issue_types": {
+    "epic": "Epic",
+    "grouping": "Story",
+    "leaf": "Task"
+  },
+  "leaf_attach": "link",
+  "link_type": "Relates",
   "cloud_id": "<atlassian-cloud-id>",
   "region_url": "https://us.sentry.io"
 }
@@ -101,6 +108,12 @@ You will receive a JSON object with the following structure:
 - `story_points_field`: Story Points field configuration (or `null` if not configured)
   - `field_name`: Human-readable field name (e.g., "Story Points")
   - `field_id`: Jira field ID. `customfield_10016` is correct for the vast majority of Jira Cloud projects and should always be tried first. Common fallbacks in order: `customfield_10028` (classic company-managed), `customfield_10016` is preferred over `story_points` (alias, rarely works via API).
+- `issue_types`: Backend issue-type names to create (from `aidlc.config.yaml`; parent agent resolves per backend). Defaults if absent: `epic: "Epic"`, `grouping: "Story"`, `leaf: "Task"`.
+  - `epic`: type for the Epic container.
+  - `grouping`: type for the work-item that groups the leaf items (this is the item historically created as "Sprint"; the internal `aidlc:sprint` label is still applied so retrieval is unaffected).
+  - `leaf`: type for the implementation items under each grouping.
+- `leaf_attach`: how the leaf attaches to its grouping — `"parent"` (native parent/child; e.g. ADO User Story → Task, or any backend where the leaf type is a valid child of the grouping type) or `"link"` (leaf parented to the **Epic** and joined to its grouping via an issue link — required in Jira when grouping and leaf are the same hierarchy level, e.g. Story + Task). Default `"link"` for Jira, `"parent"` for ADO.
+- `link_type`: issue-link type used when `leaf_attach: "link"`. Default `"Relates"` (present in every Jira project). A semantic type like `"is part of"` may be used only if it exists in the instance.
 - `cloud_id`: Atlassian Cloud ID for API calls
 - `region_url`: Optional Sentry region URL
 
@@ -125,7 +138,7 @@ EOF
 ```bash
 acli jira workitem create \
   --project "<epic.primary_project_key>" \
-  --type "Epic" \
+  --type "<issue_types.epic>" \
   --summary "Epic: <epic.name>" \
   --description-file /tmp/epic-description.md \
   --parent "<epic.feature_jira_key>" \
@@ -208,13 +221,17 @@ No dependencies
 EOF
 ```
 
-**Create Sprint using acli:**
+**Create the grouping work-item using acli:**
+
+The grouping is created with the configured `issue_types.grouping` (default **Story**), parented to
+the Epic. It **always** carries the `aidlc:sprint` label — that label, not the issue-type name, is
+how every downstream skill finds these items, so the type can vary per backend without breaking retrieval.
 
 ```bash
 acli jira workitem create \
   --project "<sprint.project_key>" \
-  --type "Sprint" \
-  --summary "Sprint: <sprint.sprint_name>" \
+  --type "<issue_types.grouping>" \
+  --summary "<sprint.sprint_name>" \
   --description-file /tmp/sprint-description.md \
   --parent "<epic_jira_key>" \
   --label "aidlc:sprint" \
@@ -222,7 +239,9 @@ acli jira workitem create \
   --json
 ```
 
-`sprint-type` will be one of: `sprint-type:backend`, `sprint-type:frontend`, `sprint-type:fullstack`
+`sprint-type` will be one of: `sprint-type:backend`, `sprint-type:frontend`, `sprint-type:fullstack`.
+`<issue_types.grouping>` is `Story` for Jira and `User Story` for ADO by default (Epic → Story is a
+valid native parent relationship in both).
 
 **Parse response to extract:**
 - `sprint_jira_key` (e.g., "PROJ-124")
@@ -359,7 +378,14 @@ EOF
 
 **Legacy format (pre-4.0):** If `task.behaviour` is absent, use `task.confluence_content` as-is. Transfer complete content — do **NOT** summarize or truncate.
 
-**Create Task using acli (story points set on create via `additionalAttributes`):**
+**Determine the leaf's parent** based on `leaf_attach`:
+
+- `leaf_attach: "parent"` → the leaf is a native child of the grouping. Set `parentIssueId` = **`<sprint_jira_key>`** (the grouping). Use this for ADO (User Story → Task) or any backend where `issue_types.leaf` is a valid child of `issue_types.grouping`.
+- `leaf_attach: "link"` → the leaf **cannot** be a native child of the grouping (e.g. Jira Story + Task are the same hierarchy level). Set `parentIssueId` = **`<epic_jira_key>`** (the Epic — a valid parent of a level-0 Task), then join the leaf to its grouping with an issue link (next sub-step).
+
+Call the chosen key `<leaf_parent_key>`.
+
+**Create the leaf work-item using acli (story points set on create via `additionalAttributes`):**
 
 Build the create JSON, embedding the description and story points together:
 
@@ -369,9 +395,9 @@ import json
 desc = open('/tmp/task-description.md').read()
 payload = {
     'projectKey': '<sprint.project_key>',
-    'type': '<issue_type>',
+    'type': '<issue_types.leaf>',
     'summary': '<task_title>',
-    'parentIssueId': '<sprint_jira_key>',
+    'parentIssueId': '<leaf_parent_key>',
     'description': {
         'type': 'doc', 'version': 1,
         'content': [{'type': 'codeBlock', 'attrs': {'language': 'markdown'}, 'content': [{'type': 'text', 'text': desc}]}]
@@ -389,13 +415,27 @@ If `story_points_field` is `null` or `field_id` is unknown, default to `customfi
 - `task_jira_key` (e.g., "PROJ-125")
 - `task_url`
 
+**If `leaf_attach: "link"` — link the leaf to its grouping:**
+
+```bash
+acli jira workitem link "<task_jira_key>" "<sprint_jira_key>" --type "<link_type>"
+```
+
+`<link_type>` defaults to `"Relates"` (present in every Jira project). This associates the Task with its
+Story grouping without native nesting (Jira forbids Task-under-Story parenting). Skip this sub-step entirely
+when `leaf_attach: "parent"` (the grouping is already the parent).
+
+**Error handling for the link:** if the link call fails, log a **LOW** severity warning and continue —
+the Task is already created and parented to the Epic; the Story association can be added manually later
+via `labels = aidlc:sprint` to locate the grouping.
+
 **Error Handling:**
 
 **If Task creation fails:**
 1. **MEDIUM severity** → Log error, continue with next Task
 2. Add to errors array: `{"type": "task_creation_failed", "task_title": "<task_title>", "message": "<error>"}`
 
-**[INFERRED]** Tasks automatically inherit project from parent Sprint (Jira constraint), so we use `sprint.project_key` consistently.
+**[INFERRED]** All items in a grouping share one project, so we use `sprint.project_key` for the leaf regardless of which work-item is its parent (the grouping in `parent` mode, or the Epic in `link` mode).
 
 ### Step 4: Build Output JSON
 

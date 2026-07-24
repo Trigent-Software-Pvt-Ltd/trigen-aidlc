@@ -34,6 +34,19 @@ confluence:
   featureIndexPageId: ""     # page id of the Features Index     -> <FEATURE_INDEX_PAGE_ID>
 jira:
   projectKey: ""             # e.g. PROJ
+  issueTypes:                # stock Jira types by default (no custom types needed)
+    epic: "Epic"
+    grouping: "Story"        # groups tasks (formerly the "Sprint" type)
+    leaf: "Task"
+  leafAttach: "link"         # Jira: Story+Task are same level, so link (not nest); leaf parented to Epic
+  linkType: "Relates"
+ado:
+  project: ""                # ADO project name (only if work tracker is Azure DevOps)
+  issueTypes:
+    epic: "Epic"
+    grouping: "User Story"
+    leaf: "Task"
+  leafAttach: "parent"       # ADO nests Task under User Story natively
 gitlab:
   docsRepoUrl: ""            # https://gitlab.com/org/group/ai-dlc-docs -> <GITLAB_DOCS_REPO_URL>
   docsRepoSsh: ""            # git@gitlab.com:org/group/ai-dlc-docs.git -> <GITLAB_DOCS_REPO_SSH>
@@ -72,6 +85,8 @@ Every skill resolves them by reading `aidlc.config.yaml`.
    - `confluence.spaceKey` — the Confluence space key, e.g. `ENG`
    - `confluence.featureIndexPageId` — leave blank on first run (the Features Index page is auto-created by `/aidlc-intent`)
    - `jira.projectKey` — default Jira project key, e.g. `PROJ`
+   - `jira.issueTypes` / `jira.leafAttach` / `jira.linkType` — the issue types used at transfer. Defaults (Epic → Story → Task, `leafAttach: link`, `linkType: Relates`) work against a stock Jira project with no custom types. Only change these if your project uses different type names (e.g. a custom "Sprint" type: set `grouping: "Sprint"`, `leaf: "Task"`). Confirm the types exist via `getJiraProjectIssueTypesMetadata` before finalizing.
+   - **Azure DevOps** (if the work tracker is ADO): `ado.project`, and `ado.issueTypes` (defaults Epic → User Story → Task with `leafAttach: parent`, since ADO nests Task under User Story natively).
 
    **GitLab** (if backend is GitLab):
    - `gitlab.docsRepoUrl` — HTTPS URL of the `ai-dlc-docs` repo

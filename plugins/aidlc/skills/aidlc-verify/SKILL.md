@@ -762,6 +762,16 @@ For each Epic, spawn a task-creator agent to create all Jira artifacts (Epic →
 6. **Pass Atlassian credentials:**
    - `cloud_id` and optional `region_url`
 
+7. **Pass issue-type configuration** (from `aidlc.config.yaml`):
+   - Read `jira.issueTypes` (`epic` / `grouping` / `leaf`), `jira.leafAttach`, and `jira.linkType`
+     — or the `ado.*` equivalents when the work tracker is Azure DevOps.
+   - Defaults if the config is absent: `{ epic: "Epic", grouping: "Story", leaf: "Task" }`,
+     `leafAttach: "link"`, `linkType: "Relates"` for Jira; `leafAttach: "parent"` for ADO.
+   - **Validate before spawning:** confirm the `grouping` and `leaf` types exist in the project via
+     `getJiraProjectIssueTypesMetadata`. If `grouping` and `leaf` are the **same hierarchy level**
+     (e.g. Story + Task in Jira), `leafAttach` MUST be `"link"` — never `"parent"` — or the leaf
+     create will fail. Surface a clear error and stop if the configured types are missing.
+
 **Spawn all agents in parallel:**
 
 ```
@@ -804,6 +814,13 @@ Spawn ALL agents in a single Task tool call with multiple agents (parallel execu
     "field_name": "Story Points",
     "field_id": "customfield_10016"
   },
+  "issue_types": {
+    "epic": "Epic",
+    "grouping": "Story",
+    "leaf": "Task"
+  },
+  "leaf_attach": "link",
+  "link_type": "Relates",
   "cloud_id": "<atlassian-cloud-id>",
   "region_url": "https://us.sentry.io"
 }
@@ -1233,7 +1250,8 @@ Provide aggregate results from all task-creator agents:
 ### Confluence/Jira Issues (legacy)
 - **Project not supported**: Some Jira projects may not have Advanced Roadmaps. Skip Project level and use Feature as top-level artifact.
 - **Epic issue type not supported**: If Jira project lacks Epic type, use alternative type + issue links or parent field; ask for preferred structure.
-- **Sprint issue type not available**: Some projects may use different names; use `getJiraProjectIssueTypesMetadata` to find the right type for Sprints.
+- **Grouping issue type not available**: The grouping type is set by `jira.issueTypes.grouping` (default "Story", present in stock Jira). If your project uses a different name (e.g. a custom "Sprint" type), set `jira.issueTypes.grouping` accordingly and confirm it via `getJiraProjectIssueTypesMetadata`. Retrieval is by the `aidlc:sprint` label, not the type, so any valid grouping type works.
+- **Leaf can't be parented to the grouping** (e.g. Story + Task are the same Jira hierarchy level): set `jira.leafAttach: "link"` so the leaf is parented to the Epic and joined to its grouping via an issue link (`jira.linkType`, default "Relates"). Only use `leafAttach: "parent"` when the leaf type is a valid native child of the grouping type (e.g. ADO User Story → Task).
 - **Task issue type not supported**: If Jira project lacks Task type, use alternative type with parent link or issue links instead.
 - **Missing issue types**: Use `getJiraProjectIssueTypesMetadata` and confirm available types.
 - **Low confidence score**: Guide user to address specific gaps; offer to re-run verification after updates.

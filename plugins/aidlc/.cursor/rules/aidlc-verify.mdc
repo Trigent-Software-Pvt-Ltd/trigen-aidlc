@@ -11,8 +11,13 @@ Goal: verify readiness and create the work-tracking artifacts. Follow the full w
 Summary:
 1. Detect the backend from existing artifacts (do not re-prompt).
 2. Run readiness checks (completeness, sizing, dependencies, risks).
-3. Create the Jira/Linear hierarchy: **Feature → Epic → Story → Task/Sub-task**, applying
-   labels `aidlc:feature`, `aidlc:epic`, `aidlc:story`, `aidlc:sprint`.
+3. Create the work-tracker hierarchy: **Feature → Epic → grouping → leaf**. Types come from
+   `aidlc.config.yaml` (`jira.issueTypes` / `ado.issueTypes`; defaults Epic → Story → Task).
+   The grouping is tagged `aidlc:sprint` (the stable identifier, not the type). In Jira the leaf
+   (Task) is parented to the Epic and issue-linked to its Story grouping (`leafAttach: link`,
+   `linkType` default "Relates"), because Story and Task share a hierarchy level; ADO nests
+   Task under User Story natively (`leafAttach: parent`). Validate types via
+   `getJiraProjectIssueTypesMetadata` before creating.
 4. Map internal sizes to Story Points where configured.
 5. Report results and chain to `/aidlc-sprint`.
 

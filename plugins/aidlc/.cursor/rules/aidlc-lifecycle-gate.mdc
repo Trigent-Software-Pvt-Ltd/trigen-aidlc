@@ -14,10 +14,15 @@ authoritative `SKILL.md` under `skills/<command>/`.
 ```
 Feature   (top-level goal / initiative)     label aidlc:feature
 └── Epic   (self-contained work area)         label aidlc:epic
-    └── Story  (user-story, "As a…")          label aidlc:story
-        └── Task / Sub-task (implementation)  label aidlc:task
-Sprint    = a scheduling grouping of Stories/Tasks within an Epic (NOT a hierarchy level)   label aidlc:sprint
+    └── grouping  (was "Sprint")              label aidlc:sprint   type per config: Jira "Story" / ADO "User Story"
+        └── leaf  (implementation item)                            type per config: "Task"
 ```
+
+The grouping work-item is created with the configured `jira.issueTypes.grouping` (default **Story**)
+and is always tagged `aidlc:sprint` — skills find groupings by that **label, not by issue type**.
+Leaf attaches per `leafAttach`: Jira `"link"` (leaf parented to the Epic, linked to its Story via
+`linkType`, default "Relates") since Story+Task are the same level; ADO `"parent"` (Task nests under
+User Story). "Sprint" stays an internal scheduling concept, not a Jira issue type.
 
 ## Commands (use only these)
 

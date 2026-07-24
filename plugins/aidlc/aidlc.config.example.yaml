@@ -25,6 +25,29 @@ confluence:
 # Jira work tracking
 jira:
   projectKey: ""         # default Jira project key, e.g. "PROJ"
+  # Issue types created when the AI-DLC hierarchy is transferred to Jira.
+  # Defaults use stock Jira types (no custom types needed): Epic → Story → Task.
+  issueTypes:
+    epic: "Epic"
+    grouping: "Story"    # the work-item that groups tasks (formerly the "Sprint" type)
+    leaf: "Task"         # implementation item under each grouping
+  # How the leaf attaches to its grouping:
+  #   "link"   -> leaf is parented to the Epic and joined to its grouping via an issue link.
+  #               REQUIRED in Jira when grouping+leaf are the same hierarchy level (Story+Task).
+  #   "parent" -> leaf is a native child of the grouping (use only if your leaf type is a
+  #               valid child of the grouping type).
+  leafAttach: "link"
+  linkType: "Relates"    # issue-link type used when leafAttach is "link" (present in every Jira project)
+
+# Azure DevOps work tracking (used when the work tracker is ADO instead of Jira)
+ado:
+  project: ""            # ADO project name
+  # ADO Agile process nests Task natively under User Story, so leafAttach is "parent".
+  issueTypes:
+    epic: "Epic"
+    grouping: "User Story"
+    leaf: "Task"
+  leafAttach: "parent"
 
 # GitLab documentation backend (the ai-dlc-docs repo, NOT your source code repo)
 gitlab:
