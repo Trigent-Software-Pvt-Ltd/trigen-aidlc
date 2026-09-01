@@ -13,6 +13,7 @@ This agent is spawned by `/aidlc-verify` Phase 6 to enable parallel Jira transfe
 
 ## References
 
+- **Work-item template (single source of truth for leaf descriptions)**: `@${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md`
 - **Templates**: `@plugins/aidlc/references/planning-shared.md`
 - **Scoring**: `${CLAUDE_PLUGIN_ROOT}/references/task-sizing.md`
 
@@ -31,6 +32,8 @@ You will receive a JSON object with the following structure:
   "sprints": [
     {
       "sprint_name": "Sprint 1.1: Login Flow",
+      "sprint_type": "backend",
+      "sprint_num": 1,
       "project_key": "PROJ",
       "phase": 0,
       "lane": "A",
@@ -57,6 +60,13 @@ You will receive a JSON object with the following structure:
       "dependencies": [{"type": "blocking", "what": "...", "rationale": "..."}],
       "risks": ["Risk — mitigate: mitigation"],
       "not_in_scope": ["Explicit boundary"],
+      "acceptance_criteria": ["Given <precondition> When <action w/ concrete values> Then <result incl. status/values>"],
+      "data_contract": {"request": "<fields+types or n/a>", "response": "<fields+types+status codes>", "server_authoritative": ["<values server computes/ignores>"]},
+      "errors_edge_cases": [{"condition": "<e.g. invalid input>", "result": "<e.g. 400 error_code>"}],
+      "ui_states": ["loading", "empty", "error", "success"],
+      "nfrs": ["<measurable target with a number>"],
+      "assumptions": ["[ASSUMED] <value> = <default> — confirm"],
+      "task_spec_url": "<deep link to the Task Spec page/file>",
       "confluence_content": "<full Task page markdown — Confluence backend only; omit for GitLab/Linear>"
     }
   ],
@@ -71,6 +81,15 @@ You will receive a JSON object with the following structure:
   },
   "leaf_attach": "link",
   "link_type": "Relates",
+  "feature_id": "FI-0001",
+  "product_slug": "bench-resource-tracker",
+  "epic_id": "U01",
+  "references": {"featureUrl": "", "designUrl": "", "adrsUrl": "", "businessRulesUrl": "", "boardUrl": ""},
+  "work_item_template": {
+    "enabled": true,
+    "labels": ["aidlc", "NoQA", "<leafType>", "<featureId>", "<productSlug>", "<layer>", "<epicId>", "sprint-<sprintNum>"],
+    "estimation": {"mode": "both", "pointsToHours": {"1": 2, "2": 4, "3": 8, "5": 16, "8": 24, "13": 40}}
+  },
   "cloud_id": "<atlassian-cloud-id>",
   "region_url": "https://us.sentry.io"
 }
@@ -114,6 +133,14 @@ You will receive a JSON object with the following structure:
   - `leaf`: type for the implementation items under each grouping.
 - `leaf_attach`: how the leaf attaches to its grouping — `"parent"` (native parent/child; e.g. ADO User Story → Task, or any backend where the leaf type is a valid child of the grouping type) or `"link"` (leaf parented to the **Epic** and joined to its grouping via an issue link — required in Jira when grouping and leaf are the same hierarchy level, e.g. Story + Task). Default `"link"` for Jira, `"parent"` for ADO.
 - `link_type`: issue-link type used when `leaf_attach: "link"`. Default `"Relates"` (present in every Jira project). A semantic type like `"is part of"` may be used only if it exists in the instance.
+- **Work-item template fields** (from `aidlc.config.yaml` `workItemTemplate` + resolved context; used to render the rich leaf description per `references/work-item-template.md`):
+  - `feature_id` (e.g. `FI-0001`), `product_slug` (e.g. `bench-resource-tracker`), `epic_id` (e.g. `U01`) — label + References tokens.
+  - `references`: `featureUrl`, `designUrl`, `adrsUrl`, `businessRulesUrl`, `boardUrl` — deep-links for the References section (blank keys are omitted).
+  - `work_item_template.enabled`: when `false`, render the legacy minimal description and skip per-leaf labels.
+  - `work_item_template.labels`: token list applied per leaf (default `aidlc, NoQA, <leafType>, <featureId>, <productSlug>, <layer>, <epicId>, sprint-<sprintNum>`). `aidlc`/`NoQA` are literals; `<layer>` is derived per ticket from its files/behaviour.
+  - `work_item_template.estimation`: `{ mode: points|hours|both (default both), pointsToHours: {1:2,2:4,3:8,5:16,8:24,13:40} }` — Story Points and/or Original Estimate (hours) from the task's `size`.
+  - Per-task Task-Spec fields: `acceptance_criteria`, `data_contract`, `errors_edge_cases`, `ui_states`, `nfrs`, `assumptions` (`[ASSUMED]` verbatim), `task_spec_url`. Absent fields are simply omitted from the rendered description.
+  - Per-sprint: `sprint_type` (→ `<layer>`), `sprint_num` (→ `sprint-<n>`).
 - `cloud_id`: Atlassian Cloud ID for API calls
 - `region_url`: Optional Sentry region URL
 
@@ -322,76 +349,87 @@ Find the Task object in `tasks` array where `task_title` matches the current Tas
 
 **Task Spec format (v4.0+):** If `task.behaviour` is present, render from Task Spec fields:
 
-> **Ticket format (required).** Every Task/Story ticket MUST follow the full structure
-> below — the same section order for every ticket, so tickets read consistently across the
-> project. Task Specs deliberately omit Overview, User Story, and Goal, so **synthesize**
-> those: Overview = one line from the task title + primary behaviour; User Story = "As a
-> `<role from the Epic's Target Users>`, I want `<capability from the task title>`, so that
-> `<benefit tied to the Epic outcome>`"; Goal = one-line restatement of the deliverable.
-> Do NOT invent behaviour, files, or dependencies — only Overview/User Story/Goal/Scope
-> prose may be synthesized from existing Task Spec + Epic content. Omit an optional section
-> only when the source data is empty (write "None" for Dependencies/Out of Scope rather than
-> dropping the heading).
+> **Build from the canonical template (single source of truth).** Render every leaf
+> description from `@${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md` — it defines the
+> section order, the source-mapping table, the Definition-of-done boilerplate, the References
+> deep-links, the label scheme, and the format rule. This agent supplies resolved field
+> values only; it does not redefine the structure.
+>
+> **Render Markdown** (`###` headings, `-` bullets, backtick `code`, `[text](url)` links).
+> **Never** wrap the body in an ADF `codeBlock` (renders monospaced) and **never** emit Jira
+> wiki markup (`h3.`, `[text|url]`). Only Overview / User Story / Goal may be **synthesized**
+> (from title + primary behaviour + epic context). Preserve all concrete values, tables,
+> request/response bodies, and `[ASSUMED]` items **verbatim** — use the spec's real
+> `acceptance_criteria`; do not re-synthesize ACs from Behaviour when the spec provides them.
+> Omit an optional section only when its source data is empty (write "None" for
+> Dependencies / Out of Scope rather than dropping the heading).
+>
+> **Toggle:** if `work_item_template.enabled` is false, skip this rich template and write the
+> legacy minimal description (Behaviour + Acceptance Criteria + Task Spec link), with no
+> per-leaf labels.
+
+Follow the section order in `references/work-item-template.md` exactly (`###` headings):
 
 ```bash
 cat > /tmp/task-description.md << 'EOF'
-## Overview
-<one line synthesized from task title + primary behaviour>
+### Overview
+<2–3 sentences: what this builds and why — synthesized from title + primary behaviour + epic context>
 
-## User Story
-As a <role from Epic Target Users>, I want <capability from task title>, so that <benefit tied to Epic outcome>.
+### User Story
+As a <role from Epic Target Users>, I need <capability from task title> so that <reason tied to Epic outcome>.
 
-## Scope
-<1-3 lines synthesized from task.behaviour — what this task delivers>
+### Scope
+<bullets of in-scope behaviour from task.behaviour + in-scope task.rules>
 
-## Out of Scope
-<if task.not_in_scope non-empty: one bullet per item; else: "None">
+### Out of Scope
+<one bullet per task.not_in_scope item; "None" if empty>
 
-## Dependencies
-<if task.dependencies non-empty: "- [<dep.type>] <dep.what> — <dep.rationale>" per dep; else: "None">
+### Dependencies
+<per task.dependencies, mapped to the real work-item key: "**Blocked by** <KEY> (<task_id>) — <rationale>" or "Non-blocking: <rationale>"; "None" if independent>
 
-## What to build
-**Goal:** <one-line goal>
+### What to build
+**Goal:** <one-line restatement of the deliverable>
 
 **Implementation checklist (do all items):**
-<derive action items from task.files + task.behaviour>
+<imperative bullets (ADD / IMPLEMENT / BUILD / EXPOSE / CONFIGURE / DOCUMENT / TEST) derived from task.behaviour + task.files>
 - CREATE <task.files.create path> — <purpose>
 - MODIFY <task.files.modify path> — <purpose>
-- <ADD/CONFIGURE ... per behaviour item, imperative voice>
 
-**Technical notes:**
-<from task.rules and design patterns; one bullet each; "None" if empty>
+### Technical notes
+<task.rules bullets + task.assumptions ([ASSUMED] items verbatim) + applicable stack; omit this section if all empty>
 
-## Acceptance Criteria
-<group task.behaviour into logical AC groups; each observable outcome is a checkbox>
-**AC 1 — <group name>**
-- [ ] <behaviour item>
-**AC 2 — <group name>**
-- [ ] <behaviour item>
-**AC <n> — Verification steps**
-- [ ] Step 1: <manual check derived from a behaviour item>
-- [ ] Step 2: <...>
+### APIs and interfaces
+<from task.data_contract: endpoints/methods with request/response shapes; for UI/frontend items list endpoints CONSUMED; "internal service, no HTTP" where applicable. REQUIRED when task.data_contract is present; else omit this section.>
 
-## Test Cases
-<derive from the Epic's "## Test Scope" scenarios that map to this task/sprint; one line each>
-- TC-<AREA>-001: <scenario> (<Layer>, <Priority>)
-- TC-<AREA>-002: <scenario> (<Layer>, <Priority>)
-<if no scenarios resolve to this task, list the task's Sprint scenarios and note "sprint-level">
+### Acceptance criteria
+<render task.acceptance_criteria grouped as "**AC 1 — <label>**", "**AC 2 — …**", each with Given/When/Then bullets and concrete values; include request/response bodies where the Data Contract defines them>
 
-## Definition of Done
-- Code merged to feature branch; PR description references <task.task_id>
-- Acceptance criteria demonstrated locally or via screen recording
-- Mapped test cases executed; evidence linked in a Jira comment
-- No P0/P1 bugs open for this task's scope
+**Data Contract** — <typed request/response fields + status codes; when task.data_contract present>
 
-## Metadata & References
-**Task ID:** <task.task_id> · **Size:** <score> · **Sprint:** <task.sprint>
-- Epic: <epic_jira_key>
-- Design doc: <design URL if available>
-- Task spec: <task source URL (Confluence page / GitLab file)>
-- Feature: <feature URL if available>
+**Errors & edge cases** — <table rows from task.errors_edge_cases: Condition | Result; when present>
+
+**UI States** — <loading / empty / error / success / disabled-permission; UI items only, from task.ui_states>
+
+### Verification steps
+<numbered Step 1..N, concrete and runnable, derived from the ACs + the Epic's sprint ## Test Scope>
+
+### Definition of done
+- Code merged to the feature branch; the PR description references <task.task_id>.
+- Acceptance criteria demonstrated locally or via screen recording.
+- Relevant Verify test case(s) executed; evidence linked in a work-item comment.
+- No P0/P1 bugs open for this work item's scope.
+
+### References
+- **Feature:** [<feature_id> — <feature/epic title>](<references.featureUrl>)
+- **Design:** [Design](<references.designUrl>) · [ADRs](<references.adrsUrl>)
+- **Business Rules:** [Business Rules](<references.businessRulesUrl>)  <!-- omit this line if businessRulesUrl blank -->
+- **Task Spec:** [<task_id>](<task_spec_url>)
+- **Board:** [<project_key> board](<references.boardUrl>)
 EOF
 ```
+
+> **NFRs:** fold `task.nfrs` into Technical notes (or an `### NFRs` line) so measurable targets
+> (latency, rate limits, retention) are visible. Preserve their numbers verbatim.
 
 **Legacy format (pre-4.0):** If `task.behaviour` is absent, use `task.confluence_content` as-is. Transfer complete content — do **NOT** summarize or truncate.
 
@@ -402,31 +440,72 @@ EOF
 
 Call the chosen key `<leaf_parent_key>`.
 
-**Create the leaf work-item using acli (story points set on create via `additionalAttributes`):**
+**Create the leaf work-item with a MARKDOWN description.** `acli --description-file` converts the
+`.md` to ADF, so it renders as rich text (headings, bullets, tables) — **not** a monospaced
+`codeBlock`. Do **not** build an ADF `codeBlock` payload.
 
-Build the create JSON, embedding the description and story points together:
+**Derive `<layer>` per ticket** (not from the sprint type): inspect this task's `files` + `behaviour` —
+API / controller / service / repository / DB / migration signals → `backend`; UI / component / page /
+view / CSS signals → `frontend`; both present → `fullstack`; infra / IaC / pipeline → `platform`.
+If the task's own signal is ambiguous, fall back to `sprint.sprint_type`. Call the result `<layer>`.
+
+**Resolve the per-leaf labels** from `work_item_template.labels`, substituting tokens for this item.
+Literal tokens (`aidlc`, `NoQA`) are applied as-is; `<tokens>` resolve to: `<leafType>` =
+`issue_types.leaf` lower-cased · `<featureId>` = `feature_id` · `<productSlug>` = `product_slug` ·
+`<layer>` = derived per ticket (above) · `<epicId>` = `epic_id` · `<sprintNum>` = `sprint.sprint_num`.
+Default expansion → `aidlc, NoQA, <leafType>, <feature_id>, <product_slug>, <layer>, <epic_id>,
+sprint-<sprint.sprint_num>`.
+
+**Idempotency:** if a leaf for this `task_id` already exists (locate via a stored key, or
+`labels = aidlc:task` + summary match on `<task_id>`), **edit it in place** —
+`acli jira workitem edit <key> --description-file /tmp/task-description.md` (or `editJiraIssue`
+with `contentFormat:"markdown"`) — rather than creating a duplicate.
 
 ```bash
-python3 -c "
-import json
-desc = open('/tmp/task-description.md').read()
-payload = {
-    'projectKey': '<sprint.project_key>',
-    'type': '<issue_types.leaf>',
-    'summary': '<task_title>',
-    'parentIssueId': '<leaf_parent_key>',
-    'description': {
-        'type': 'doc', 'version': 1,
-        'content': [{'type': 'codeBlock', 'attrs': {'language': 'markdown'}, 'content': [{'type': 'text', 'text': desc}]}]
-    },
-    'additionalAttributes': {'<story_points_field.field_id>': <score>}
-}
-json.dump(payload, open('/tmp/task-create.json', 'w'))
-"
-acli jira workitem create --from-json /tmp/task-create.json --json
+acli jira workitem create \
+  --project "<sprint.project_key>" \
+  --type "<issue_types.leaf>" \
+  --summary "<task_title>" \
+  --parent "<leaf_parent_key>" \
+  --description-file /tmp/task-description.md \
+  --label "aidlc" \
+  --label "NoQA" \
+  --label "<issue_types.leaf lower-cased>" \
+  --label "<feature_id>" \
+  --label "<product_slug>" \
+  --label "<layer>" \
+  --label "<epic_id>" \
+  --label "sprint-<sprint.sprint_num>" \
+  --json
 ```
 
-If `story_points_field` is `null` or `field_id` is unknown, default to `customfield_10016` — it is correct for the vast majority of Jira Cloud instances. If the create call returns a 400 error mentioning the field, retry with `customfield_10028`, then omit `additionalAttributes` entirely as a last resort (falling back to `--description-file` for that task only).
+> The label list comes from `work_item_template.labels` — apply exactly those (resolving tokens).
+> The 8 above are the default expansion; `NoQA` is a literal from the config (drop it there to omit).
+
+> If `work_item_template.enabled` is **false**: create with the legacy minimal description
+> (Behaviour + AC + link) and skip the per-leaf `--label` flags.
+
+**Set the estimate** (separate call, since the body is now a markdown file) per
+`work_item_template.estimation.mode` (`points` | `hours` | `both`, default `both`):
+
+- **Story Points** (mode `points` | `both`):
+  ```bash
+  acli jira workitem edit "<task_jira_key>" --field "Story Points" --value <score>
+  ```
+  If the field name is rejected, fall back to `editJiraIssue({issueIdOrKey:"<task_jira_key>", fields:{"<story_points_field.field_id>": <score>}})` — default `customfield_10016`, then `customfield_10028`.
+
+- **Original Estimate in hours** (mode `hours` | `both`): map the task's `size` → hours via
+  `work_item_template.estimation.pointsToHours` (default `1→2, 2→4, 3→8, 5→16, 8→24, 13→40`), then:
+  ```bash
+  acli jira workitem edit "<task_jira_key>" --field "Original Estimate" --value "<hours>h"
+  ```
+  or `editJiraIssue({issueIdOrKey:"<task_jira_key>", fields:{"timetracking": {"originalEstimate": "<hours>h"}}})`. (Requires time-tracking enabled on the project.)
+
+If a field is unavailable, log **LOW** and continue — estimation is non-blocking.
+
+> **Alternative (MCP, one call):** `createJiraIssue` with `contentFormat:"markdown"`,
+> `description=<markdown body>`, `additional_fields={"labels":[…7 resolved labels…],
+> "<story_points_field.field_id>": <score>}` — sets description, labels, and points together.
 
 **Parse response to extract:**
 - `task_jira_key` (e.g., "PROJ-125")

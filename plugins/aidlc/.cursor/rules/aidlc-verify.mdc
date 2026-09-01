@@ -22,6 +22,17 @@ Summary:
    Task under User Story natively (`leafAttach: parent`). Validate types via
    `getJiraProjectIssueTypesMetadata` before creating.
 4. Map internal sizes to Story Points where configured.
+   - **Rich leaf descriptions:** when `workItemTemplate.enabled` (default true), build every leaf
+     description from `references/work-item-template.md` — the 12-section GP format (Overview →
+     User Story → Scope → Out of Scope → Dependencies → What to build → Technical notes → APIs
+     and interfaces → Acceptance criteria (+ Data Contract / Errors / UI States) → Verification
+     steps → Definition of done → References). Render **Markdown** (`contentFormat:"markdown"`),
+     **never** an ADF codeBlock. Apply the per-leaf labels (`aidlc, NoQA, <leafType>, <featureId>,
+     <productSlug>, <layer>, <epicId>, sprint-<n>`) — `<layer>` is derived **per ticket** from its
+     files/behaviour (backend/frontend/fullstack), not the sprint type. Set the estimate from the
+     task's `size` per `workItemTemplate.estimation.mode` — **Story Points** and/or **Original
+     Estimate (hours)** via the `pointsToHours` map. Pass the full Task Spec fields to the
+     task-creator agent. `enabled:false` restores the legacy minimal description.
 5. Report results and chain to `/aidlc-sprint`.
 
 Resolve config placeholders (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,

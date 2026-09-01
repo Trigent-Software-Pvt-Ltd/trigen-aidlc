@@ -62,3 +62,51 @@ linear:
 # Optional reference links surfaced in planning docs
 links:
   performanceStandards: "" # e.g. "https://yourcompany.atlassian.net/wiki/.../Performance+Standards" -> <PERFORMANCE_STANDARDS_URL>
+
+# Leaf work-item (Story/Task/Bolt) description template used in /aidlc-verify Phase 6 transfer.
+# Renders the rich 12-section GP-style description (see references/work-item-template.md).
+# Set enabled:false to restore the legacy minimal description (Behaviour + AC + link, no labels).
+workItemTemplate:
+  enabled: true
+
+  # Label set applied to every leaf work item. Tokens in <angle brackets> are resolved per
+  # item at transfer time; literal strings are applied as-is.
+  #   <leafType>    = jira.issueTypes.leaf, lower-cased (story|task|bolt)
+  #   <featureId>   = e.g. FI-0001
+  #   <productSlug> = e.g. bench-resource-tracker
+  #   <layer>       = backend|frontend|fullstack|platform (from sprint type)
+  #   <epicId>      = e.g. U01
+  #   <sprintNum>   = sprint grouping number
+  # Literal strings (aidlc, NoQA) are applied as-is; <tokens> are resolved per item.
+  # <layer> is derived per ticket from its files/behaviour (backend|frontend|fullstack|platform).
+  labels:
+    - aidlc
+    - NoQA
+    - "<leafType>"
+    - "<featureId>"
+    - "<productSlug>"
+    - "<layer>"
+    - "<epicId>"
+    - "sprint-<sprintNum>"
+
+  # Estimation written to each leaf from the task's Fibonacci size.
+  estimation:
+    mode: both              # points | hours | both
+    # Fibonacci size -> Original Estimate hours (used when mode is hours|both)
+    pointsToHours: { 1: 2, 2: 4, 3: 8, 5: 16, 8: 24, 13: 40 }
+
+  # Human-readable product slug used in labels and the References block.
+  productSlug: bench-resource-tracker
+
+  # References block deep-links. Any key left blank is omitted from the rendered References
+  # section. Normally resolved from BackendContext; set here to override.
+  references:
+    featureUrl: ""          # Intent / Feature page
+    designUrl: ""           # Design page
+    adrsUrl: ""             # ADR page
+    businessRulesUrl: ""    # Business Rules page (omit if project has none)
+    boardUrl: ""            # Jira board backlog URL
+
+  # Description body format. "markdown" => create/edit issues with contentFormat:"markdown".
+  # Never wrap the whole body in an ADF codeBlock.
+  descriptionFormat: markdown

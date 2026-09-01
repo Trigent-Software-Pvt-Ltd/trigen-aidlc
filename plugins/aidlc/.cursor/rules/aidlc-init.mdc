@@ -15,6 +15,14 @@ Summary:
 3. Collect only the relevant settings: `atlassian.cloudId`, `confluence.spaceKey`,
    `confluence.featureIndexPageId`, `jira.projectKey`, `gitlab.docsRepoUrl` / `docsRepoSsh` /
    `docsPath`, `linear.teamKey`, `links.performanceStandards`. Leave unknowns as `""`.
+   Also write the transfer-behaviour blocks (defaults work on a stock Jira project):
+   - **`jira.issueTypes`** (`epic: Epic`, `grouping: Story`, `leaf: Task`) + `leafAttach: link`,
+     `linkType: Relates` — and `ado.*` equivalents (`grouping: User Story`, `leafAttach: parent`).
+   - **`workItemTemplate`** — `enabled: true`; `labels` (default `aidlc, NoQA, <leafType>,
+     <featureId>, <productSlug>, <layer>, <epicId>, sprint-<sprintNum>`); `estimation`
+     (`mode: points|hours|both`, `pointsToHours` map); `productSlug`; `references`;
+     `descriptionFormat: markdown`. These drive the rich 12-section Jira descriptions, per-ticket
+     labels, and Story-Points/Original-Estimate written in `/aidlc-verify`.
 4. Show the assembled YAML, get approval, write `aidlc.config.yaml` to the project root.
 5. Point the user to `/aidlc-intent` next.
 

@@ -772,6 +772,26 @@ For each Epic, spawn a task-creator agent to create all Jira artifacts (Epic →
      (e.g. Story + Task in Jira), `leafAttach` MUST be `"link"` — never `"parent"` — or the leaf
      create will fail. Surface a clear error and stop if the configured types are missing.
 
+8. **Pass work-item template context** (from `aidlc.config.yaml` `workItemTemplate`; default `enabled: true`):
+   - When `workItemTemplate.enabled` is true, pass each leaf the **full Task Spec fields** — not
+     just Behaviour + AC: `acceptance_criteria`, `data_contract`, `errors_edge_cases`, `ui_states`,
+     `nfrs`, `assumptions` (`[ASSUMED]` verbatim), plus the existing behaviour/files/dependencies/
+     not_in_scope/size.
+   - Resolve per item: `feature_id`, `product_slug` (`workItemTemplate.productSlug`),
+     `epic_id`, `sprint_num`, `task_spec_url`, and `sprint_type` (→ `<layer>`).
+   - `references`: `featureUrl`, `designUrl`, `adrsUrl`, `businessRulesUrl`, `boardUrl` from
+     BackendContext / `workItemTemplate.references`.
+   - `work_item_template`: `{ enabled, labels, estimation }` — the token list from
+     `workItemTemplate.labels` (literals `aidlc`/`NoQA` applied as-is; `<layer>` **derived by the
+     agent per ticket** from that task's files/behaviour, not the sprint type), and
+     `estimation` (`mode: points|hours|both`, `pointsToHours` map) so the agent writes Story
+     Points and/or Original Estimate (hours) from each task's `size`.
+   - Add a one-line instruction to the agent call: *"Build the description from
+     `references/work-item-template.md`; render Markdown with `contentFormat:"markdown"`; never
+     wrap the body in an ADF codeBlock."*
+   - **Guard:** if `workItemTemplate.enabled` is false, pass the legacy minimal fields only
+     (Behaviour + AC + link) and instruct the agent to skip per-leaf labels.
+
 **Spawn all agents in parallel:**
 
 ```
@@ -807,6 +827,16 @@ Spawn ALL agents in a single Task tool call with multiple agents (parallel execu
   "tasks": [
     {
       "task_title": "Implement password validation",
+      "task_id": "U01-T01",
+      "behaviour": ["..."], "files": {"modify": [], "create": [], "reference": []},
+      "dependencies": [], "not_in_scope": [],
+      "acceptance_criteria": ["Given <x> When <y> Then <z with concrete values>"],
+      "data_contract": {"request": "...", "response": "...", "server_authoritative": []},
+      "errors_edge_cases": [{"condition": "...", "result": "..."}],
+      "ui_states": ["loading", "empty", "error", "success"],
+      "nfrs": ["<measurable target>"],
+      "assumptions": ["[ASSUMED] ... — confirm"],
+      "task_spec_url": "<Task Spec page/file URL>",
       "confluence_content": "<full Task page markdown>"
     }
   ],
@@ -821,6 +851,15 @@ Spawn ALL agents in a single Task tool call with multiple agents (parallel execu
   },
   "leaf_attach": "link",
   "link_type": "Relates",
+  "feature_id": "FI-0001",
+  "product_slug": "bench-resource-tracker",
+  "epic_id": "U01",
+  "references": {"featureUrl": "", "designUrl": "", "adrsUrl": "", "businessRulesUrl": "", "boardUrl": ""},
+  "work_item_template": {
+    "enabled": true,
+    "labels": ["aidlc", "NoQA", "<leafType>", "<featureId>", "<productSlug>", "<layer>", "<epicId>", "sprint-<sprintNum>"],
+    "estimation": {"mode": "both", "pointsToHours": {"1": 2, "2": 4, "3": 8, "5": 16, "8": 24, "13": 40}}
+  },
   "cloud_id": "<atlassian-cloud-id>",
   "region_url": "https://us.sentry.io"
 }
@@ -931,6 +970,14 @@ After all task-creator agents return, consolidate their results:
 - Verify all Epics have `epic_jira_key` (or are in errors)
 - Verify sprint_name → sprint_key map is complete
 - Check for duplicate Sprint names (should not happen)
+
+**Work-item template spot-check (when `workItemTemplate.enabled`):** open **one** created leaf and confirm:
+- the description renders as normal **rich text** (headings/bullets/tables) — **not** a monospaced block;
+- it contains **Overview, User Story, Acceptance criteria, Verification steps, Definition of done, References** (and APIs and interfaces when the spec had a Data Contract);
+- its labels include `aidlc`, `NoQA`, `<leafType>`, `<featureId>`, `<productSlug>`, `<layer>` (appropriate to *this* ticket, e.g. `backend`/`frontend`), `<epicId>`, `sprint-<n>`;
+- it carries an estimate — **Story Points** and/or **Original Estimate (hours)** per `workItemTemplate.estimation.mode`;
+- References resolve to Feature, Design, ADRs, Business Rules (if any), Task Spec, Board.
+If the description shows as monospaced or is missing sections/labels, flag it and re-run the leaf with the template before reporting success.
 
 **Store for Step 3:** sprint_name → sprint_key map
 **Store for Step 4:** Aggregated Sprint metadata with Jira keys

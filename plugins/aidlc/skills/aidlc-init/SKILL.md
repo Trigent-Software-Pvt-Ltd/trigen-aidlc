@@ -55,6 +55,13 @@ linear:
   teamKey: ""                # e.g. ENG
 links:
   performanceStandards: ""   # optional reference URL            -> <PERFORMANCE_STANDARDS_URL>
+workItemTemplate:            # rich 12-section leaf descriptions in /aidlc-verify (see references/work-item-template.md)
+  enabled: true             # false = legacy minimal description
+  labels: [aidlc, NoQA, "<leafType>", "<featureId>", "<productSlug>", "<layer>", "<epicId>", "sprint-<sprintNum>"]
+  estimation: { mode: both, pointsToHours: { 1: 2, 2: 4, 3: 8, 5: 16, 8: 24, 13: 40 } }  # points|hours|both
+  productSlug: ""           # e.g. bench-resource-tracker
+  references: { featureUrl: "", designUrl: "", adrsUrl: "", businessRulesUrl: "", boardUrl: "" }
+  descriptionFormat: markdown
 ```
 
 These placeholder tokens (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
