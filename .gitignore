@@ -6,3 +6,6 @@ docs/superpowers/
 
 # Backup folders (not for the repo)
 plugins/*.backup-*
+
+# AIDLC sprint recovery ledgers (machine recovery map; per-project scratch)
+.aidlc/

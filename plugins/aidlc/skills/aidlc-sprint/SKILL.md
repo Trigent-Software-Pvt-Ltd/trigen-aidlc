@@ -33,6 +33,7 @@ This skill follows the AI-DLC principle where AI initiates and directs the conve
 
 ## References
 
+- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md — **Execution rigor (single source of truth):** ceremony scaling (Quick/Standard/Deep), the recovery ledger, task briefs / context hygiene, and the 3-round fix-loop + adjudication + two-stage review. This skill wires those in; the reference defines them.
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md — Sprint guidance and templates
 - @${CLAUDE_PLUGIN_ROOT}/references/vcs-detection.md — VCS provider detection and PR/MR commands
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md — Implementation review rubric ("Finding Severity Levels" and "Implementation Review Rubric" sections); used for plan quality checks and Step 13.5 self-review
@@ -208,13 +209,23 @@ fix(<JIRA-KEY>): address CodeRabbit findings (iteration <n>)
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-### Fix Loop
+### Fix Loop (3 rounds + adjudication)
 
-1. **Iteration 1:** Triage + apply fixes per `triage_mode`. Commit (if fixes applied). Re-run review.
-2. **Iteration 2:** Triage remaining findings. Apply + commit (if fixes applied). Re-run.
-3. **After iteration 2:** If `valid-must-fix` findings remain, **stop the loop** — surface the unresolved items and ask the user whether to proceed to MR anyway (override) or stop.
+Follow the fix-loop + adjudication protocol in
+@${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md §4. Each round = one fix + one **scoped**
+re-review of the fix diff only. **Max 3 rounds per finding-set:**
 
-If `triage_mode = interactive`, after the fix loop optionally ask using AskUserQuestion: "Address Info-level findings too? (1. Yes / 2. No, skip them)"
+1. **Round 1–2:** triage per `triage_mode`, apply `valid-must-fix` fixes, commit, scoped re-review.
+   Record deferred **minor** findings in the ledger (they never enter the loop).
+2. **Round 3:** if findings remain, escalate to a **more capable model** for the fix, then scoped re-review.
+3. **At the cap (after round 3):** **adjudicate** every open finding — *park with a ruling* in the
+   ledger (reviewer wrong / real-but-not-load-bearing) or, if **real and load-bearing**, ledger
+   `BLOCKED` and escalate to the user with the finding + fix history. **No silent discards** — every
+   ruling is a ledger entry. Then ask whether to proceed to MR (override) or stop.
+
+Log each round to the ledger: `Task <id>: fix round <R>/3 (<X> addressed, <Y> open — <one-liners>; commits <a7>..<b7>)`.
+
+If `triage_mode = interactive`, after the loop optionally ask: "Address Info-level findings too? (1. Yes / 2. No, skip them)"
 
 ### Error Handling
 
@@ -233,6 +244,27 @@ If `triage_mode = interactive`, after the fix loop optionally ask using AskUserQ
 Throughout the Sprint workflow, use `transition_status(item_id, target_status, item_type, backend)` to transition Jira or Linear statuses. See @${CLAUDE_PLUGIN_ROOT}/references/status-management.md for backend-specific strategies, error handling, and return format.
 
 ### Phase 1: Context Gathering
+
+#### Step 0: Ceremony classification & ledger resume (do first)
+
+Before gathering context, run the two entry checks from
+@${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md:
+
+1. **Resume from the ledger** (§2). Check `.aidlc/sprint/<sprint-id>/progress.md`. If it exists and
+   its first line names this sprint, tasks with a `complete` line are DONE — resume at the first
+   incomplete task (a `fix round` line means mid-loop, resume the loop). After compaction, trust the
+   ledger + `git log` over recollection. If there's no ledger, you'll create one in Phase 5.
+2. **Classify the ceremony path** (§1) from the sprint's Task Specs — **Quick / Standard / Deep**
+   (default Standard) based on size, file count, blast radius, and risk. Announce the path. It scales
+   the later phases (Quick skips the Phase 3 consensus review; Deep adds expert perspectives + a
+   most-capable final review). **Invariants regardless of path:** human approval before code, TDD,
+   at least one code review, and the ledger. If hidden complexity surfaces mid-sprint, **upgrade the
+   path** (never downgrade) and re-plan the remaining work.
+
+> **Context hygiene (§3) applies to every subagent dispatch in this skill:** hand each task's
+> requirements over as a **brief file** (path), not pasted text or the whole plan; have subagents
+> write full output to a **report file** and return only status + commits + a one-line test summary
+> + concerns. Exact values live only in the brief.
 
 #### Step 1: Gather Work Item Context
 
@@ -655,7 +687,12 @@ After drafting the cycles, build the **AC-to-Test Mapping** table. For every AC 
 
 Plans reviewed only by the authoring agent tend to have blind spots — missing edge cases, optimistic dependency ordering, or untested acceptance criteria. A structured second-opinion pass catches these before the user commits to the plan, reducing rework during implementation.
 
-Before running the consensus review, ask:
+**Ceremony gate (from Step 0's classification):**
+- **Quick** → **skip Phase 3** (no consensus review); go straight to Phase 4. Still TDD + human approval + a code review later.
+- **Standard** → run one consensus pass (Steps 5a → 5b).
+- **Deep** → run the consensus pass **and** the Expert Perspectives (Step 4.5) for security/perf/domain; the final whole-branch review (Step 13.5) runs on the most capable model.
+
+For Standard/Deep, still confirm before running:
 
 ```
 Run automated consensus review on this plan? (y/n, default y)
@@ -663,7 +700,7 @@ Skip only for trivial sprints — single-task config changes, doc fixes, or re-r
 ```
 
 If y (or enter): proceed with Steps 5a and 5b.
-If n: skip Phase 3 and go directly to Phase 4 (Plan Approval).
+If n (or ceremony = Quick): skip Phase 3 and go directly to Phase 4 (Plan Approval).
 
 See @${CLAUDE_PLUGIN_ROOT}/references/sprint-plan-review.md for review criteria, verdict definitions, and context schema.
 
@@ -781,6 +818,15 @@ Create the plan file with:
 - For **user story format**: populate **Acceptance Criteria** from the existing checklist
 
 Use @${CLAUDE_PLUGIN_ROOT}/references/sprint-plan-template.md for the file structure.
+
+**Also create the recovery ledger** (execution-rigor §2) — the machine recovery map that survives
+compaction (the plan file is for humans). Create `.aidlc/sprint/<sprint-id>/progress.md` with its
+identity as the first line:
+```
+# AIDLC sprint ledger — sprint: <sprint-id> — plan: <plan-file-path>
+```
+Append a line per task event as you execute (`complete` / `fix round R/3` / `parked` / `BLOCKED`).
+`.aidlc/` must be git-ignored. On any later re-invocation, Step 0 reads this ledger to resume.
 
 ---
 

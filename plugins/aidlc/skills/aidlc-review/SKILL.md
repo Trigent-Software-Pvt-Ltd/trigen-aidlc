@@ -75,6 +75,7 @@ The backend determines where to fetch documentation from:
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Jira/Confluence tool guidance and templates
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend detection logic
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Scoring rubrics and checklists
+- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md - Two-stage review (spec then quality), severity model, and the fix-loop + adjudication protocol shared with `/aidlc-sprint`
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab operations (if GitLab backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear operations (if Linear backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md - Confluence operations (if Confluence backend)
@@ -365,6 +366,14 @@ If the user opts in, post a summarised version of the findings to the relevant s
 ### Reviewer Persona
 
 Act as a **constructive but rigorous senior engineer**. Tone is direct, professional, and actionable — flag issues clearly, explain why they matter, and suggest alternatives. Assume the author is a competent engineer; do not over-explain fundamentals.
+
+### Two-stage verdict (required)
+
+Return **two explicit verdicts, both required** (per @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md §4):
+1. **Spec compliance** — does the MR meet the Sprint/Task acceptance criteria? (AC-to-test coverage; missing AC = spec ❌)
+2. **Code quality** — clean, tested, secure, follows repo conventions?
+
+A missing verdict = not reviewed. Use the shared severity model (Blocking / Important / Minor). When the caller acts on findings (e.g. from `/aidlc-sprint`), the **fix-loop + adjudication protocol** (execution-rigor §4) governs: scoped re-review each round, 3-round cap, then park-with-ruling or BLOCK — no silent discards.
 
 ### Step B1: Detect Backend and Gather Inputs
 

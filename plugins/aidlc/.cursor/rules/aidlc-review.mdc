@@ -12,6 +12,10 @@ Summary:
 1. Detect the backend and VCS provider (GitHub vs GitLab) from the repo remote.
 2. Review the PR/MR against the Story acceptance criteria, Task specs, and design/ADRs.
 3. Check test coverage (unit, integration, acceptance), NFRs, and risks.
-4. Produce a structured review with a confidence assessment; request changes or approve.
+4. Produce a structured review as **two explicit verdicts** (spec compliance, then code quality) —
+   both required — with a confidence assessment and the shared severity model (Blocking/Important/
+   Minor). When findings are acted on, the **3-round fix-loop + adjudication** in
+   `references/execution-rigor.md` §4 governs (scoped re-review each round; at the cap park-with-
+   ruling or BLOCK — no silent discards).
 
 Resolve config placeholders from `aidlc.config.yaml`.

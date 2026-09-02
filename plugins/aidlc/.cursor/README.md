@@ -21,7 +21,8 @@ Copy the rules into your project's Cursor rules folder:
 mkdir -p .cursor/rules
 cp -r /path/to/plugins/aidlc/.cursor/rules/* .cursor/rules/
 # copy the shared references so the deeper standards resolve
-# (e.g. references/intent-doc-standard.md, references/intent-validation-workflow.md)
+# (e.g. references/intent-doc-standard.md, references/intent-validation-workflow.md,
+#  references/work-item-template.md, references/execution-rigor.md)
 mkdir -p references
 cp -r /path/to/plugins/aidlc/references/* references/
 # also copy the config template
