@@ -9,8 +9,14 @@ protocol (incl. two-stage review). Keep these consistent across the two skills.
 
 ## 1. Ceremony scaling (Quick / Standard / Deep)
 
+> The **lifecycle-wide** gear model (what Quick/Standard/Deep produce at intent, elaborate, design,
+> verify, sprint and review) lives in `ceremony-scaling.md`. This section is the **sprint-specific**
+> detail of the same gear the feature is already running.
+
 Scale the *amount of process* to the work, but **never scale away the human approval gate or TDD**.
-Classify the sprint at entry from its Task Specs (size, file count, blast radius, risk):
+The gear is normally already set for the feature (config `ceremony.default`, carried from
+`/aidlc-intent`); if entering sprint cold, classify from the Task Specs (size, file count, blast
+radius, risk):
 
 | Path | When | Ceremony |
 |------|------|----------|

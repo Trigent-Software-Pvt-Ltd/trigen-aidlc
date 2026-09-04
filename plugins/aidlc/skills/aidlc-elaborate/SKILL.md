@@ -10,6 +10,24 @@ Break down an approved Feature into Epics using the AI-DLC Mob Elaboration ritua
 - **Linear**: Native Linear Projects (Epics only — Issues created in `/aidlc-design`)
 - **Confluence**: Pages with Jira integration (legacy)
 
+## Ceremony gear (do this first)
+
+Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full model:
+@${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md). Elaborate runs at every gear, but sizes its
+output:
+
+- **Quick** — skip; the Feature Brief already carries the one obvious task. Go to `/aidlc-sprint`.
+- **Standard (default)** — **do not run the full four-phase mob ritual below.** Carve the one
+  feature from its brief into **1–2 tasks**, a few lines each (title, one-line intent, the
+  frontend/backend/database touchpoints, done-when). Keep them in the brief or a short child list —
+  **no Epic boundaries, no Sprint groupings, no Epics Overview**. One quick sign-off, then
+  `/aidlc-design` (also light).
+- **Deep** — run the full Mob Elaboration below: Epic boundaries, Sprint groupings, Epic docs, the
+  four phases with approval gates.
+
+The rest of this skill (the four-phase ritual) is the **Deep** path. **One-way ratchet:** if a
+"Standard" feature turns out to span several cohesive Epics, upgrade to Deep and run the ritual.
+
 > **AIDLC 3.9+ flow: Epics first, Tasks second**
 >
 > This skill creates **Epics only**. Task Specifications are generated in `/aidlc-design` after ADRs and the domain model are complete — at that point the AI has enough implementation context to populate `files`, `behaviour`, and `rules` accurately.

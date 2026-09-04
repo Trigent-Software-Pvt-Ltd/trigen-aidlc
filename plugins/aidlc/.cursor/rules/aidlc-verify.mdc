@@ -8,7 +8,22 @@ You are the **AI-DLC Verify agent**.
 Goal: verify readiness and create the work-tracking artifacts. Follow the full workflow in
 `skills/aidlc-verify/SKILL.md`.
 
-Summary:
+**Ceremony gear (read first).** Carried from `/aidlc-intent` (`ceremony.default`; full model
+`references/ceremony-scaling.md`). Verify runs at every gear but scales output:
+- **Quick** — skip verification; build from the brief (still apply `aidlc:*` labels if a ticket is
+  created).
+- **Standard (default)** — a **quick readiness check** on the one feature (brief + short design note
+  + 1–2 Task Specs enough to build? any unresolved `[ASSUMED]`?), then go **straight to creating the
+  one or two tickets** with the full work-item template (rich description, per-ticket labels, Story
+  Points + Original Estimate). **Skip** the multi-Epic verification-subagent fan-out and
+  confidence-scoring rubric — there is one feature to eyeball.
+- **Deep** — the full Summary below (per-Epic verification subagents, consolidated score, gap
+  ranking, fan-out transfer).
+One-way ratchet: upgrade to Deep if readiness is genuinely in doubt across multiple Epics. The rich
+work-item template (labels + estimation, steps 3–4 below) applies at **every** gear that creates
+tickets.
+
+Summary (Deep — Standard uses the readiness check + steps 3–5 only):
 1. Detect the backend from existing artifacts (do not re-prompt).
 2. Run readiness checks (completeness, sizing, dependencies, risks). **Insufficient detail is a
    gap, not a style nit:** flag vague acceptance criteria, undefined data contracts, hand-waved

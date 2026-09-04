@@ -1,14 +1,18 @@
-# Feature Brief (lightweight lane)
+# Feature Brief (the light Intent output)
 
-The **default** way `/aidlc-intent` captures a feature: one small feature, written as a **single
-human-readable brief** (a ~2-minute read), built **end-to-end** (frontend + backend + database),
-reviewed and approved as **one page**, then handed to build. It is the opposite of the full
-Intent → Elaborate → Design → Verify document tower, which stays available as an explicit opt-in for
-genuinely cross-cutting or regulated work.
+The Feature Brief is **`/aidlc-intent`'s output at the Quick and Standard gears** (see
+`ceremony-scaling.md`): one small feature, written as a **single human-readable brief** (a ~2-minute
+read), built **end-to-end** (frontend + backend + database), reviewed and approved as **one page**.
 
-> **Why:** the full flow front-loads heavy governance — a §0–§9 Intent, Epics, ADRs, verification,
-> design deltas — which is more than a human can read and approve per screen. The brief trades some
-> up-front ceremony for **readability and momentum**: a feature you can grasp, decide, and finish.
+It is **not** a way to skip the rest of AI-DLC. At the **Standard** gear the brief is followed by a
+light Elaborate (1–2 tasks), a light Design (a short note + only forced ADRs) and a light Verify
+(readiness check + rich tickets) — every step still runs, each just sized to one feature. Only at the
+**Quick** gear do Elaborate/Design/Verify fold into the brief and you go straight to build. The full
+§0–§9 Intent tower is the **Deep** gear, reserved for cross-cutting or regulated work.
+
+> **Why:** the Deep flow front-loads heavy governance — a §0–§9 Intent, Epics, ADRs, verification,
+> design deltas — which is more than a human can read and approve per screen for an everyday feature.
+> The brief keeps the *thinking* but sizes the *output*: a feature you can grasp, decide, and finish.
 
 ## Core rules
 
@@ -22,8 +26,9 @@ genuinely cross-cutting or regulated work.
 4. **Only this feature's open questions.** List the handful of decisions *this* screen needs, each
    with a proposed default. Cross-cutting concerns (tenancy, RBAC, connector set) are named as
    *other features'* problems and explicitly do **not** block this one.
-5. **One approval.** The reader approves the single brief; it goes to build. No separate
-   Intent/Elaborate/Design sign-offs.
+5. **One approval per phase, not per artifact.** The reader approves the single brief as the Intent
+   step. At Standard the later light phases (elaborate/design/verify) collapse into a small number of
+   quick sign-offs — not zero, not one-per-document. At Quick, the brief's approval is the only gate.
 6. **End-to-end scope.** Each brief spans frontend + backend + database for its one feature.
 
 ## Section order (the whole brief)
@@ -38,12 +43,25 @@ genuinely cross-cutting or regulated work.
    then one line noting the cross-cutting items that belong elsewhere.
 8. **References** *(separate page / divided section)* — Design · API contract · Code · Context.
 
-## When to use the heavy lane instead (opt-in)
+## What happens after the brief (Standard gear)
 
-Escalate to the full Intent → Elaborate → Design → Verify flow only when the work genuinely needs it:
-a cross-cutting architectural decision (tenancy, auth model, canonical data model), a regulated/
-audit requirement, a multi-team initiative, or a feature whose blast radius spans many modules.
-When in doubt, start with a brief; a brief can *raise* a cross-cutting ADR without becoming a tower.
+The brief is the Intent step, not the end. At Standard, hand off through the rest of the lifecycle,
+each phase light (see `ceremony-scaling.md`):
+
+- **`/aidlc-elaborate`** — carve the brief into **1–2 tasks**, a few lines each. No Epics/Overviews.
+- **`/aidlc-design`** — a **short design note** (contract/approach in a paragraph or two) plus **only
+  the ADR(s) this feature actually forces** (usually none).
+- **`/aidlc-verify`** — a **quick readiness check**, then create the one or two tickets with the rich
+  work-item template (labels + estimate).
+- **`/aidlc-sprint`** / **`/aidlc-review`** — build TDD-first, one code review before merge.
+
+## When to escalate to Deep (opt-in)
+
+Escalate to the full Deep gear (§0–§9 Intent → Epics → domain model + ADRs → full verify) only when
+the work genuinely needs it: a cross-cutting architectural decision (tenancy, auth model, canonical
+data model), a regulated/audit requirement, a multi-team initiative, or a feature whose blast radius
+spans many modules. When in doubt, stay at Standard; a Standard feature can *raise* a single
+cross-cutting ADR without becoming a tower.
 
 ## Backend rendering
 
@@ -55,5 +73,6 @@ When in doubt, start with a brief; a brief can *raise* a cross-cutting ADR witho
 
 ## Config
 
-`featureBrief.enabled: true` (default) makes this the standard `/aidlc-intent` output. Set it to
-`false`, or answer the mode prompt with "full", to run the governed Intent flow for that feature.
+The gear comes from `ceremony.default` (default `standard`) in `aidlc.config.yaml`, or the user's
+per-feature choice at the start of `/aidlc-intent`. The brief is the Intent output at **quick** and
+**standard**; **deep** runs the governed §0–§9 Intent flow instead. See `ceremony-scaling.md`.

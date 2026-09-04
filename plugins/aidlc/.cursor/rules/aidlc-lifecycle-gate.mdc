@@ -43,6 +43,23 @@ User Story). "Sprint" stays an internal scheduling concept, not a Jira issue typ
 Init → Intent → Elaborate → Design → Verify → Sprint → Review
 (with `/aidlc-help` and `/aidlc-progress` available anytime)
 
+## Ceremony gear (applies to every phase)
+
+The phases above **always run**; a single **gear** scales how much output each one emits. Resolve it
+once from `ceremony.default` in `aidlc.config.yaml` (or the user's per-feature choice) and carry it
+through. Full model: `../../references/ceremony-scaling.md`.
+
+- **quick** — brief → build; elaborate/design/verify fold into the brief. Trivial/internal only.
+- **standard** (default) — **all** phases run, each producing a compact single-feature output
+  (Intent = one-page Feature Brief, then light elaborate/design/verify). One or two features at a
+  time, end-to-end (FE+BE+DB). This is the light lane: governance kept, tower dropped.
+- **deep** — the full governed flow (§0–§9 Intent, Epics, domain model + ADRs, full verify). For
+  cross-cutting/regulated/multi-team work.
+
+One-way ratchet: any phase may **upgrade** the gear when hidden complexity surfaces, never downgrade.
+Invariants at every gear: a human approval per feature, a traceability link, TDD, one code review,
+and the `aidlc:*` labels on created tickets.
+
 ## Configuration
 
 All organisation-specific values (Atlassian cloud id, Confluence space, GitLab docs repo,

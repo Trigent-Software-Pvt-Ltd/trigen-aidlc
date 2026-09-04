@@ -25,27 +25,36 @@ Produce the Feature documentation as the single source of truth for the project 
 > If there is NO source doc (pure green-field), the lightweight template below is enough and
 > the source-traceability/validation sections are optional.
 
-## Mode Selection (do this first)
+## Gear Selection (do this first)
 
-`/aidlc-intent` has two modes. **Default to the lightweight Feature Brief** unless the work
-genuinely needs full governance.
+AI-DLC always runs the **same steps** (intent → elaborate → design → verify → build → review). What
+changes is the **gear** — how much output each step emits. Resolve the gear before anything else and
+carry it through the whole feature, because every downstream skill reads it. Full model:
+@${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md.
 
-- **Feature Brief (lightweight — default).** One small feature, captured as a **single
-  human-readable prose brief** (~2-minute read), built end-to-end (frontend + backend + database),
-  **one approval**, references on a **separate page**. Follow
-  @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md. This is the everyday path — it keeps the review
-  burden human-sized and matches an agile "one small feature, finish, next" rhythm. If the ask is
-  bigger than one shippable slice, **propose a small backlog of briefs** (one per slice) instead of
-  a single large document. **Skip the heavy Steps 4–11 below** — a Feature Brief is done when the
-  single page is approved and (optionally) published + registered in the Features Index.
-- **Full Feature (governed — opt-in).** The complete Intent → (source traceability, validation
-  record, MVP slice, §0–§9 structure) flow in the Workflow below. Use only for genuinely
-  cross-cutting or regulated work: an architectural decision (tenancy, auth, canonical model), an
-  audit/compliance need, or a multi-team initiative.
+- **Standard (default).** All steps run, each producing a **compact single-feature output**. Intent
+  is a **Feature Brief**: one small feature, a single human-readable prose brief (~2-minute read),
+  built end-to-end (frontend + backend + database), references on a **separate page**, **one
+  approval**. Follow @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md. This is the everyday agile
+  path — governance kept, tower dropped. If the ask is bigger than one shippable slice, **propose a
+  small backlog of briefs** (one per slice). Elaborate/Design/Verify still run after this, each
+  light (see ceremony-scaling.md) — you do **not** stop at the brief.
+- **Quick.** Trivial / internal / one obvious task. Same Feature Brief, but Elaborate/Design/Verify
+  **fold into it** and you go straight to `/aidlc-sprint`. Reach for this only when the work is
+  genuinely throwaway-small.
+- **Deep (governed — opt-in).** The complete Intent → (source traceability, validation record, MVP
+  slice, §0–§9 structure) flow in the Workflow below, then full Epics / domain model + ADRs / full
+  verify. Use only for genuinely cross-cutting or regulated work: an architectural decision (tenancy,
+  auth, canonical model), an audit/compliance need, or a multi-team initiative.
 
-Resolve the default from config: `featureBrief.enabled: true` (default) → Feature Brief; `false` or
-the user answering "full" → the governed flow. **When in doubt, start with a Feature Brief** — a
-brief can always raise a cross-cutting ADR without becoming a tower.
+Resolve the gear from config `ceremony.default` (default `standard`), or let the user pick per
+feature. **When in doubt, use Standard** — a Standard feature can still raise one cross-cutting ADR
+(escalate that single decision to Deep) without turning the whole feature into a tower. **One-way
+ratchet:** upgrade the gear if hidden complexity surfaces mid-feature; never downgrade.
+
+For Quick and Standard, Intent's output is the Feature Brief, so the heavy Steps 4–11 below are the
+**Deep** path; at Quick/Standard you produce the brief (approved, optionally published + registered
+in the Features Index) and hand off to `/aidlc-elaborate`, which will also run light.
 
 ## Backend Selection
 

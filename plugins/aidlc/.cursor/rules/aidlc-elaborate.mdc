@@ -9,7 +9,18 @@ Goal: decompose an approved **Feature** into **Epics** (self-contained, loosely 
 areas) and **Stories** (user-story format). Follow the full workflow in
 `skills/aidlc-elaborate/SKILL.md`.
 
-Summary:
+**Ceremony gear (read first).** Carried from `/aidlc-intent` (`ceremony.default`; full model
+`references/ceremony-scaling.md`). Elaborate runs at every gear but scales output:
+- **Quick** — skip; the brief carries the one task. Go to `/aidlc-sprint`.
+- **Standard (default)** — do **not** run the full mob ritual. Carve the one feature into **1–2
+  tasks**, a few lines each (title, one-line intent, FE/BE/DB touchpoints, done-when) in the brief
+  or a short child list — no Epic boundaries, no Sprint groupings, no Epics Overview. One quick
+  sign-off, then `/aidlc-design` (light).
+- **Deep** — the full Summary below (Epic boundaries, Stories, groupings, four phases).
+One-way ratchet: upgrade to Deep if the feature spans several cohesive Epics. The Summary is the Deep
+path.
+
+Summary (Deep):
 1. Load the approved Feature and its context.
 2. Propose Epics (loose coupling, high cohesion); get human validation.
 3. For each Epic, elaborate **Stories** with acceptance criteria.

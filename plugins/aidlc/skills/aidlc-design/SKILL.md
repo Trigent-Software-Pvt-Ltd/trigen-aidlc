@@ -7,6 +7,26 @@ description: Guide the Construction Phase with Domain Design, Logical Design, an
 
 Bridge from planning to implementation by creating Domain Designs, Logical Designs, and ADRs for approved Epics. Supports multiple backends: **GitLab** (markdown files in `design/` and `adrs/` directories), **Linear** (design doc Issues with "Design Doc" label), or **Confluence** (child pages).
 
+## Ceremony gear (do this first)
+
+Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full model:
+@${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md). Design runs at every gear; scale the output:
+
+- **Quick** — skip; the brief's "What we build" is the design. Go to `/aidlc-sprint`.
+- **Standard (default)** — produce a **short design note**, not the full tower: the contract/approach
+  in a paragraph or two (key entities/endpoints/data shape for this one feature), a small Mermaid
+  diagram only if it clarifies, and **only the ADR(s) this feature actually forces** (usually none —
+  if a real cross-cutting decision surfaces, raise exactly one ADR and treat that decision as Deep).
+  Then generate the **1–2 Task Specs** for this feature at enough depth to build (AC with concrete
+  values, data contract, error/edge notes) — keep the detail-sufficiency gate (no silent
+  `[ASSUMED]`), but skip the multi-epic domain model, deviation analysis, test-scope fan-out, and
+  team-sizing steps. One quick sign-off, then `/aidlc-verify` (light).
+- **Deep** — run the full checklist below: domain model, logical design, ADR set, detail-sufficiency
+  gate, test-scope sub-agents, Sprint groupings.
+
+The full checklist below is the **Deep** path. **One-way ratchet:** upgrade to Deep if the feature
+turns out to need a real domain model or a cross-cutting ADR.
+
 ## Completion Checklist
 
 > **IMPORTANT**: Create tasks for each step at the start using `TodoWrite`. Mark tasks complete as you go using `TodoWrite`. Each task description should reference the corresponding Workflow step.

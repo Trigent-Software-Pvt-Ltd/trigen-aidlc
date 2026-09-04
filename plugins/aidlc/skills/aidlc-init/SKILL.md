@@ -26,9 +26,9 @@ The generated `aidlc.config.yaml` has this shape (see `aidlc.config.example.yaml
 
 ```yaml
 backend:
-  default: "gitlab"
-featureBrief:
-  enabled: true             # /aidlc-intent default: lightweight single-feature brief (false = full governed Intent flow)          # gitlab | linear | confluence
+  default: "gitlab"          # gitlab | linear | confluence
+ceremony:
+  default: "standard"       # quick | standard | deep — how much each phase emits (steps always run). See references/ceremony-scaling.md
 atlassian:
   cloudId: ""                # e.g. yourcompany.atlassian.net   -> <ATLASSIAN_CLOUD_ID>
 confluence:

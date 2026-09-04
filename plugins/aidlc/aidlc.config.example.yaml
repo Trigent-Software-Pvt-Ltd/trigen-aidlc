@@ -10,12 +10,17 @@
 backend:
   default: "gitlab"
 
-# /aidlc-intent default lane. true => lightweight Feature Brief (one small feature, prose,
-# one approval, references on a separate page — see references/feature-brief.md). false =>
-# the full governed Intent -> Elaborate -> Design -> Verify flow. Either way, the user can
-# switch per feature at the mode prompt.
-featureBrief:
-  enabled: true
+# Ceremony gear — how much output every phase produces. The AI-DLC *steps* always run
+# (intent -> elaborate -> design -> verify -> build -> review); this only scales the *volume*
+# each step emits. See references/ceremony-scaling.md.
+#   quick    -> brief -> build. Elaborate/Design/Verify fold into the brief. Trivial/internal only.
+#   standard -> ALL steps run, each producing a compact single-feature output (the light lane:
+#               governance kept, tower dropped). One or two features at a time, end-to-end.
+#   deep     -> the full governed flow (§0–§9 Intent, Epics, domain model + ADRs, full verify).
+# One-way ratchet: any phase may UPGRADE the gear if hidden complexity surfaces, never downgrade.
+# The user can also pick a gear per feature at the start of /aidlc-intent.
+ceremony:
+  default: "standard"    # quick | standard | deep
 
 # Atlassian (Jira + Confluence) connection
 atlassian:

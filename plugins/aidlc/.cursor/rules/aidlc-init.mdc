@@ -16,9 +16,11 @@ Summary:
    `confluence.featureIndexPageId`, `jira.projectKey`, `gitlab.docsRepoUrl` / `docsRepoSsh` /
    `docsPath`, `linear.teamKey`, `links.performanceStandards`. Leave unknowns as `""`.
    Also write the behaviour blocks (defaults work on a stock Jira project):
-   - **`featureBrief.enabled: true`** — `/aidlc-intent` defaults to the lightweight single-feature
-     prose Brief (one approval, references on a separate page). Set `false` for the full governed
-     Intent flow. See `references/feature-brief.md`.
+   - **`ceremony.default: standard`** (`quick | standard | deep`) — how much output every phase
+     emits; the AI-DLC *steps* always run. `standard` = all phases light (Intent = one-page Feature
+     Brief, then light elaborate/design/verify), one/two features at a time. `quick` = brief → build.
+     `deep` = the full governed tower. See `references/ceremony-scaling.md` and
+     `references/feature-brief.md`.
    - **`jira.issueTypes`** (`epic: Epic`, `grouping: Story`, `leaf: Task`) + `leafAttach: link`,
      `linkType: Relates` — and `ado.*` equivalents (`grouping: User Story`, `leafAttach: parent`).
    - **`workItemTemplate`** — `enabled: true`; `labels` (default `aidlc, NoQA, <leafType>,
