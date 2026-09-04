@@ -16,17 +16,37 @@ Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full mode
 @${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md). Elaborate runs at every gear, but sizes its
 output:
 
-- **Quick** — skip; the Feature Brief already carries the one obvious task. Go to `/aidlc-sprint`.
-- **Standard (default)** — **do not run the full four-phase mob ritual below.** Carve the one
-  feature from its brief into **1–2 tasks**, a few lines each (title, one-line intent, the
-  frontend/backend/database touchpoints, done-when). Keep them in the brief or a short child list —
-  **no Epic boundaries, no Sprint groupings, no Epics Overview**. One quick sign-off, then
-  `/aidlc-design` (also light).
-- **Deep** — run the full Mob Elaboration below: Epic boundaries, Sprint groupings, Epic docs, the
-  four phases with approval gates.
+- **Quick** — skip the decomposition ceremony; the Feature Brief already carries the one obvious
+  task. Go to `/aidlc-sprint`. (If a ticket is created it still lands under an Epic + Sprint.)
+- **Standard (default)** — **keep the full hierarchy, drop the ritual.** First **attach-or-create the
+  Epic** (see below), then carve **this feature** into a **handful of Stories/Tasks** (a few lines
+  each: title, one-line intent, the frontend/backend/database touchpoints, done-when) and **group
+  them into one Sprint** under that Epic. The feature is sized to ~one two-week sprint; the Epic may
+  hold several related features. **Skip** the four-phase mob ritual, the parallel theme-cluster
+  agents, and the separate Epics Overview page — but **do** produce the Epic → Sprint → Story/Task
+  structure so everything stays grounded and traceable. One quick sign-off, then `/aidlc-design`.
+
+  **Attach-or-create the Epic (do this before writing tasks):**
+  1. Read the brief's parent initiative and references; **search the tracker + docs for an existing
+     Epic** covering the same area (initiative page, sibling/same-area Epic).
+  2. If a **related** Epic exists, **propose attaching** this feature under it as a **new Sprint**
+     (a fresh `aidlc:sprint` grouping holding this feature's Stories/Tasks) — confirm with the user
+     before writing.
+  3. If none fits, **create a new Epic named for the area/initiative** (e.g. "Workspace Setup"), not
+     the single feature, so later related features can attach to it too.
+  This is how related features accumulate under one Epic instead of each spawning its own.
+- **Deep** — run the full Mob Elaboration below: **multiple** Epic boundaries, Sprint groupings, Epic
+  docs, Epics Overview, the four phases with approval gates.
 
 The rest of this skill (the four-phase ritual) is the **Deep** path. **One-way ratchet:** if a
 "Standard" feature turns out to span several cohesive Epics, upgrade to Deep and run the ritual.
+**Light means less content and fewer items — never a flatter hierarchy.**
+
+> **Publish gate (every gear — do NOT skip at Quick/Standard).** Running this phase is not consent to
+> publish. **Draft the tasks in chat first, show them to the user, and get an explicit "go" before
+> any write to Confluence / GitLab / Linear / Jira.** Only after approval create/update the page,
+> file or issue. If the user only said "run elaborate", that means *produce the draft for review* —
+> not *publish it*. When unsure whether you have approval, you do not — ask.
 
 > **AIDLC 3.9+ flow: Epics first, Tasks second**
 >

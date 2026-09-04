@@ -13,13 +13,19 @@ Goal: turn approved **Stories** into a domain/logical design with ADRs and imple
 - **Quick** — skip; the brief's "What we build" is the design. Go to `/aidlc-sprint`.
 - **Standard (default)** — a **short design note** (contract/approach in a paragraph or two for this
   one feature; a small Mermaid only if it clarifies) **+ only the ADR(s) the feature actually forces**
-  (usually none). Then the **1–2 Task Specs** at build depth (AC with concrete values, data contract,
-  error/edge notes) — keep the detail-sufficiency gate (no silent `[ASSUMED]`); skip the multi-epic
-  domain model, deviation analysis, test-scope fan-out, and team sizing. One quick sign-off, then
-  `/aidlc-verify` (light).
+  (usually none). Then **Task Specs under each Story** of the feature's one Epic at build depth (AC
+  with concrete values, data contract, error/edge notes) — keep the detail-sufficiency gate (no
+  silent `[ASSUMED]`); skip the multi-epic domain model, deviation analysis, test-scope fan-out, and
+  team sizing. The Epic + Sprint from elaborate stay intact. One quick sign-off, then `/aidlc-verify`
+  (light).
 - **Deep** — the full Summary below (domain model, logical design, ADR set, test scopes, groupings).
 One-way ratchet: upgrade to Deep if a real domain model or cross-cutting ADR is needed. The Summary
 is the Deep path.
+
+**Publish gate (every gear).** Running this phase is not consent to publish. Draft the design note +
+Task Specs in chat, show the user, get an explicit "go" **before** any write to
+Confluence/GitLab/Linear. (Deep's Step 3 "In Review" gate is the same rule for the heavy path.) When
+unsure, ask.
 
 > **This skill has TWO halves in one run:** (1) Domain Design → approve, and (2) Task
 > Specifications → approve. On entry, check the epic's Feature status: if **Domain Design is

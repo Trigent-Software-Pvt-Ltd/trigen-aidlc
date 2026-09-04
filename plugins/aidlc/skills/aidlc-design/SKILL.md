@@ -17,15 +17,23 @@ Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full mode
   in a paragraph or two (key entities/endpoints/data shape for this one feature), a small Mermaid
   diagram only if it clarifies, and **only the ADR(s) this feature actually forces** (usually none —
   if a real cross-cutting decision surfaces, raise exactly one ADR and treat that decision as Deep).
-  Then generate the **1–2 Task Specs** for this feature at enough depth to build (AC with concrete
-  values, data contract, error/edge notes) — keep the detail-sufficiency gate (no silent
-  `[ASSUMED]`), but skip the multi-epic domain model, deviation analysis, test-scope fan-out, and
-  team-sizing steps. One quick sign-off, then `/aidlc-verify` (light).
+  Then generate **Task Specs under each Story** of the feature's one Epic at enough depth to build
+  (AC with concrete values, data contract, error/edge notes) — keep the detail-sufficiency gate (no
+  silent `[ASSUMED]`), but skip the multi-epic domain model, deviation analysis, test-scope fan-out,
+  and team-sizing steps. The Epic + Sprint from `/aidlc-elaborate` stay intact — Task Specs attach to
+  their Stories, they don't replace the hierarchy. One quick sign-off, then `/aidlc-verify` (light).
 - **Deep** — run the full checklist below: domain model, logical design, ADR set, detail-sufficiency
   gate, test-scope sub-agents, Sprint groupings.
 
 The full checklist below is the **Deep** path. **One-way ratchet:** upgrade to Deep if the feature
 turns out to need a real domain model or a cross-cutting ADR.
+
+> **Publish gate (every gear — do NOT skip at Quick/Standard).** Running this phase is not consent to
+> publish. **Draft the design note + Task Specs in chat first, show them to the user, and get an
+> explicit "go" before any write to Confluence / GitLab / Linear.** Only after approval store the
+> artifacts. If the user only said "run design", that means *produce the draft for review* — not
+> *publish it*. (The Deep checklist already has its "In Review" publish gates at Steps 8/16; this
+> makes the same rule explicit for the light path.) When unsure whether you have approval, ask.
 
 ## Completion Checklist
 

@@ -10,12 +10,14 @@ Goal: capture the feature. Follow the full workflow in `skills/aidlc-intent/SKIL
 **Gear (choose first — the steps always run; this scales output). Full model:
 `references/ceremony-scaling.md`. Resolve from `ceremony.default` (default `standard`) in
 `aidlc.config.yaml`, or let the user pick per feature.**
-- **Standard (default)** — all phases run, each light. Intent's output is a **Feature Brief**: one
-  small feature as a single human-readable prose brief (~2-min read), built end-to-end (frontend +
-  backend + database), references on a **separate page**, **one approval**. Follow
-  `references/feature-brief.md`. If the ask is bigger than one shippable slice, propose a small
-  backlog of briefs. After approval, hand off to `/aidlc-elaborate` — it also runs light; you do
-  **not** stop at the brief.
+- **Standard (default)** — all phases run **and the full Feature → Epic → Sprint → Story/Task
+  hierarchy is kept**, each artifact just compact. Intent's output is a **Feature Brief**: one feature
+  sized to ~one two-week sprint / one Epic, a single human-readable prose brief (~2-min read), built
+  end-to-end (FE + BE + DB), references on a **separate page**, **one approval**. Follow
+  `references/feature-brief.md`. If the ask is bigger than one sprint-sized slice, propose a small
+  backlog of briefs. After approval, hand off to `/aidlc-elaborate` — it turns the brief into one
+  Epic + Stories/Tasks in one Sprint (light); you do **not** stop at the brief or flatten the
+  hierarchy.
 - **Quick** — trivial/internal. Same brief, but elaborate/design/verify fold into it; go straight
   to `/aidlc-sprint`.
 - **Deep (opt-in)** — the governed Intent → Elaborate → Design → Verify flow (§0–§9, source

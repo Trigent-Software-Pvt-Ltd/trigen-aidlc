@@ -15,11 +15,16 @@ Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full mode
 - **Quick** — skip verification; build straight from the brief. (Still apply the `aidlc:*` labels if
   a ticket is created.)
 - **Standard (default)** — a **quick readiness check** on the one feature (is the brief + short
-  design note + 1–2 Task Specs enough to build? any unresolved `[ASSUMED]`?), then go **straight to
-  the Jira Transfer Phase** and create the **one or two tickets** with the full work-item template
-  (rich description, per-ticket labels, Story Points + Original Estimate — see
-  @${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md). **Skip** the multi-Epic verification
-  subagent fan-out and confidence-scoring rubric (Phases 2–4) — there is one feature to eyeball.
+  design note + Task Specs enough to build? any unresolved `[ASSUMED]`?), then go **straight to the
+  Jira Transfer Phase** and create the **full Feature → Epic → Sprint → Story/Task hierarchy** — one
+  Epic, one Sprint grouping (`aidlc:sprint`), its Stories/Tasks — with the full work-item template on
+  each leaf (rich description, per-ticket labels, Story Points + Original Estimate — see
+  @${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md). It's the **same hierarchy as Deep, just
+  fewer items** (one Epic, one Sprint). **If elaborate attached this feature to an existing Epic,
+  reuse that Epic** — find it by title/`aidlc:epic` label and create only the new Sprint grouping +
+  leaves under it (the task-creator is idempotent per Epic); do not create a duplicate Epic. **Skip**
+  only the multi-Epic verification subagent fan-out and confidence-scoring rubric (Phases 2–4) —
+  there is one feature to eyeball, not many Epics.
 - **Deep** — run the full checklist below: per-Epic verification subagents, consolidated confidence
   score, gap ranking, then the fan-out transfer.
 
@@ -27,6 +32,12 @@ The full checklist below is the **Deep** path; at Standard use only the readines
 Transfer Phase. **One-way ratchet:** upgrade to Deep if readiness is genuinely in doubt across
 multiple Epics. The rich work-item template (labels + estimation) applies at **every** gear that
 creates tickets.
+
+> **Publish gate (every gear — do NOT skip at Quick/Standard).** Creating Jira/Linear/ADO tickets is
+> an irreversible-ish write to a shared tracker. **Show the drafted ticket(s) — title, description,
+> labels, estimate — in chat and get an explicit "go" before creating anything.** Running verify is
+> not consent to create tickets. This is in addition to the existing "Confirm Jira transfer" step.
+> When unsure whether you have approval, you do not — ask.
 
 ## Completion Checklist
 

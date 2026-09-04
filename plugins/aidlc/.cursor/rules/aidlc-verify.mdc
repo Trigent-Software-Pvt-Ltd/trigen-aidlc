@@ -13,15 +13,22 @@ Goal: verify readiness and create the work-tracking artifacts. Follow the full w
 - **Quick** — skip verification; build from the brief (still apply `aidlc:*` labels if a ticket is
   created).
 - **Standard (default)** — a **quick readiness check** on the one feature (brief + short design note
-  + 1–2 Task Specs enough to build? any unresolved `[ASSUMED]`?), then go **straight to creating the
-  one or two tickets** with the full work-item template (rich description, per-ticket labels, Story
-  Points + Original Estimate). **Skip** the multi-Epic verification-subagent fan-out and
-  confidence-scoring rubric — there is one feature to eyeball.
+  + Task Specs enough to build? any unresolved `[ASSUMED]`?), then create the **full Feature → Epic →
+  Sprint → Story/Task hierarchy** (one Epic, one `aidlc:sprint` grouping, its Stories/Tasks) with the
+  full work-item template on each leaf (rich description, per-ticket labels, Story Points + Original
+  Estimate). **Same hierarchy as Deep, just fewer items.** If elaborate attached this feature to an
+  **existing** Epic, reuse it (find by title/`aidlc:epic`; create only the new Sprint + leaves under
+  it — task-creator is idempotent per Epic; no duplicate Epic). Skip only the multi-Epic
+  verification-subagent fan-out and confidence-scoring rubric — one feature to eyeball, not many Epics.
 - **Deep** — the full Summary below (per-Epic verification subagents, consolidated score, gap
   ranking, fan-out transfer).
 One-way ratchet: upgrade to Deep if readiness is genuinely in doubt across multiple Epics. The rich
 work-item template (labels + estimation, steps 3–4 below) applies at **every** gear that creates
 tickets.
+
+**Publish gate (every gear).** Creating tickets is a write to a shared tracker. Show the drafted
+ticket(s) — title, description, labels, estimate — in chat and get an explicit "go" **before**
+creating anything. Running verify is not consent to create tickets. When unsure, ask.
 
 Summary (Deep — Standard uses the readiness check + steps 3–5 only):
 1. Detect the backend from existing artifacts (do not re-prompt).

@@ -11,14 +11,25 @@ areas) and **Stories** (user-story format). Follow the full workflow in
 
 **Ceremony gear (read first).** Carried from `/aidlc-intent` (`ceremony.default`; full model
 `references/ceremony-scaling.md`). Elaborate runs at every gear but scales output:
-- **Quick** — skip; the brief carries the one task. Go to `/aidlc-sprint`.
-- **Standard (default)** — do **not** run the full mob ritual. Carve the one feature into **1–2
-  tasks**, a few lines each (title, one-line intent, FE/BE/DB touchpoints, done-when) in the brief
-  or a short child list — no Epic boundaries, no Sprint groupings, no Epics Overview. One quick
-  sign-off, then `/aidlc-design` (light).
-- **Deep** — the full Summary below (Epic boundaries, Stories, groupings, four phases).
-One-way ratchet: upgrade to Deep if the feature spans several cohesive Epics. The Summary is the Deep
-path.
+- **Quick** — skip the ceremony; the brief carries the one task. Go to `/aidlc-sprint` (still lands
+  under an Epic + Sprint if ticketed).
+- **Standard (default)** — **keep the full hierarchy, drop the ritual.** First **attach-or-create the
+  Epic**: search the tracker + docs for an existing Epic covering the same area (from the brief's
+  parent initiative/references); if a **related** Epic exists, propose attaching this feature under it
+  as a **new Sprint** (confirm first); else create a new Epic **named for the area/initiative** (not
+  the single feature) so later related features attach too. Then carve **this feature** into a
+  **handful of Stories/Tasks** (a few lines each: title, one-line intent, FE/BE/DB touchpoints,
+  done-when) grouped in **one Sprint** under that Epic. Feature sized to ~one two-week sprint; an Epic
+  may hold several related features. Skip the four-phase mob ritual, the theme-cluster agents, and the
+  Epics Overview — but **do** produce the Epic → Sprint → Story/Task structure. One quick sign-off,
+  then `/aidlc-design` (light).
+- **Deep** — the full Summary below (**multiple** Epic boundaries, Stories, groupings, four phases).
+One-way ratchet: upgrade to Deep if the feature spans several cohesive Epics. Light = less content and
+fewer items, **never a flatter hierarchy**. The Summary is the Deep path.
+
+**Publish gate (every gear).** Running this phase is not consent to publish. Draft the tasks in chat,
+show the user, get an explicit "go" **before** any write to Confluence/GitLab/Linear/Jira. "Run
+elaborate" means produce the draft for review, not publish it. When unsure, ask.
 
 Summary (Deep):
 1. Load the approved Feature and its context.

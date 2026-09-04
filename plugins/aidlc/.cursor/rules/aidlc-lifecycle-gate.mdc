@@ -50,15 +50,22 @@ once from `ceremony.default` in `aidlc.config.yaml` (or the user's per-feature c
 through. Full model: `../../references/ceremony-scaling.md`.
 
 - **quick** — brief → build; elaborate/design/verify fold into the brief. Trivial/internal only.
-- **standard** (default) — **all** phases run, each producing a compact single-feature output
-  (Intent = one-page Feature Brief, then light elaborate/design/verify). One or two features at a
-  time, end-to-end (FE+BE+DB). This is the light lane: governance kept, tower dropped.
+- **standard** (default) — **all** phases run **and the full Feature → Epic → Sprint → Story/Task
+  hierarchy is kept**, each artifact just compact (Intent = one-page Feature Brief; elaborate = one
+  Epic + a handful of Stories/Tasks in one Sprint; light design/verify). A feature is sized to ~one
+  two-week sprint / one Epic. This is the light lane: **structure and governance kept, tower dropped**
+  — light means less content and fewer items, never a flatter hierarchy.
 - **deep** — the full governed flow (§0–§9 Intent, Epics, domain model + ADRs, full verify). For
   cross-cutting/regulated/multi-team work.
 
 One-way ratchet: any phase may **upgrade** the gear when hidden complexity surfaces, never downgrade.
 Invariants at every gear: a human approval per feature, a traceability link, TDD, one code review,
 and the `aidlc:*` labels on created tickets.
+
+**Publish gate (every gear, every phase): show draft → get approval → publish, in that order.** No
+phase writes to a shared system of record (Confluence, GitLab, Linear, Jira) until the human has seen
+the drafted content in chat and said go. "Run the phase" is not consent to publish. When unsure
+whether you have approval, you do not — ask.
 
 ## Configuration
 

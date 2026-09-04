@@ -4,11 +4,13 @@ The Feature Brief is **`/aidlc-intent`'s output at the Quick and Standard gears*
 `ceremony-scaling.md`): one small feature, written as a **single human-readable brief** (a ~2-minute
 read), built **end-to-end** (frontend + backend + database), reviewed and approved as **one page**.
 
-It is **not** a way to skip the rest of AI-DLC. At the **Standard** gear the brief is followed by a
-light Elaborate (1–2 tasks), a light Design (a short note + only forced ADRs) and a light Verify
-(readiness check + rich tickets) — every step still runs, each just sized to one feature. Only at the
-**Quick** gear do Elaborate/Design/Verify fold into the brief and you go straight to build. The full
-§0–§9 Intent tower is the **Deep** gear, reserved for cross-cutting or regulated work.
+It is **not** a way to skip the rest of AI-DLC, and **not** a way to flatten it. At the **Standard**
+gear the brief is followed by a light Elaborate (**one Epic + a handful of Stories/Tasks in one
+Sprint**), a light Design (a short note + only forced ADRs + Task Specs) and a light Verify (readiness
+check + the full Feature → Epic → Sprint → Story/Task tickets) — every step still runs and the full
+hierarchy is kept, each artifact just sized to one sprint-sized feature. Only at the **Quick** gear do
+Elaborate/Design/Verify fold into the brief and you go straight to build. The full §0–§9 Intent tower
+with multiple Epics is the **Deep** gear, reserved for cross-cutting or regulated work.
 
 > **Why:** the Deep flow front-loads heavy governance — a §0–§9 Intent, Epics, ADRs, verification,
 > design deltas — which is more than a human can read and approve per screen for an everyday feature.
@@ -16,9 +18,11 @@ light Elaborate (1–2 tasks), a light Design (a short note + only forced ADRs) 
 
 ## Core rules
 
-1. **One feature, sliced small.** A brief covers a single coherent capability that can ship on its
-   own end-to-end (e.g. "Create Workspace", not "Workspace Setup, steps 1–3"). If the ask is bigger,
-   **propose a small backlog of briefs** (one per shippable slice) rather than one giant document.
+1. **One feature, sized to a sprint.** A brief covers a single coherent capability that can ship on
+   its own end-to-end (e.g. "Create Workspace", not "Workspace Setup, steps 1–3"), scoped to roughly
+   **one two-week sprint / one Epic** of work. If the ask is bigger, **propose a small backlog of
+   briefs** (one per shippable slice) rather than one giant document. The brief is the Intent for that
+   feature; the feature still becomes **one Epic, scheduled in one Sprint**, at elaborate.
 2. **Prose, not tables.** Write like a person — short paragraphs a reader digests in ~2 minutes.
    No metadata grids, no `R#`/`P#` decision/risk tables, no version-history apparatus.
 3. **References live on a separate page.** Keep links (design, API, code, context) off the brief so
@@ -46,13 +50,16 @@ light Elaborate (1–2 tasks), a light Design (a short note + only forced ADRs) 
 ## What happens after the brief (Standard gear)
 
 The brief is the Intent step, not the end. At Standard, hand off through the rest of the lifecycle,
-each phase light (see `ceremony-scaling.md`):
+each phase light but the **full hierarchy kept** (see `ceremony-scaling.md`):
 
-- **`/aidlc-elaborate`** — carve the brief into **1–2 tasks**, a few lines each. No Epics/Overviews.
+- **`/aidlc-elaborate`** — turn the brief into **one Epic** (short epic note) with a **handful of
+  Stories/Tasks**, all assigned to **one Sprint**. Skip the mob ritual and Epics Overview, keep the
+  Epic → Sprint → Story/Task structure.
 - **`/aidlc-design`** — a **short design note** (contract/approach in a paragraph or two) plus **only
-  the ADR(s) this feature actually forces** (usually none).
-- **`/aidlc-verify`** — a **quick readiness check**, then create the one or two tickets with the rich
-  work-item template (labels + estimate).
+  the ADR(s) this feature actually forces** (usually none), then Task Specs under each Story.
+- **`/aidlc-verify`** — a **quick readiness check**, then create the full Feature → Epic → Sprint →
+  Story/Task hierarchy in Jira with the rich work-item template (labels + estimate) — fewer items,
+  same structure.
 - **`/aidlc-sprint`** / **`/aidlc-review`** — build TDD-first, one code review before merge.
 
 ## When to escalate to Deep (opt-in)

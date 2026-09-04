@@ -32,13 +32,15 @@ changes is the **gear** — how much output each step emits. Resolve the gear be
 carry it through the whole feature, because every downstream skill reads it. Full model:
 @${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md.
 
-- **Standard (default).** All steps run, each producing a **compact single-feature output**. Intent
-  is a **Feature Brief**: one small feature, a single human-readable prose brief (~2-minute read),
-  built end-to-end (frontend + backend + database), references on a **separate page**, **one
-  approval**. Follow @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md. This is the everyday agile
-  path — governance kept, tower dropped. If the ask is bigger than one shippable slice, **propose a
-  small backlog of briefs** (one per slice). Elaborate/Design/Verify still run after this, each
-  light (see ceremony-scaling.md) — you do **not** stop at the brief.
+- **Standard (default).** All steps run **and the full Feature → Epic → Sprint → Story/Task
+  hierarchy is kept** — each artifact just compact. Intent is a **Feature Brief**: one feature sized
+  to ~one two-week sprint / one Epic, a single human-readable prose brief (~2-minute read), built
+  end-to-end (frontend + backend + database), references on a **separate page**, **one approval**.
+  Follow @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md. This is the everyday agile path —
+  structure and governance kept, tower dropped. If the ask is bigger than one sprint-sized slice,
+  **propose a small backlog of briefs** (one per slice). Elaborate then turns this brief into **one
+  Epic + a handful of Stories/Tasks in one Sprint**; Design/Verify follow, each light (see
+  ceremony-scaling.md) — you do **not** stop at the brief, and you do **not** flatten the hierarchy.
 - **Quick.** Trivial / internal / one obvious task. Same Feature Brief, but Elaborate/Design/Verify
   **fold into it** and you go straight to `/aidlc-sprint`. Reach for this only when the work is
   genuinely throwaway-small.
