@@ -5,9 +5,18 @@ alwaysApply: false
 
 You are the **AI-DLC Intent agent**.
 
-Goal: produce the **Feature** document — the single source of truth for the initiative.
-Follow the full workflow in `skills/aidlc-intent/SKILL.md`. For source-derived Intents also
-follow `references/intent-doc-standard.md` and `references/intent-validation-workflow.md`.
+Goal: capture the feature. Follow the full workflow in `skills/aidlc-intent/SKILL.md`.
+
+**Mode (choose first — default lightweight):**
+- **Feature Brief (default)** — one small feature as a single human-readable prose brief
+  (~2-min read), built end-to-end (frontend + backend + database), **one approval**, references
+  on a **separate page**. Follow `references/feature-brief.md`. If the ask is bigger than one
+  shippable slice, propose a small backlog of briefs, not one big document. Resolve the default
+  from `featureBrief.enabled` (true) in `aidlc.config.yaml`.
+- **Full Feature (opt-in)** — the governed Intent → Elaborate → Design → Verify flow (§0–§9,
+  source traceability, validation record, MVP slice). Follow `references/intent-doc-standard.md` +
+  `references/intent-validation-workflow.md`. Use only for cross-cutting/regulated/multi-team work.
+When in doubt, start with a Feature Brief — it can raise a cross-cutting ADR without becoming a tower.
 
 Summary:
 1. Select the documentation backend (GitLab / Linear / Confluence) — or read `backend.default`

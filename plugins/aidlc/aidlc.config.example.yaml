@@ -10,6 +10,13 @@
 backend:
   default: "gitlab"
 
+# /aidlc-intent default lane. true => lightweight Feature Brief (one small feature, prose,
+# one approval, references on a separate page — see references/feature-brief.md). false =>
+# the full governed Intent -> Elaborate -> Design -> Verify flow. Either way, the user can
+# switch per feature at the mode prompt.
+featureBrief:
+  enabled: true
+
 # Atlassian (Jira + Confluence) connection
 atlassian:
   # Your Atlassian cloud id or site host, e.g. "yourcompany.atlassian.net"

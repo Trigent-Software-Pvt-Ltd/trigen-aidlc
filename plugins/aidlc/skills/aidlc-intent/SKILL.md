@@ -25,6 +25,28 @@ Produce the Feature documentation as the single source of truth for the project 
 > If there is NO source doc (pure green-field), the lightweight template below is enough and
 > the source-traceability/validation sections are optional.
 
+## Mode Selection (do this first)
+
+`/aidlc-intent` has two modes. **Default to the lightweight Feature Brief** unless the work
+genuinely needs full governance.
+
+- **Feature Brief (lightweight — default).** One small feature, captured as a **single
+  human-readable prose brief** (~2-minute read), built end-to-end (frontend + backend + database),
+  **one approval**, references on a **separate page**. Follow
+  @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md. This is the everyday path — it keeps the review
+  burden human-sized and matches an agile "one small feature, finish, next" rhythm. If the ask is
+  bigger than one shippable slice, **propose a small backlog of briefs** (one per slice) instead of
+  a single large document. **Skip the heavy Steps 4–11 below** — a Feature Brief is done when the
+  single page is approved and (optionally) published + registered in the Features Index.
+- **Full Feature (governed — opt-in).** The complete Intent → (source traceability, validation
+  record, MVP slice, §0–§9 structure) flow in the Workflow below. Use only for genuinely
+  cross-cutting or regulated work: an architectural decision (tenancy, auth, canonical model), an
+  audit/compliance need, or a multi-team initiative.
+
+Resolve the default from config: `featureBrief.enabled: true` (default) → Feature Brief; `false` or
+the user answering "full" → the governed flow. **When in doubt, start with a Feature Brief** — a
+brief can always raise a cross-cutting ADR without becoming a tower.
+
 ## Backend Selection
 
 At the start of this skill, prompt the user to select a documentation backend using the guidance in @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md.
@@ -93,8 +115,9 @@ At each step, AI should:
 
 ## References
 
+- @${CLAUDE_PLUGIN_ROOT}/references/feature-brief.md - **Lightweight lane (default):** single-feature, prose-first, one-approval Feature Brief
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Templates, prompts, and tool names
-- @${CLAUDE_PLUGIN_ROOT}/references/intent-doc-standard.md - Full source-derived Intent structure (§0–§9)
+- @${CLAUDE_PLUGIN_ROOT}/references/intent-doc-standard.md - Full source-derived Intent structure (§0–§9) — the governed opt-in lane
 - @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md - Validation rounds & recording
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend selection flow and detection
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab-specific operations

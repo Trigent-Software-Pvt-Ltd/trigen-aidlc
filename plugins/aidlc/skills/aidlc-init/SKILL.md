@@ -26,7 +26,9 @@ The generated `aidlc.config.yaml` has this shape (see `aidlc.config.example.yaml
 
 ```yaml
 backend:
-  default: "gitlab"          # gitlab | linear | confluence
+  default: "gitlab"
+featureBrief:
+  enabled: true             # /aidlc-intent default: lightweight single-feature brief (false = full governed Intent flow)          # gitlab | linear | confluence
 atlassian:
   cloudId: ""                # e.g. yourcompany.atlassian.net   -> <ATLASSIAN_CLOUD_ID>
 confluence:
