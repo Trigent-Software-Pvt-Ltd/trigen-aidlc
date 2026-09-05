@@ -29,6 +29,9 @@ backend:
   default: "gitlab"          # gitlab | linear | confluence
 ceremony:
   default: "standard"       # quick | standard | deep — how much each phase emits (steps always run). See references/ceremony-scaling.md
+constitution:
+  enabled: true             # one-page project principles/constraints intent/design/verify check against (references/constitution.md)
+  path: "aidlc.constitution.md"
 atlassian:
   cloudId: ""                # e.g. yourcompany.atlassian.net   -> <ATLASSIAN_CLOUD_ID>
 confluence:
@@ -116,7 +119,15 @@ Every skill resolves them by reading `aidlc.config.yaml`.
    - Confirm the file path and remind the user this file may contain internal URLs/keys —
      add it to `.gitignore` if those are sensitive (offer to do so).
 
-5. **Next step**
+5. **Offer the project Constitution (optional, recommended)**
+   - When `constitution.enabled`, offer to create `aidlc.constitution.md` from the one-page template
+     in @${CLAUDE_PLUGIN_ROOT}/references/constitution.md. Ask a few short questions (non-negotiable
+     principles, key constraints incl. tenancy/data, and which `standards` links apply) and fill the
+     template — **keep it to one page; link the `standards` plugin instead of restating standards.**
+   - If the user declines or has nothing project-specific yet, skip it — intent/design/verify simply
+     run without a constitution. It can be added later by re-running this step.
+
+6. **Next step**
    - Tell the user they can now run `/aidlc-intent` to capture the first **Feature**.
 
 ## Reading config from other skills

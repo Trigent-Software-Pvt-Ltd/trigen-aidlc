@@ -26,6 +26,14 @@ One-way ratchet: upgrade to Deep if readiness is genuinely in doubt across multi
 work-item template (labels + estimation, steps 3–4 below) applies at **every** gear that creates
 tickets.
 
+**Coherence check (before any ticket, every gear except Quick).** Distinct from readiness (which asks
+"enough detail?"): coherence asks "do the artifacts agree with each other and the Constitution?" Scan
+brief/Intent ↔ design note ↔ Task Specs (↔ `aidlc.constitution.md` if present) and flag drift — an AC
+not traceable to the brief, a data-contract field missing from the schema, a choice violating a
+constitution constraint with no ADR, an unresolved open question/`[ASSUMED]`. Output `Coherent` or a
+short drift list; **drift is fixed or explicitly accepted before transfer.** Standard = single-feature
+pass; Deep = across all Epics.
+
 **Publish gate (every gear).** Creating tickets is a write to a shared tracker. Show the drafted
 ticket(s) — title, description, labels, estimate — in chat and get an explicit "go" **before**
 creating anything. Running verify is not consent to create tickets. When unsure, ask.

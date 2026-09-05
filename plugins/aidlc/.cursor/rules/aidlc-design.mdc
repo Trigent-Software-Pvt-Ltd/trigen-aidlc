@@ -27,6 +27,10 @@ Task Specs in chat, show the user, get an explicit "go" **before** any write to
 Confluence/GitLab/Linear. (Deep's Step 3 "In Review" gate is the same rule for the heavy path.) When
 unsure, ask.
 
+**Honor the Constitution.** If `aidlc.constitution.md` exists, read it before designing; a decision
+that **breaks a constraint requires an ADR** (usually Deep), never a silent exception. Its conventions
+(and the `standards` it links) are your defaults.
+
 > **This skill has TWO halves in one run:** (1) Domain Design → approve, and (2) Task
 > Specifications → approve. On entry, check the epic's Feature status: if **Domain Design is
 > already ✅ Approved but Task Specification is not**, the previous run stopped at the half-way

@@ -58,6 +58,12 @@ For Quick and Standard, Intent's output is the Feature Brief, so the heavy Steps
 **Deep** path; at Quick/Standard you produce the brief (approved, optionally published + registered
 in the Features Index) and hand off to `/aidlc-elaborate`, which will also run light.
 
+## Honor the project Constitution
+
+If `constitution.enabled` and `aidlc.constitution.md` exists, **read it first**. The brief/Intent must
+not contradict a constitution **principle or constraint**; where there is genuine tension, surface it
+as an **open question** (don't silently override it). No constitution file → proceed normally.
+
 ## Backend Selection
 
 At the start of this skill, prompt the user to select a documentation backend using the guidance in @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md.

@@ -35,6 +35,13 @@ turns out to need a real domain model or a cross-cutting ADR.
 > *publish it*. (The Deep checklist already has its "In Review" publish gates at Steps 8/16; this
 > makes the same rule explicit for the light path.) When unsure whether you have approval, ask.
 
+## Honor the project Constitution
+
+If `constitution.enabled` and `aidlc.constitution.md` exists, **read it before designing**. A design
+decision that **breaks a constitution constraint requires an ADR** (and usually the Deep gear) — never
+a silent exception. Conventions in the constitution (and the `standards` it links) are the defaults
+your design and Task Specs follow. No constitution file → proceed normally.
+
 ## Completion Checklist
 
 > **IMPORTANT**: Create tasks for each step at the start using `TodoWrite`. Mark tasks complete as you go using `TodoWrite`. Each task description should reference the corresponding Workflow step.

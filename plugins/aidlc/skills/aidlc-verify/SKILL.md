@@ -39,6 +39,23 @@ creates tickets.
 > not consent to create tickets. This is in addition to the existing "Confirm Jira transfer" step.
 > When unsure whether you have approval, you do not — ask.
 
+## Coherence check (before creating any ticket — every gear except Quick)
+
+Distinct from the readiness/confidence check: **readiness asks "is there enough detail?"; coherence
+asks "do the artifacts agree with each other and the Constitution?"** Run a quick cross-artifact scan
+of brief/Intent ↔ design note ↔ Task Specs (↔ `aidlc.constitution.md` when present) and flag **drift**:
+
+- a Task Spec acceptance criterion **not traceable** to the brief/Intent (or vice-versa: a brief
+  promise with no task),
+- a data-contract field **missing from the schema** (or a schema field never set/returned),
+- a design or task choice that **violates a constitution principle/constraint** with no ADR,
+- an **open question or `[ASSUMED]`** left unresolved.
+
+Output a **short report**: `Coherent`, or a list of drift items. **Drift must be fixed or explicitly
+accepted by the user before transfer** — do not create tickets over unacknowledged drift. At
+**Standard** this is a single-feature pass (a few lines); at **Deep** it spans all Epics; **Quick**
+skips it. This is the AI-DLC equivalent of a spec/plan/tasks consistency gate.
+
 ## Completion Checklist
 
 > **IMPORTANT**: Create tasks for each step at the start using `TodoWrite`. Mark tasks complete as you go using `TodoWrite`. Each task description should reference the corresponding Workflow step.

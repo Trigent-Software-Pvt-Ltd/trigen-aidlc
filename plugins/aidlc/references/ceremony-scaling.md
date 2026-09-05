@@ -47,7 +47,7 @@ decision** to Deep (raise a single ADR) without turning the whole feature into a
 | **Intent** (`/aidlc-intent`) | One-page **Feature Brief** (prose; see `feature-brief.md`) | Same **Feature Brief** — this *is* the light intent; the feature is sized to ~one Epic / one sprint | Full §0–§9 source-derived Intent (`intent-doc-standard.md`) + validation record |
 | **Elaborate** (`/aidlc-elaborate`) | *folded into the brief* (still lands under an Epic + Sprint if ticketed) | **Attach to a related Epic or create one** (named for the area, not the single feature), add **this feature as one Sprint** of a handful of **Stories/Tasks** — the full hierarchy, compact. Skip the multi-epic mob ritual and the separate Epics Overview | **Multiple** Epics via full Mob Elaboration + Sprint groupings + Epics Overview |
 | **Design** (`/aidlc-design`) | *folded into the brief's "What we build"* | A **short design note** (contract/approach in a paragraph or two) **+ only the ADR(s) the feature actually forces** (usually none), then **Task Specs under each Story** at build depth | Full domain model, logical design, ADR set, detail-sufficiency gate |
-| **Verify** (`/aidlc-verify`) | *skipped — build straight from the brief* | **Quick readiness check**, then create the **full Feature → Epic → Sprint → Story/Task hierarchy** with the rich work-item template (labels, estimate) — just fewer items | Full verification rubric + confidence score + fan-out transfer across many Epics |
+| **Verify** (`/aidlc-verify`) | *skipped — build straight from the brief* | **Readiness + coherence check** (single-feature), then create the **full Feature → Epic → Sprint → Story/Task hierarchy** with the rich work-item template (labels, estimate) — just fewer items | Full verification rubric + confidence score + **cross-Epic coherence** + fan-out transfer |
 | **Sprint** (`/aidlc-sprint`) | Quick ceremony (skip consensus review) | Standard ceremony (one consensus pass) | Deep ceremony (architect+critic+experts, most-capable final review) — see `execution-rigor.md` §1 |
 | **Review** (`/aidlc-review`) | Two-stage verdict, light | Two-stage verdict | Two-stage verdict + whole-branch final review |
 
@@ -62,6 +62,11 @@ decision** to Deep (raise a single ADR) without turning the whole feature into a
   still precedes that phase's write. When unsure whether you have approval, you do not — ask.
 - **A traceability link** — each artifact points back to the one it came from (brief → tasks →
   tickets → PR), even when the artifact is a paragraph.
+- **The project Constitution is honored** (`aidlc.constitution.md` when present): intent/design/verify
+  check against its principles and constraints; a constraint breach needs an ADR, not a silent
+  exception.
+- **A coherence check before tickets are created** (Standard/Deep): brief ↔ design ↔ tasks ↔
+  constitution must agree; drift is fixed or explicitly accepted first.
 - **TDD** in the build.
 - **At least one code review** before merge.
 - **The `aidlc:*` labels** on created tickets, so work stays findable regardless of gear.

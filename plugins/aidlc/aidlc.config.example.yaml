@@ -22,6 +22,13 @@ backend:
 ceremony:
   default: "standard"    # quick | standard | deep
 
+# Project Constitution — a one-page, versioned statement of principles/constraints that intent,
+# design and verify are checked against (see references/constitution.md). `/aidlc-init` offers to
+# create it. Leave path as-is; set enabled:false to skip constitution checks entirely.
+constitution:
+  enabled: true
+  path: "aidlc.constitution.md"
+
 # Atlassian (Jira + Confluence) connection
 atlassian:
   # Your Atlassian cloud id or site host, e.g. "yourcompany.atlassian.net"

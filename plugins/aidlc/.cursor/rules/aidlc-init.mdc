@@ -21,6 +21,12 @@ Summary:
      Brief, then light elaborate/design/verify), one/two features at a time. `quick` = brief → build.
      `deep` = the full governed tower. See `references/ceremony-scaling.md` and
      `references/feature-brief.md`.
+   - **`constitution.enabled: true` / `path: aidlc.constitution.md`** — a one-page project
+     principles/constraints doc that intent/design/verify check against (see
+     `references/constitution.md`). After writing the config, **offer to create
+     `aidlc.constitution.md`** from that template: a few questions (non-negotiable principles, key
+     constraints incl. tenancy/data, applicable `standards` links), keep it to one page, link the
+     `standards` plugin instead of restating it. Skip if the user has nothing project-specific yet.
    - **`jira.issueTypes`** (`epic: Epic`, `grouping: Story`, `leaf: Task`) + `leafAttach: link`,
      `linkType: Relates` — and `ado.*` equivalents (`grouping: User Story`, `leafAttach: parent`).
    - **`workItemTemplate`** — `enabled: true`; `labels` (default `aidlc, NoQA, <leafType>,

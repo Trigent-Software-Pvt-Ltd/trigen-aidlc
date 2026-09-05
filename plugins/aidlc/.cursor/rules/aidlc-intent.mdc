@@ -27,6 +27,10 @@ When in doubt, use Standard — a Standard feature can raise one cross-cutting A
 tower. One-way ratchet: upgrade the gear if complexity surfaces, never downgrade. The heavy Summary
 steps below are the **Deep** path; at Quick/Standard produce the Feature Brief.
 
+**Honor the Constitution.** If `constitution.enabled` and `aidlc.constitution.md` exists, read it
+first; the brief/Intent must not contradict a principle/constraint — surface any tension as an open
+question, don't silently override. No file → proceed normally.
+
 Summary:
 1. Select the documentation backend (GitLab / Linear / Confluence) — or read `backend.default`
    from `aidlc.config.yaml`.

@@ -60,7 +60,9 @@ through. Full model: `../../references/ceremony-scaling.md`.
 
 One-way ratchet: any phase may **upgrade** the gear when hidden complexity surfaces, never downgrade.
 Invariants at every gear: a human approval per feature, a traceability link, TDD, one code review,
-and the `aidlc:*` labels on created tickets.
+the `aidlc:*` labels on created tickets, honoring the project **Constitution**
+(`aidlc.constitution.md` when present), and a **coherence check** (brief ↔ design ↔ tasks ↔
+constitution) before tickets are created.
 
 **Publish gate (every gear, every phase): show draft → get approval → publish, in that order.** No
 phase writes to a shared system of record (Confluence, GitLab, Linear, Jira) until the human has seen
