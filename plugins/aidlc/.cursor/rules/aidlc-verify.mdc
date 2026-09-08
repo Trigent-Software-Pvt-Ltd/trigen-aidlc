@@ -15,7 +15,8 @@ Goal: verify readiness and create the work-tracking artifacts. Follow the full w
 - **Standard (default)** — a **quick readiness check** on the one feature (brief + short design note
   + Task Specs enough to build? any unresolved `[ASSUMED]`?), then create the **full Feature → Epic →
   Sprint → Story/Task hierarchy** (one Epic, one `aidlc:sprint` grouping, its Stories/Tasks) with the
-  full work-item template on each leaf (rich description, per-ticket labels, Story Points + Original
+  full work-item template on **both the grouping (a feature-level user story from the brief/PRD, never
+  a one-line stub) and each leaf** (rich description, per-ticket labels, Story Points + Original
   Estimate). **Same hierarchy as Deep, just fewer items.** If elaborate attached this feature to an
   **existing** Epic, reuse it (find by title/`aidlc:epic`; create only the new Sprint + leaves under
   it — task-creator is idempotent per Epic; no duplicate Epic). Skip only the multi-Epic

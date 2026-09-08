@@ -209,44 +209,56 @@ If not found, skip silently.
 
 For each Sprint in `sprints` array:
 
-**Write sprint description to file:**
+**Write the grouping description to file — a full user story, NOT a bare grouping.**
+
+> **The grouping is the feature's user story, not a sprint stub.** In the light lane one feature =
+> one grouping = one sprint, so this item is what a PO/BA reads. Build its description from the **same
+> `@${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md` structure at feature level**, sourced from
+> the **feature brief / PRD FR slice** — never a one-line "Sprint grouping for X". A thin grouping
+> description is a defect. "Sprint" is conveyed by the `aidlc:sprint` + `sprint-<n>` **labels**, not by
+> the content. Append the execution details as a short trailer.
 
 ```bash
 cat > /tmp/sprint-description.md << 'EOF'
-## Scope
+### Overview
+<2–3 sentences: the feature and why — from the brief/PRD>
 
-<sprint_name>
+### User Story
+As a <persona from the feature>, I want <the feature capability> so that <the outcome>.
 
-## Execution Details
+### Scope
+<in-scope bullets for the feature>
 
-- **Phase:** <phase>
-- **Lane:** <lane>
-- **Team:** <team> (if configured)
-- **Estimated Duration:** <estimated_duration>
-- **Critical Path:** <"Yes" if on_critical_path else "No">
+### Out of Scope
+<bullets; "None" if empty>
 
-## Tasks
+### Dependencies
+<feature-level dependencies mapped to work-item keys; "None" if independent>
 
-<for each task in sprint.tasks>
-- <task_title>
-</for>
+### Acceptance criteria
+<feature-level ACs grouped as "**AC 1 — <label>**", "**AC 2 — …**", each Given/When/Then with concrete values, referencing the FR ids this feature realises>
 
-## Dependencies
+### Business rules
+<the BR-* the feature must hold; "None" if none>
 
-<if depends_on is not empty>
-This Sprint is blocked by:
-<for each dep in depends_on>
-- <dep> (Jira key will be linked by parent agent)
-</for>
-<else>
-No dependencies
-</if>
+### Verification steps
+<numbered Step 1..N feature-level checks>
 
-## Additional Context
+### References
+- **Feature / PRD:** [<title>](<references.featureUrl>) (<FR range, e.g. FR-WS-*>)
+- **Design:** [Design](<references.designUrl>) · [ADRs](<references.adrsUrl>)
+- **Brief:** [<brief title>](<briefUrl>)
+- **Tasks:** <leaf keys, added after leaves are created>
+- **Board:** [<project_key> board](<references.boardUrl>)
 
-(Include any relevant context from Epic page or Sprint Execution Plan)
+---
+**Execution:** Phase <phase> · Lane <lane> · Team <team> · Duration <estimated_duration> · Critical path <"Yes" if on_critical_path else "No"> · Tasks: <sprint.tasks joined>
 EOF
 ```
+
+Source the persona / scope / ACs / business rules from the feature's brief and the PRD FR slice
+(passed in `sprint.feature_content` / the Epic content). Preserve concrete values and FR/BR ids
+verbatim — do **not** collapse this back into a one-liner.
 
 **Create the grouping work-item using acli:**
 

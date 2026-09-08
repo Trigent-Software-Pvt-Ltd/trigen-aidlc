@@ -1,9 +1,16 @@
 # Work-Item Template (Jira Story/Task/Bolt descriptions)
 
-Canonical structure for the **leaf work-item description** created during `/aidlc-verify` Phase 6
+Canonical structure for **every AI-DLC work-item description** created during `/aidlc-verify` Phase 6
 (Confluence & GitLab backends → Jira; Linear applies the same body to the Issue description).
-The `task-creator` agent MUST build every leaf item's description from this template, and
-`/aidlc-verify` MUST pass the fields below to the agent.
+The `task-creator` agent MUST build **both** the **grouping/Story** (the feature's user story, sourced
+from the brief/PRD FR slice) **and** every **leaf Task** from this template — a one-line "sprint
+grouping for X" is a defect. `/aidlc-verify` MUST pass the fields below to the agent.
+
+> **Grouping vs leaf.** The **grouping** (Story) carries the *feature-level* user story (persona +
+> feature capability + outcome), feature-level ACs referencing the FR ids, and business rules. Each
+> **leaf** (Task) carries the *task-level* slice (its own behaviour, ACs, data contract). Both use the
+> section order below; only the altitude differs. "Sprint" is a **label** (`aidlc:sprint`,
+> `sprint-<n>`), never a thin description.
 
 > **Format:** write the description as **Markdown** (`###` headings, `-` bullets, backtick `code`,
 > `[text](url)` links) and create the item with **`contentFormat: "markdown"`** (Atlassian MCP

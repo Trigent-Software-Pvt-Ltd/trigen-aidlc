@@ -18,7 +18,8 @@ Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full mode
   design note + Task Specs enough to build? any unresolved `[ASSUMED]`?), then go **straight to the
   Jira Transfer Phase** and create the **full Feature → Epic → Sprint → Story/Task hierarchy** — one
   Epic, one Sprint grouping (`aidlc:sprint`), its Stories/Tasks — with the full work-item template on
-  each leaf (rich description, per-ticket labels, Story Points + Original Estimate — see
+  **both the grouping (a feature-level user story from the brief/PRD — never a one-line stub) and
+  every leaf** (rich description, per-ticket labels, Story Points + Original Estimate — see
   @${CLAUDE_PLUGIN_ROOT}/references/work-item-template.md). It's the **same hierarchy as Deep, just
   fewer items** (one Epic, one Sprint). **If elaborate attached this feature to an existing Epic,
   reuse that Epic** — find it by title/`aidlc:epic` label and create only the new Sprint grouping +

@@ -2,6 +2,16 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.21.0
+
+**Fixed — grouping/Story tickets were one-line stubs.** `task-creator` Step 2 built the grouping
+(Story) description as a thin "Scope / Execution Details / Tasks list" stub while only the leaf Tasks
+used `work-item-template.md`. Now **both** the grouping and the leaves are built from the template:
+the grouping carries the **feature-level user story** (persona + capability + outcome, feature ACs
+referencing FR ids, business rules), sourced from the brief/PRD slice — never a bare "sprint grouping
+for X". "Sprint" is a label (`aidlc:sprint`, `sprint-<n>`), not the content. `work-item-template.md`
+and `/aidlc-verify` updated to state this explicitly (Claude + Cursor).
+
 ## 4.20.0
 
 **Added — Design Document as the solution spec.** New `references/design-doc-template.md`: a
