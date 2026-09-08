@@ -2,6 +2,29 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.20.0
+
+**Added — Design Document as the solution spec.** New `references/design-doc-template.md`: a
+15-section, depth-scaled Design Document (Overview → Impact & dependencies) that is a **shared
+artifact** — plain-language solution/flow/rules/security sections a BA/PO can validate, plus
+engineering detail (architecture, data model, API/contract, error handling, algorithms, test
+strategy) and `FR/AC → task → test` traceability. `/aidlc-design` at Standard now produces this full
+document, **not the old two-line note**; Quick folds it into the brief, Deep adds a formal domain
+model / alternatives / sequence diagrams. Guardrail: a design is HOW (the PRD is WHAT) — link the
+PRD, don't restate it; cross-cutting/shared-contract decisions become ADRs.
+
+## 4.19.0
+
+**Added — AI-DLC PRD as the source specification.** New `references/prd-template.md`: a 21-section,
+depth-scaled, product-facing PRD (Document Context → Definition of Ready) that the pipeline
+decomposes (Intent → **PRD** → Design → Epics/Stories+AC → Code → Test). Requirements are
+machine-readable `FR-<AREA>-<NNN>` blocks (priority/actor/risk/depends-on) with `AC-*`/`BR-*` ids for
+end-to-end traceability. **Mandatory in every PRD and Feature Brief:** Acceptance Criteria (positive +
+negative + permission), Business Rules, Roles/Permissions, State Lifecycle, Data/Integration behavior,
+Edge/Failure cases — a requirement without AC is not ready. Two guardrails: *scale depth, not
+structure* (same sections at every gear), and *a PRD is not a design* (no API/schema/tests). Wired
+into `/aidlc-intent`; the Feature Brief upgraded to a Quick/Standard PRD that carries these layers.
+
 ## 4.18.0
 
 **Added — Constitution.** One-page `aidlc.constitution.md` (principles, constraints, conventions,

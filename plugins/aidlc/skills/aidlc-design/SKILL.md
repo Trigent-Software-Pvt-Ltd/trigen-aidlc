@@ -13,15 +13,17 @@ Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full mode
 @${CLAUDE_PLUGIN_ROOT}/references/ceremony-scaling.md). Design runs at every gear; scale the output:
 
 - **Quick** — skip; the brief's "What we build" is the design. Go to `/aidlc-sprint`.
-- **Standard (default)** — produce a **short design note**, not the full tower: the contract/approach
-  in a paragraph or two (key entities/endpoints/data shape for this one feature), a small Mermaid
-  diagram only if it clarifies, and **only the ADR(s) this feature actually forces** (usually none —
-  if a real cross-cutting decision surfaces, raise exactly one ADR and treat that decision as Deep).
-  Then generate **Task Specs under each Story** of the feature's one Epic at enough depth to build
-  (AC with concrete values, data contract, error/edge notes) — keep the detail-sufficiency gate (no
-  silent `[ASSUMED]`), but skip the multi-epic domain model, deviation analysis, test-scope fan-out,
-  and team-sizing steps. The Epic + Sprint from `/aidlc-elaborate` stay intact — Task Specs attach to
-  their Stories, they don't replace the hierarchy. One quick sign-off, then `/aidlc-verify` (light).
+- **Standard (default)** — produce a **full Design Document** per
+  @${CLAUDE_PLUGIN_ROOT}/references/design-doc-template.md (all 15 sections, depth-scaled) — **not a
+  two-line note.** It is a shared artifact: sections 1/2/6/7/9 in plain language a BA/PO can validate,
+  the rest with the engineering detail (architecture, data model, API/contract, flows, business-rule
+  enforcement, security, error handling, algorithms, test strategy, traceability). Raise **only the
+  ADR(s) this feature actually forces** (a real cross-cutting or shared-contract decision → one ADR,
+  treated as Deep). Then generate **Task Specs under each Story** of the feature's one Epic at build
+  depth (AC with concrete values, data contract, error/edge notes) — keep the detail-sufficiency gate
+  (no silent `[ASSUMED]`), but skip the multi-epic domain model, deviation analysis, test-scope
+  fan-out, and team-sizing steps. The Epic + Sprint from `/aidlc-elaborate` stay intact. One quick
+  sign-off, then `/aidlc-verify` (light).
 - **Deep** — run the full checklist below: domain model, logical design, ADR set, detail-sufficiency
   gate, test-scope sub-agents, Sprint groupings.
 

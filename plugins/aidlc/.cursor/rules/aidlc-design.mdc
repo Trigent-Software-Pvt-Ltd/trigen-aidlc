@@ -11,13 +11,13 @@ Goal: turn approved **Stories** into a domain/logical design with ADRs and imple
 **Ceremony gear (read first).** Carried from `/aidlc-intent` (`ceremony.default`; full model
 `references/ceremony-scaling.md`). Design runs at every gear but scales output:
 - **Quick** — skip; the brief's "What we build" is the design. Go to `/aidlc-sprint`.
-- **Standard (default)** — a **short design note** (contract/approach in a paragraph or two for this
-  one feature; a small Mermaid only if it clarifies) **+ only the ADR(s) the feature actually forces**
-  (usually none). Then **Task Specs under each Story** of the feature's one Epic at build depth (AC
-  with concrete values, data contract, error/edge notes) — keep the detail-sufficiency gate (no
-  silent `[ASSUMED]`); skip the multi-epic domain model, deviation analysis, test-scope fan-out, and
-  team sizing. The Epic + Sprint from elaborate stay intact. One quick sign-off, then `/aidlc-verify`
-  (light).
+- **Standard (default)** — a **full Design Document** per `references/design-doc-template.md` (all 15
+  sections, depth-scaled — **not a two-line note**): plain-language solution/flow/rules/security for a
+  BA/PO (§1/2/6/7/9) plus engineering detail (architecture, data model, API/contract, error handling,
+  algorithms, test strategy, traceability). Raise **only the ADR(s) the feature actually forces**.
+  Then **Task Specs** at build depth (AC, data contract, error/edge) — detail-sufficiency gate, no
+  silent `[ASSUMED]`; skip the multi-epic domain model, deviation analysis, test-scope fan-out, team
+  sizing. Epic + Sprint from elaborate stay intact. One quick sign-off, then `/aidlc-verify` (light).
 - **Deep** — the full Summary below (domain model, logical design, ADR set, test scopes, groupings).
 One-way ratchet: upgrade to Deep if a real domain model or cross-cutting ADR is needed. The Summary
 is the Deep path.

@@ -37,15 +37,30 @@ with multiple Epics is the **Deep** gear, reserved for cross-cutting or regulate
 
 ## Section order (the whole brief)
 
+A Feature Brief is the **Quick/Standard PRD for one feature** — it follows `prd-template.md` in
+miniature and **still carries the mandatory spec layers** (AC, business rules, roles, states, edge
+cases). Keep each short; omit a layer only when it genuinely does not apply — but **never omit
+Acceptance Criteria.**
+
 1. **One-line intent** — italic: "One feature, built end-to-end. ~2-minute read."
 2. **What this is** — 2–4 sentences: the capability and where it sits.
-3. **Who it's for** — the user and what "good" feels like for them.
+3. **Who it's for** — persona + the job they're doing, and what they should *not* need to know.
 4. **What the user does** — the flow in prose (not numbered ceremony unless it truly helps).
 5. **What we build (frontend, backend, database)** — three short bullets, one per layer, concrete.
-6. **Done when** — 4–6 checkable acceptance points with concrete values.
-7. **Open questions (only what this screen needs)** — a few, each with a *(proposed: …)* default;
-   then one line noting the cross-cutting items that belong elsewhere.
-8. **References** *(separate page / divided section)* — Design · API contract · Code · Context.
+6. **Acceptance criteria** *(mandatory)* — as `FR/AC` for this feature: **positive, negative, and
+   permission** scenarios, with concrete values. This replaces a vague "done when"; a brief without AC
+   is not ready for development.
+7. **Business rules** — the invariants this feature must hold (`BR-*`), when it has any.
+8. **Roles & permissions** — who may do this and the access boundary (tenant isolation / permission
+   ceiling), whenever the feature touches authorization. Mark it HIGH risk.
+9. **States** — the lifecycle state(s) this feature reads or moves the entity through, if any.
+10. **Edge & failure cases** — the handful of negative paths and the expected *system behavior*.
+11. **Open questions (only what this feature needs)** — a few, each with a *(proposed: …)* default;
+    one line noting cross-cutting items that belong elsewhere.
+12. **References** *(separate page / divided section)* — Design · API contract · Code · Context.
+
+Sections 7–10 are usually one to three lines each — enough to remove ambiguity, not a second design
+doc. If they can't be stated briefly, the feature is probably Deep (raise it), not Standard.
 
 ## What happens after the brief (Standard gear)
 

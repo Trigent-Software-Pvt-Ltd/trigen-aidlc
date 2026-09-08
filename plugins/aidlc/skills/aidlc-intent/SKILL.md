@@ -58,6 +58,24 @@ For Quick and Standard, Intent's output is the Feature Brief, so the heavy Steps
 **Deep** path; at Quick/Standard you produce the brief (approved, optionally published + registered
 in the Features Index) and hand off to `/aidlc-elaborate`, which will also run light.
 
+## The PRD is the source specification (structure + mandatory layers)
+
+The Intent artifact follows the **AI-DLC PRD** structure in
+@${CLAUDE_PLUGIN_ROOT}/references/prd-template.md — the product-facing spec the rest of the pipeline
+decomposes (Intent → **PRD** → Design → Epics/Stories+AC → Code → Test). It captures **WHAT, WHY,
+boundaries, observable behavior**, never HOW (no API/schema/architecture — that's `/aidlc-design`).
+
+**Mandatory, not deferred:** every PRD (and every Feature Brief) carries **Acceptance Criteria**
+(positive + negative + permission), **Business Rules**, **Roles/Permissions**, **State Lifecycle**,
+**Data/Integration behavior**, and **Edge/Failure cases**. A requirement without AC is *not ready*.
+Write requirements as machine-readable `FR-<AREA>-<NNN>` blocks (priority, actor, risk, depends-on)
+with `AC-*`/`BR-*` ids so the chain **PRD → Requirement → Story → PR → Test → metric** stays
+traceable. Mark authorization + external-integration requirements **HIGH risk**.
+
+**Gear sizes the PRD (scale depth, not structure):** Quick = a Feature Brief *with* AC; Standard = a
+compact PRD (all sections, most brief, full FR/AC/BR for this feature's P0s); Deep = the full PRD.
+One initiative PRD → several Feature Briefs, each carrying its own FR/AC/BR slice.
+
 ## Honor the project Constitution
 
 If `constitution.enabled` and `aidlc.constitution.md` exists, **read it first**. The brief/Intent must

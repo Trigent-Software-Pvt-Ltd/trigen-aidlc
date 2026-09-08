@@ -27,6 +27,15 @@ When in doubt, use Standard — a Standard feature can raise one cross-cutting A
 tower. One-way ratchet: upgrade the gear if complexity surfaces, never downgrade. The heavy Summary
 steps below are the **Deep** path; at Quick/Standard produce the Feature Brief.
 
+**The PRD is the source spec.** The Intent artifact follows `references/prd-template.md` (WHAT/WHY/
+boundaries/observable behavior — never HOW). **Mandatory in every PRD and Feature Brief:** Acceptance
+Criteria (positive + negative + permission), Business Rules, Roles/Permissions, State Lifecycle,
+Data/Integration behavior, Edge/Failure cases — a requirement without AC is not ready. Use
+machine-readable `FR-<AREA>-<NNN>` blocks (priority/actor/risk/depends-on) with `AC-*`/`BR-*` ids for
+traceability; mark authz + external integrations HIGH risk. Gear sizes it: Quick = Feature Brief with
+AC; Standard = compact PRD; Deep = full 21-section PRD. Don't turn it into API/schema/tests — that's
+`/aidlc-design`.
+
 **Honor the Constitution.** If `constitution.enabled` and `aidlc.constitution.md` exists, read it
 first; the brief/Intent must not contradict a principle/constraint — surface any tension as an open
 question, don't silently override. No file → proceed normally.
