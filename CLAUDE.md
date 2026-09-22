@@ -32,7 +32,7 @@ plugins/<plugin-name>/
 
 | Plugin | Purpose |
 |--------|---------|
-| `aidlc` | AI-DLC workflow: Project → Intent → Units → Bolts → Tasks |
+| `aidlc` | AI-DLC lifecycle using Jira terminology: Feature → Epic → Story → Task, scheduled in Sprints (Intent → Elaborate → Design → Verify → Sprint → Review), with ceremony gears, a PRD/Design/work-item template set, a project Constitution, agent toolchain bootstrap, refactoring and retrospective lanes |
 | `issues` | Jira issue creation, GitLab MRs, release notes |
 | `pair-programming` | Get second opinions from Grok/ChatGPT/Gemini |
 | `epistemic-reasoning` | Enforces [FACT]/[INFERRED]/[ASSUMED] labeling |
@@ -54,16 +54,21 @@ plugins/<plugin-name>/
 
 #### AIDLC (`/aidlc-*`)
 
+Terminology is Jira-aligned: **Feature → Epic → Story → Task**, scheduled in **Sprints**. Every phase is **ceremony-gear-scaled** (`quick | standard | deep` via `ceremony.default` in `aidlc.config.yaml`) and honors a **draft → approve → publish** gate before any write to a shared system.
+
 | Command | Triggers | Description |
 |---------|----------|-------------|
-| `/aidlc-intent` | `create intent`, `intent document`, `new initiative`, `draft intent`, `aidlc plan` | Create Intent documentation in Confluence |
-| `/aidlc-elaborate` | `decompose intent`, `break down intent`, `create units`, `mob elaboration` | Break Intent into Units via Mob Elaboration, propose Bolt groupings — units only, no task files |
-| `/aidlc-design` | `domain design`, `logical design`, `create ADR`, `architecture decision`, `aidlc design` | Domain/Logical Design and Architecture Decision Records |
-| `/aidlc-verify` | `verify docs`, `check readiness`, `transfer to jira`, `aidlc verify`, `confidence check` | Verify docs, refine Bolts, transfer to Jira: Intent → Unit → Bolt → Task |
-| `/aidlc-bolt` | `bolt`, `implement bolt`, `start bolt`, `bolt implementation`, `new bolt` | Guide implementation of a bolt with TDD emphasis |
-| `/aidlc-review` | `review AI-DLC docs`, `peer review MR`, `validate Jira story`, `aidlc review` | Peer-review documentation or MRs with confidence scoring |
-| `/aidlc-progress` | `check progress`, `project status`, `how are we doing`, `project health`, `aidlc progress` | Generate confidence, risk, and progress dashboard for a Project |
-| `/aidlc-help` | `aidlc help`, `what is aidlc`, `explain aidlc`, `planning help`, `how to plan` | Explain AI-DLC methodology and available skills |
+| `/aidlc-init` | `aidlc init`, `initialize aidlc`, `configure aidlc`, `aidlc setup` | Write `aidlc.config.yaml` (Jira/Confluence/GitLab/Linear, issue types, work-item template); optionally scaffold the project **Constitution** and the **agent toolchain** (AGENTS.md/deny-rules/hooks/repo-context). Run once, first. |
+| `/aidlc-intent` | `create feature`, `feature document`, `new initiative`, `draft feature`, `aidlc plan` | Capture the goal as a **Feature**. Output is a **PRD** (`prd-template.md`) — a one-page Feature Brief at quick/standard, the full 21-section PRD at deep. |
+| `/aidlc-elaborate` | `decompose feature`, `break down feature`, `create epics`, `mob elaboration` | Decompose the Feature into **Epics** and **Stories**; propose Sprint groupings. Standard keeps the full hierarchy, compact; related features attach under one Epic. |
+| `/aidlc-design` | `domain design`, `logical design`, `create ADR`, `architecture decision`, `aidlc design` | Produce the **Design Document** (`design-doc-template.md`, 15 sections) + ADRs + Task Specs. |
+| `/aidlc-verify` | `verify docs`, `check readiness`, `transfer to jira`, `aidlc verify`, `confidence check` | Readiness **+ coherence** check, then transfer to Jira: **Feature → Epic → Sprint → Story/Task**, each built from the work-item template with labels + estimates. |
+| `/aidlc-sprint` | `sprint`, `implement sprint`, `start sprint`, `work on PROJ-123` | TDD implementation of a Sprint with execution rigor (recovery ledger, task briefs, 3-round fix-loop, worktrees, token economics, evidence-led PRs). |
+| `/aidlc-review` | `review AI-DLC docs`, `peer review MR`, `validate Jira story`, `aidlc review` | Two-stage review (spec then quality) with the fix-loop, review depth (different-model/specialist subagents), and a required PR evidence pack. |
+| `/aidlc-refactor` | `refactor`, `clean up this module`, `tech debt`, `characterization tests`, `safe refactor` | Test-first brownfield/tech-debt cleanup: characterize → change → verify → commit, preserving external contracts. |
+| `/aidlc-retro` | `aidlc retro`, `retrospective`, `session review`, `codify corrections` | Session/sprint retrospective — the agent drafts rule/skill/hook/constitution fixes for human approval. |
+| `/aidlc-progress` | `check progress`, `project status`, `how are we doing`, `project health`, `aidlc progress` | Generate confidence, risk, and progress dashboard for a Feature/Project. |
+| `/aidlc-help` | `aidlc help`, `what is aidlc`, `explain aidlc`, `planning help`, `how to plan` | Explain AI-DLC methodology and available skills. |
 
 #### Issues (`/issues:*`)
 
