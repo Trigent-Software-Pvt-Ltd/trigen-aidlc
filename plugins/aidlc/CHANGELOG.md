@@ -2,6 +2,32 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.22.0
+
+**Added — agentic-engineering competencies (bridges the CodeWalnut "12 competencies" gaps).** All
+additive; no existing behavior removed.
+
+- **Agent toolchain & repo-context bootstrap** (`references/agent-toolchain.md`, wired into
+  `/aidlc-init`): scaffold the target repo's `AGENTS.md`/`CLAUDE.md`, deny rules, PreToolUse hooks,
+  least-privilege CLI/MCP, and `architecture.md`/repo-map/`conventions.md` — diff-and-approve, never
+  overwrite. (Comp 1 + 3)
+- **Evidence-led PRs** (`references/evidence-led-pr.md`): the evidence ladder + PR evidence pack;
+  `/aidlc-review` now requires the pack and treats a missing one as a finding. (Comp 8)
+- **Test reliability** (`references/test-reliability.md`): reliable locators, auto-wait, deterministic
+  mocks, permission/negative-path coverage, mutation testing; wired into `/aidlc-sprint`,
+  `/aidlc-design`, `/aidlc-verify`. (Comp 4)
+- **Token economics** (`references/token-economics.md`): per-role model dispatch, context hygiene,
+  pointers-not-payloads; wired into `/aidlc-sprint`. (Comp 10)
+- **execution-rigor §5 (git-worktree parallel isolation)** and **§6 (review depth: fresh-agent/
+  different-model reviewer, security/a11y/perf specialist subagents, review memory)**. (Comp 6 + 9)
+- **New skill `/aidlc-refactor`** — test-first characterization refactoring for brownfield/tech-debt
+  (Characterize → Change → Verify → Commit; preserve external contracts; Strangler for legacy). (Comp 11)
+- **New skill `/aidlc-retro`** — session/sprint retrospective that drafts rule/skill/hook/constitution
+  fixes for human approval (capture → analyze → draft → approve → prune). (Comp 12 + Skill-Packaging)
+
+Mirrored across Claude skills/references and Cursor `.mdc` rules (+ two new rules, lifecycle-gate
+command table, README references list).
+
 ## 4.21.0
 
 **Fixed — grouping/Story tickets were one-line stubs.** `task-creator` Step 2 built the grouping

@@ -1,0 +1,31 @@
+---
+description: AI-DLC agentic refactoring — test-first brownfield/tech-debt cleanup. Pin current behavior with characterization tests, get a green baseline, then refactor in small reversible steps that keep the suite green and preserve external contracts.
+alwaysApply: false
+---
+
+You are the **AI-DLC Refactoring agent**. Follow the full workflow in `skills/aidlc-refactor/SKILL.md`.
+
+Use this for **changing structure while preserving behavior** (tech debt, cleanup). If the goal is
+new/changed behavior, run intent → design → sprint instead. A clean-looking rewrite that changes
+behavior is still a bug.
+
+Loop — **Characterize → Change → Verify → Commit**, each pass green:
+1. **Characterize** — read the code, write a behavior spec of what it observably does today, generate
+   **characterization tests** that pin it.
+2. **Green baseline** — those tests must pass against the **current** code before any refactor.
+3. **Mark each behavior** — must-preserve / intentionally-changing / actually-a-bug (the latter two
+   become their own tickets, not smuggled into cleanup).
+4. **Change in small reversible steps** — isolate I/O, split validation from side effects, retire one
+   conditional branch at a time. **Never "rewrite this module" in one shot.**
+5. **Verify** after every step; never carry red forward.
+6. **Commit** small green commits, each reviewable and revertible.
+
+Preserve external contracts (APIs, schemas, logs, outputs, screenshots, events) unless a ticket says
+otherwise. **Do not patch a test just to make the refactor pass.** For legacy replacement prefer the
+**Strangler pattern**.
+
+Runs under the same rigor as a sprint: `references/execution-rigor.md` (ledger, two-stage review +
+fix-loop, §5 worktrees), `references/test-reliability.md` (characterization + mutation), and
+`references/evidence-led-pr.md` (put the green baseline + diff in the PR). Ceremony-scaled: Quick for a
+small covered module; Deep (behavior spec + broad characterization + phased strangler) for a
+high-blast-radius core.

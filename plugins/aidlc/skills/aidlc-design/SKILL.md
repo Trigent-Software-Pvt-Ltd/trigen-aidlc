@@ -147,6 +147,7 @@ Use @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md to detect the backend
 - @${CLAUDE_PLUGIN_ROOT}/references/task-spec.md - Task Specification schema contract (required for steps 11-12)
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend detection logic
 - @${CLAUDE_PLUGIN_ROOT}/references/test-classification.md - Test layer classification rules, sprint type → layer mapping, scenario format (required for steps 14-14b)
+- @${CLAUDE_PLUGIN_ROOT}/references/test-reliability.md - Reliability craft for the Test Scope: the pyramid, reliable locators, auto-wait, deterministic mocks, permission/negative-path coverage, and mutation testing to prove the net is real
 - @plugins/standards/references/technical-guidance/global.md - Universal architectural standards
 - @plugins/standards/references/detection-logic.md - Project type and application profile detection
 

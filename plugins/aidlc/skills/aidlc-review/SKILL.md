@@ -75,7 +75,8 @@ The backend determines where to fetch documentation from:
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Jira/Confluence tool guidance and templates
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend detection logic
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Scoring rubrics and checklists
-- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md - Two-stage review (spec then quality), severity model, and the fix-loop + adjudication protocol shared with `/aidlc-sprint`
+- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md - Two-stage review (spec then quality), severity model, the fix-loop + adjudication protocol shared with `/aidlc-sprint`, and **§6 review depth** (fresh-agent/different-model reviewer, security/a11y/performance specialist subagents, review memory)
+- @${CLAUDE_PLUGIN_ROOT}/references/evidence-led-pr.md - The evidence pack an implementation PR must carry; the implementation-review path **requires it to be present** and treats a missing/played-down pack as a finding, not a pass
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab operations (if GitLab backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear operations (if Linear backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md - Confluence operations (if Confluence backend)

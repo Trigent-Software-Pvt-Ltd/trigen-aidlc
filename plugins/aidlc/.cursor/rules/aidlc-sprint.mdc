@@ -27,4 +27,15 @@ Summary:
    **adjudicate** open findings (park-with-ruling in the ledger, or BLOCK) — no silent discards.
 5. Hand off to `/aidlc-review` when the Sprint scope is complete.
 
+**Also apply (references):**
+- `references/test-reliability.md` — make agent-written tests trustworthy: pyramid, reliable
+  locators, auto-wait, deterministic mocks, permission/negative-path coverage, mutation testing.
+- `references/evidence-led-pr.md` — climb the evidence ladder and produce the PR evidence pack
+  (intent, test matrix, results, scans, boundaries, rollback); `/aidlc-review` expects it.
+- `references/token-economics.md` — per-role model dispatch (frontier to plan/review, efficient to
+  implement), context hygiene, one task per session, feed pointers not payloads.
+- `references/execution-rigor.md` **§5 worktrees** (isolate genuinely independent parallel work) and
+  **§6 review depth** (fresh-agent/different-model reviewer, security/a11y/perf specialists, review
+  memory).
+
 A Sprint groups related Stories/Tasks for scheduling. Resolve config from `aidlc.config.yaml`.

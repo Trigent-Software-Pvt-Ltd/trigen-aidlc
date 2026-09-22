@@ -35,7 +35,14 @@ Summary:
      `descriptionFormat: markdown`. These drive the rich 12-section Jira descriptions, per-ticket
      labels, and Story-Points/Original-Estimate written in `/aidlc-verify`.
 4. Show the assembled YAML, get approval, write `aidlc.config.yaml` to the project root.
-5. Point the user to `/aidlc-intent` next.
+5. **Offer the agent toolchain bootstrap (optional, recommended)** for the **product repo(s)** the
+   team builds in — per `references/agent-toolchain.md`: a lean `AGENTS.md`/`CLAUDE.md` (rules,
+   scripts, do-not-touch, links to PRD/Design/Constitution), deny rules (secrets/`.env`/force-push),
+   a starter PreToolUse hook, least-privilege CLI/MCP wiring, and repo-context stubs
+   (`architecture.md`, repo map, `conventions.md`). **Show a diff and get approval per file; never
+   overwrite — extend.** Distinct from the Constitution: Constitution = project principles;
+   toolchain = the agent's guardrails + context.
+6. Point the user to `/aidlc-intent` next.
 
 These values resolve the placeholders (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
 `<FEATURE_INDEX_PAGE_ID>`, `<GITLAB_DOCS_REPO_URL>`, `<GITLAB_DOCS_REPO_SSH>`,

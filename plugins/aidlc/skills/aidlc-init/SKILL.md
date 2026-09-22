@@ -127,7 +127,18 @@ Every skill resolves them by reading `aidlc.config.yaml`.
    - If the user declines or has nothing project-specific yet, skip it — intent/design/verify simply
      run without a constitution. It can be added later by re-running this step.
 
-6. **Next step**
+6. **Offer the agent toolchain bootstrap (optional, recommended for the target code repo)**
+   - Offer to scaffold the coding agent's operating environment in the **product repo(s)** the team
+     will build in, following @${CLAUDE_PLUGIN_ROOT}/references/agent-toolchain.md: a lean
+     `AGENTS.md`/`CLAUDE.md` (rules, scripts, do-not-touch, links to PRD/Design/Constitution),
+     deny rules for secrets/`.env`/force-push, a starter PreToolUse hook, least-privilege CLI/MCP
+     wiring, and repo-context stubs (`architecture.md`, a repo map, `conventions.md`).
+   - **Show a diff and get approval for each file; never overwrite an existing file — extend it.**
+     Skip anything the user declines. This is a one-time, team-inherited setup; re-run to refresh.
+   - This is distinct from the Constitution: the Constitution holds project *principles*; the
+     toolchain holds the agent's *guardrails and context*.
+
+7. **Next step**
    - Tell the user they can now run `/aidlc-intent` to capture the first **Feature**.
 
 ## Reading config from other skills

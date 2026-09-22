@@ -17,5 +17,12 @@ Summary:
    Minor). When findings are acted on, the **3-round fix-loop + adjudication** in
    `references/execution-rigor.md` §4 governs (scoped re-review each round; at the cap park-with-
    ruling or BLOCK — no silent discards).
+5. **Require the PR evidence pack** (`references/evidence-led-pr.md`): intent, test matrix, results,
+   scans, boundaries confirmed, rollback. A missing/played-down pack is a **finding**, not a pass —
+   reviewers approve-or-redirect, they don't reconstruct intent and coverage.
+6. **Add review depth as risk warrants** (`references/execution-rigor.md` §6): a fresh-agent review on
+   a **different model**; **security / accessibility / performance specialist** subagents (always the
+   security pass for authz + external-integration changes); and **review memory** so a confirmed
+   pattern isn't re-discovered every PR. A human still owns the merge.
 
 Resolve config placeholders from `aidlc.config.yaml`.

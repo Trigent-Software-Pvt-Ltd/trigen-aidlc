@@ -118,3 +118,42 @@ Use the least powerful model that fits the role: cheap/fast for mechanical trans
 small scoped re-reviews; standard for integration/judgment; the most capable for design tasks and
 the whole-branch final review. Escalate one tier for the round-3 fix. **Always name the model
 explicitly when dispatching** — an omitted model inherits the session's (often most expensive) model.
+(Token-economics rationale: `token-economics.md`.)
+
+---
+
+## 5. Parallel work isolation (git worktrees)
+
+Independent work does not need to queue — but two agents editing the same files overwrite each other,
+and you spend the saved time fixing conflicts. **Isolate first, then parallelize.**
+
+- **Separate tasks → separate lanes.** Give each parallel task its **own git worktree and branch**
+  (`git worktree add ../wt/<task> -b <branch>`), its own agent, and its own PR. Review and merge each
+  deliberately, like any PR — don't babysit one shared session.
+- **One complex task → one main thread + subagents.** Keep the main thread in charge of the plan and
+  the final diff; use subagents only for focused search/research/checks that **return summaries**
+  (context hygiene, §3). This is the same rule as "never dispatch overlapping implementation
+  subagents in parallel."
+- **Keep the fan-out reviewable.** Only as many parallel lanes as you can review properly; each still
+  climbs the evidence ladder (`evidence-led-pr.md`) and passes two-stage review (§4).
+- **Ceremony-scaled:** Quick/Standard usually run a single lane; reach for worktree parallelism at
+  Deep or when genuinely independent features (different modules, no shared files) can proceed at once.
+
+## 6. Review depth (fresh eyes, specialists, memory)
+
+The two-stage review in §4 is the floor. Add depth as risk warrants — AI code can look clean and
+confident while being wrong, so "looks right" is never the bar.
+
+- **Fresh-agent, different-model reviewer.** Run at least one review pass with a **fresh session on a
+  different model** than the implementer's. Variance catches what the implementer (and its model's
+  blind spots) missed. The round-3 fix already switches model; the *review* should too.
+- **Specialist subagents for NFRs.** When the task warrants, spin up focused reviewers for
+  **security, accessibility, performance**, and other NFRs — agents defer these unless asked. Each
+  returns *ranked* findings (Critical/Important/Minor) into the same fix-loop. Authorization and
+  external-integration changes (HIGH risk) always get the security pass.
+- **Review memory.** Capture recurring review guidance — a confirmed bug pattern, an anti-pattern, a
+  repo convention — as durable notes the next review reuses (repo guidelines, or the retrospective's
+  rule/skill output). The same finding should not have to be re-discovered every PR.
+- **Human owns the merge.** Automated passes inform; a human reads the diff and stands behind what
+  merges. One automated pass is not enough confidence for AI code.
+

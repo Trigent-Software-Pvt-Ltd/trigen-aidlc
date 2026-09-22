@@ -33,7 +33,10 @@ This skill follows the AI-DLC principle where AI initiates and directs the conve
 
 ## References
 
-- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md — **Execution rigor (single source of truth):** ceremony scaling (Quick/Standard/Deep), the recovery ledger, task briefs / context hygiene, and the 3-round fix-loop + adjudication + two-stage review. This skill wires those in; the reference defines them.
+- @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md — **Execution rigor (single source of truth):** ceremony scaling (Quick/Standard/Deep), the recovery ledger, task briefs / context hygiene, the 3-round fix-loop + adjudication + two-stage review, **§5 parallel-work isolation (git worktrees)**, and **§6 review depth**. This skill wires those in; the reference defines them.
+- @${CLAUDE_PLUGIN_ROOT}/references/test-reliability.md — **Make agent-written tests trustworthy:** the pyramid, reliable locators, auto-wait, deterministic mocks, permission/negative-path tests, and mutation testing to prove coverage is real. Apply during the TDD build.
+- @${CLAUDE_PLUGIN_ROOT}/references/evidence-led-pr.md — **Put the proof in the PR:** the evidence ladder (pre-commit → push → PR → CI → release) and the evidence pack (intent, test matrix, results, scans, boundaries, rollback). Produce this as you build; `/aidlc-review` expects it.
+- @${CLAUDE_PLUGIN_ROOT}/references/token-economics.md — **Spend tokens on judgment:** per-role model dispatch (frontier to plan/review, efficient to implement), context hygiene, one-task-per-session, feed pointers not payloads.
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md — Sprint guidance and templates
 - @${CLAUDE_PLUGIN_ROOT}/references/vcs-detection.md — VCS provider detection and PR/MR commands
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md — Implementation review rubric ("Finding Severity Levels" and "Implementation Review Rubric" sections); used for plan quality checks and Step 13.5 self-review
