@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-DLC Plugin — User Guide</title>
+<style>
+  :root{
+    --bg:#0f1220; --panel:#171a2b; --panel2:#1e2236; --ink:#e8eaf2; --muted:#a2a8c0;
+    --line:#2b3050; --brand:#7c8cff; --brand2:#59d3c4; --warn:#ffcf6b; --danger:#ff8a8a;
+    --ok:#7ee0a6; --chip:#232744; --radius:14px; --maxw:1080px;
+    --quick:#59d3c4; --standard:#7c8cff; --deep:#c58cff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:linear-gradient(180deg,#0d1020,#0f1220 40%);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
+  code{background:var(--chip);padding:.12em .4em;border-radius:6px;font-size:.88em;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;color:#dfe3ff}
+  header.hero{padding:56px 24px 40px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 400px at 50% -120px,rgba(124,140,255,.18),transparent)}
+  .hero h1{font-size:38px;margin:0 0 8px;letter-spacing:-.5px}
+  .hero p{color:var(--muted);max-width:720px;margin:6px auto;font-size:17px}
+  .badge{display:inline-block;background:var(--chip);border:1px solid var(--line);color:var(--brand2);
+    padding:4px 12px;border-radius:999px;font-size:13px;margin-top:14px}
+  nav.toc{position:sticky;top:0;z-index:5;background:rgba(15,18,32,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+  nav.toc a{color:var(--muted);font-size:13px;padding:5px 10px;border-radius:8px;white-space:nowrap}
+  nav.toc a:hover{background:var(--panel2);color:var(--ink);text-decoration:none}
+  main{max-width:var(--maxw);margin:0 auto;padding:16px 20px 80px}
+  section{margin:40px 0;scroll-margin-top:60px}
+  h2{font-size:26px;margin:0 0 6px;letter-spacing:-.3px}
+  h2 .num{color:var(--brand);font-weight:700;margin-right:10px}
+  h3{font-size:18px;margin:26px 0 8px;color:#eef0ff}
+  .lead{color:var(--muted);margin:0 0 14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin:16px 0}
+  .grid{display:grid;gap:14px}
+  .grid.two{grid-template-columns:1fr 1fr}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:760px){.grid.two,.grid.three{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:#eef0ff;font-weight:600}
+  tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line)}
+  .pill.q{color:var(--quick);border-color:rgba(89,211,196,.5)}
+  .pill.s{color:var(--standard);border-color:rgba(124,140,255,.5)}
+  .pill.d{color:var(--deep);border-color:rgba(197,140,255,.5)}
+  .callout{border-left:3px solid var(--brand);background:var(--panel2);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.warn{border-color:var(--warn)} .callout.ok{border-color:var(--ok)}
+  .callout b{color:#fff}
+  .stepnum{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#0b0e1c;
+    font-weight:700;align-items:center;justify-content:center;margin-right:8px;font-size:14px}
+  figure{margin:18px 0;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  figcaption{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+  svg{width:100%;height:auto;display:block}
+  .muted{color:var(--muted)}
+  .kbd{font-family:ui-monospace,monospace;background:#0c0f1e;border:1px solid var(--line);border-bottom-width:2px;
+    padding:1px 7px;border-radius:6px;font-size:13px}
+  ul.tight{margin:8px 0;padding-left:20px} ul.tight li{margin:4px 0}
+  .foot{color:var(--muted);font-size:13px;text-align:center;border-top:1px solid var(--line);padding-top:20px;margin-top:40px}
+  .tag{font-size:12px;color:var(--brand2)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>AI-DLC Plugin — User Guide</h1>
+  <p>A spec-driven, human-gated way to take an idea from intent to shipped code with AI agents — for product owners, business analysts, and engineers.</p>
+  <p class="muted">Trigent AI-DLC · plugin v4.22.0 · works in Claude Code &amp; Cursor</p>
+  <div class="badge">Feature → Epic → Sprint → Story/Task &nbsp;·&nbsp; right-sized by ceremony gears</div>
+</header>
+
+<nav class="toc">
+  <a href="#what">What it is</a>
+  <a href="#lifecycle">Lifecycle</a>
+  <a href="#gears">Ceremony gears</a>
+  <a href="#hierarchy">Hierarchy</a>
+  <a href="#commands">Commands</a>
+  <a href="#artifacts">Artifacts</a>
+  <a href="#rigor">Execution rigor</a>
+  <a href="#roles">Who does what</a>
+  <a href="#example">Worked example</a>
+  <a href="#quickstart">Quick start</a>
+  <a href="#caveats">Caveats</a>
+</nav>
+
+<main>
+
+<section id="what">
+  <h2><span class="num">1</span>What it is</h2>
+  <p class="lead">AI-DLC (AI-Driven Development Lifecycle) treats the AI as a collaborator across the whole delivery cycle, not just an autocomplete. The plugin gives you a set of slash commands — <code>/aidlc-*</code> — that walk an idea through <b>Intent → Elaborate → Design → Verify → Sprint → Review</b>, producing shareable documents and real Jira tickets at each step.</p>
+  <div class="grid three">
+    <div class="card">
+      <h3>Spec first</h3>
+      <p class="muted">The bottleneck in AI delivery is <b>specification quality</b>, not typing. The plugin front-loads a testable PRD, a design, and acceptance criteria so the agent builds the right thing.</p>
+    </div>
+    <div class="card">
+      <h3>Human-gated</h3>
+      <p class="muted">Every phase follows <b>draft → approve → publish</b>. The agent never writes to Confluence, Jira, or your repo without an explicit go.</p>
+    </div>
+    <div class="card">
+      <h3>Right-sized</h3>
+      <p class="muted"><b>Ceremony gears</b> (quick / standard / deep) scale how much each step produces — the steps always run, only the volume changes.</p>
+    </div>
+  </div>
+  <div class="callout"><b>One-line mental model:</b> a PRD flows down into feature briefs, those into an Epic with sprints, those into designs + ADRs, those into richly-specified Jira tickets — and every artifact links back to the one above it, so nothing is built from a guess.</div>
+</section>
+
+<section id="lifecycle">
+  <h2><span class="num">2</span>The lifecycle</h2>
+  <p class="lead">Six phases run in order, plus helpers you can call any time. Each phase reads the artifact the previous one produced and hands off to the next.</p>
+  <figure>
+    <svg viewBox="0 0 980 260" role="img" aria-label="AI-DLC lifecycle pipeline">
+      <defs>
+        <marker id="arw" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#7c8cff"/>
+        </marker>
+      </defs>
+      <!-- init -->
+      <g font-family="inherit" font-size="13" text-anchor="middle">
+        <rect x="12" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#59d3c4"/>
+        <text x="72" y="65" fill="#e8eaf2" font-weight="700">/aidlc-init</text>
+        <text x="72" y="83" fill="#a2a8c0" font-size="11">config + guardrails</text>
+      </g>
+      <!-- pipeline boxes -->
+      <g font-family="inherit" font-size="13" text-anchor="middle">
+        <!-- coords -->
+        <!-- 6 boxes -->
+        <g>
+          <rect x="160" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="220" y="65" fill="#e8eaf2" font-weight="700">Intent</text>
+          <text x="220" y="83" fill="#a2a8c0" font-size="11">PRD / brief</text>
+        </g>
+        <g>
+          <rect x="296" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="356" y="65" fill="#e8eaf2" font-weight="700">Elaborate</text>
+          <text x="356" y="83" fill="#a2a8c0" font-size="11">Epic + Stories</text>
+        </g>
+        <g>
+          <rect x="432" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="492" y="65" fill="#e8eaf2" font-weight="700">Design</text>
+          <text x="492" y="83" fill="#a2a8c0" font-size="11">doc + ADRs</text>
+        </g>
+        <g>
+          <rect x="568" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="628" y="65" fill="#e8eaf2" font-weight="700">Verify</text>
+          <text x="628" y="83" fill="#a2a8c0" font-size="11">→ Jira tickets</text>
+        </g>
+        <g>
+          <rect x="704" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="764" y="65" fill="#e8eaf2" font-weight="700">Sprint</text>
+          <text x="764" y="83" fill="#a2a8c0" font-size="11">TDD build</text>
+        </g>
+        <g>
+          <rect x="840" y="40" width="120" height="58" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+          <text x="900" y="65" fill="#e8eaf2" font-weight="700">Review</text>
+          <text x="900" y="83" fill="#a2a8c0" font-size="11">merge with proof</text>
+        </g>
+      </g>
+      <!-- arrows -->
+      <g stroke="#7c8cff" stroke-width="2" fill="none">
+        <line x1="132" y1="69" x2="158" y2="69" marker-end="url(#arw)"/>
+        <line x1="280" y1="69" x2="294" y2="69" marker-end="url(#arw)"/>
+        <line x1="416" y1="69" x2="430" y2="69" marker-end="url(#arw)"/>
+        <line x1="552" y1="69" x2="566" y2="69" marker-end="url(#arw)"/>
+        <line x1="688" y1="69" x2="702" y2="69" marker-end="url(#arw)"/>
+        <line x1="824" y1="69" x2="838" y2="69" marker-end="url(#arw)"/>
+      </g>
+      <!-- gate band -->
+      <text x="490" y="128" text-anchor="middle" fill="#ffcf6b" font-size="12">▲ each phase: draft → approve → publish (human gate)</text>
+      <!-- anytime helpers -->
+      <text x="12" y="172" fill="#a2a8c0" font-size="12">Available any time:</text>
+      <g font-family="inherit" font-size="12" text-anchor="middle" fill="#e8eaf2">
+        <rect x="140" y="156" width="120" height="34" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="200" y="178">/aidlc-help</text>
+        <rect x="272" y="156" width="130" height="34" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="337" y="178">/aidlc-progress</text>
+        <rect x="414" y="156" width="140" height="34" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="484" y="178">/aidlc-refactor</text>
+        <rect x="566" y="156" width="120" height="34" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="626" y="178">/aidlc-retro</text>
+      </g>
+      <text x="12" y="228" fill="#a2a8c0" font-size="12">Refactor = change structure safely · Retro = make the next session smarter</text>
+    </svg>
+    <figcaption>The AI-DLC pipeline. Run <code>/aidlc-init</code> once, then walk left to right; helpers sit outside the line.</figcaption>
+  </figure>
+</section>
+
+<section id="gears">
+  <h2><span class="num">3</span>Ceremony gears — right-sizing</h2>
+  <p class="lead">The same steps run at three "gears." Light doesn't mean skipping steps or flattening the hierarchy — it means <b>less content per artifact and fewer items</b>. Set the default in <code>aidlc.config.yaml</code> (<code>ceremony.default</code>) or pick per feature.</p>
+  <figure>
+    <svg viewBox="0 0 980 210" role="img" aria-label="Ceremony gears comparison">
+      <g font-family="inherit">
+        <rect x="10" y="20" width="300" height="170" rx="12" fill="#141830" stroke="#59d3c4"/>
+        <text x="30" y="50" fill="#59d3c4" font-size="18" font-weight="700">Quick</text>
+        <text x="30" y="74" fill="#a2a8c0" font-size="12.5">Trivial / internal / one obvious task</text>
+        <text x="30" y="104" fill="#e8eaf2" font-size="13">• Brief → build</text>
+        <text x="30" y="126" fill="#e8eaf2" font-size="13">• Elaborate/design/verify fold in</text>
+        <text x="30" y="148" fill="#e8eaf2" font-size="13">• Straight to /aidlc-sprint</text>
+        <text x="30" y="174" fill="#a2a8c0" font-size="12">Still: approval · TDD · one review</text>
+
+        <rect x="340" y="20" width="300" height="170" rx="12" fill="#141830" stroke="#7c8cff" stroke-width="2"/>
+        <text x="360" y="50" fill="#7c8cff" font-size="18" font-weight="700">Standard <tspan fill="#a2a8c0" font-size="11">(default)</tspan></text>
+        <text x="360" y="74" fill="#a2a8c0" font-size="12.5">An everyday feature ≈ one 2-week sprint</text>
+        <text x="360" y="104" fill="#e8eaf2" font-size="13">• All phases run, each compact</text>
+        <text x="360" y="126" fill="#e8eaf2" font-size="13">• Full Feature→Epic→Sprint→Task</text>
+        <text x="360" y="148" fill="#e8eaf2" font-size="13">• One Epic, a handful of tickets</text>
+        <text x="360" y="174" fill="#a2a8c0" font-size="12">Governance kept, tower dropped</text>
+
+        <rect x="670" y="20" width="300" height="170" rx="12" fill="#141830" stroke="#c58cff"/>
+        <text x="690" y="50" fill="#c58cff" font-size="18" font-weight="700">Deep</text>
+        <text x="690" y="74" fill="#a2a8c0" font-size="12.5">Cross-cutting / regulated / multi-team</text>
+        <text x="690" y="104" fill="#e8eaf2" font-size="13">• Full 21-section PRD</text>
+        <text x="690" y="126" fill="#e8eaf2" font-size="13">• Multiple Epics, domain model</text>
+        <text x="690" y="148" fill="#e8eaf2" font-size="13">• Full verification + ADR set</text>
+        <text x="690" y="174" fill="#a2a8c0" font-size="12">The complete governed tower</text>
+      </g>
+    </svg>
+    <figcaption>Pick the smallest gear that fits. A one-way ratchet lets any phase <b>upgrade</b> the gear if hidden complexity surfaces — never downgrade.</figcaption>
+  </figure>
+  <table>
+    <tr><th>Phase</th><th><span class="pill q">Quick</span></th><th><span class="pill s">Standard</span></th><th><span class="pill d">Deep</span></th></tr>
+    <tr><td>Intent</td><td>One-page Feature Brief (with AC)</td><td>Feature Brief (the light PRD)</td><td>Full 21-section PRD</td></tr>
+    <tr><td>Elaborate</td><td>folded into the brief</td><td>One Epic + a few Stories/Tasks in one Sprint</td><td>Multiple Epics, full mob elaboration</td></tr>
+    <tr><td>Design</td><td>folded into "what we build"</td><td>Short design note + only forced ADRs + Task Specs</td><td>Full domain model, ADR set, sequence diagrams</td></tr>
+    <tr><td>Verify</td><td>skipped (build from brief)</td><td>Readiness + coherence → full ticket hierarchy</td><td>Full rubric + confidence + cross-Epic fan-out</td></tr>
+  </table>
+</section>
+
+<section id="hierarchy">
+  <h2><span class="num">4</span>The work hierarchy</h2>
+  <p class="lead">The plugin speaks Jira: a <b>Feature</b> breaks into <b>Epics</b>, which hold <b>Stories</b> and <b>Tasks</b>, scheduled in <b>Sprints</b>. An Epic is a container that can hold several <i>related</i> features — so related work accumulates under one Epic rather than sprawling.</p>
+  <figure>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Work hierarchy tree">
+      <defs>
+        <marker id="ln" markerWidth="8" markerHeight="8" refX="4" refY="4"><circle cx="4" cy="4" r="2" fill="#2b3050"/></marker>
+      </defs>
+      <g font-family="inherit" font-size="13" text-anchor="middle">
+        <rect x="360" y="18" width="180" height="46" rx="10" fill="#1e2236" stroke="#c58cff"/>
+        <text x="450" y="40" fill="#e8eaf2" font-weight="700">Feature (PRD)</text>
+        <text x="450" y="56" fill="#a2a8c0" font-size="11">what &amp; why</text>
+
+        <rect x="360" y="104" width="180" height="46" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+        <text x="450" y="126" fill="#e8eaf2" font-weight="700">Epic</text>
+        <text x="450" y="142" fill="#a2a8c0" font-size="11">area container · 1+ related features</text>
+
+        <rect x="150" y="190" width="200" height="46" rx="10" fill="#1e2236" stroke="#59d3c4"/>
+        <text x="250" y="212" fill="#e8eaf2" font-weight="700">Sprint 1 (Story)</text>
+        <text x="250" y="228" fill="#a2a8c0" font-size="11">a feature's worth of work</text>
+
+        <rect x="550" y="190" width="200" height="46" rx="10" fill="#1e2236" stroke="#59d3c4"/>
+        <text x="650" y="212" fill="#e8eaf2" font-weight="700">Sprint 2 (Story)</text>
+        <text x="650" y="228" fill="#a2a8c0" font-size="11">next related feature</text>
+
+        <rect x="120" y="262" width="120" height="32" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="180" y="283" fill="#e8eaf2" font-size="12">Task (BE)</text>
+        <rect x="250" y="262" width="120" height="32" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="310" y="283" fill="#e8eaf2" font-size="12">Task (FE)</text>
+        <rect x="520" y="262" width="120" height="32" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="580" y="283" fill="#e8eaf2" font-size="12">Task (BE)</text>
+        <rect x="650" y="262" width="120" height="32" rx="8" fill="#171a2b" stroke="#2b3050"/><text x="710" y="283" fill="#e8eaf2" font-size="12">Task (FE)</text>
+      </g>
+      <g stroke="#3a4066" stroke-width="1.5" fill="none">
+        <line x1="450" y1="64" x2="450" y2="104"/>
+        <line x1="450" y1="150" x2="450" y2="170"/><line x1="250" y1="170" x2="650" y2="170"/>
+        <line x1="250" y1="170" x2="250" y2="190"/><line x1="650" y1="170" x2="650" y2="190"/>
+        <line x1="250" y1="236" x2="250" y2="250"/><line x1="180" y1="250" x2="310" y2="250"/>
+        <line x1="180" y1="250" x2="180" y2="262"/><line x1="310" y1="250" x2="310" y2="262"/>
+        <line x1="650" y1="236" x2="650" y2="250"/><line x1="580" y1="250" x2="710" y2="250"/>
+        <line x1="580" y1="250" x2="580" y2="262"/><line x1="710" y1="250" x2="710" y2="262"/>
+      </g>
+    </svg>
+    <figcaption>"Sprint" is a Story-typed grouping (labelled <code>aidlc-sprint</code>) holding the Tasks; each Task is parented to the Epic and linked to its Sprint. Backend tasks precede frontend within a sprint.</figcaption>
+  </figure>
+</section>
+
+<section id="commands">
+  <h2><span class="num">5</span>Command reference</h2>
+  <p class="lead">Eleven commands. Run <code>/aidlc-init</code> once, then the six lifecycle phases in order; the rest are on-demand.</p>
+  <table>
+    <tr><th>Command</th><th>What it does</th><th>Output / gate</th></tr>
+    <tr><td><code>/aidlc-init</code></td><td>Write <code>aidlc.config.yaml</code>; optionally scaffold the project <b>Constitution</b> and the <b>agent toolchain</b> (AGENTS.md, deny rules, hooks, repo context).</td><td><code>aidlc.config.yaml</code> + optional repo files (diff &amp; approve)</td></tr>
+    <tr><td><code>/aidlc-intent</code></td><td>Capture the goal as a <b>Feature</b>. Produces a PRD — a one-page Feature Brief (quick/standard) or the full 21-section PRD (deep).</td><td>PRD / brief, approved before publish</td></tr>
+    <tr><td><code>/aidlc-elaborate</code></td><td>Break the Feature into an <b>Epic</b> + <b>Stories/Tasks</b> in a Sprint; attach related features to an existing Epic.</td><td>Elaborate page</td></tr>
+    <tr><td><code>/aidlc-design</code></td><td>Produce the <b>Design Document</b> (15 sections) + <b>ADRs</b> for forced decisions + <b>Task Specs</b>.</td><td>Design doc + ADR page</td></tr>
+    <tr><td><code>/aidlc-verify</code></td><td>Readiness <b>+ coherence</b> check (brief ↔ design ↔ tasks ↔ constitution), then create the Jira hierarchy with rich descriptions, labels, estimates.</td><td>Jira Epic/Stories/Tasks (after go)</td></tr>
+    <tr><td><code>/aidlc-sprint</code></td><td>TDD build of a Sprint, with execution rigor (ledger, task briefs, 3-round fix-loop, worktrees, evidence-led PR).</td><td>Branch + commits + PR</td></tr>
+    <tr><td><code>/aidlc-review</code></td><td>Two-stage review (spec, then quality) + fix-loop + review depth; requires the PR evidence pack.</td><td>Verdicts + findings</td></tr>
+    <tr><td><code>/aidlc-refactor</code></td><td>Test-first brownfield cleanup: characterize → change → verify → commit, preserving contracts.</td><td>Green refactor commits</td></tr>
+    <tr><td><code>/aidlc-retro</code></td><td>Session/sprint retrospective: the agent drafts rule/skill/hook/constitution fixes for your approval.</td><td>Proposed diffs (approve to apply)</td></tr>
+    <tr><td><code>/aidlc-progress</code></td><td>Confidence, risk &amp; progress dashboard for a Feature/Project.</td><td>Status report</td></tr>
+    <tr><td><code>/aidlc-help</code></td><td>Explain the methodology and available commands.</td><td>Guidance</td></tr>
+  </table>
+</section>
+
+<section id="artifacts">
+  <h2><span class="num">6</span>The artifacts &amp; templates</h2>
+  <p class="lead">Each phase writes a document from a house template. All of them carry <b>traceability</b> — every item links back to the one above it.</p>
+  <div class="grid two">
+    <div class="card"><h3>PRD <span class="tag">prd-template.md</span></h3><p class="muted">The product-facing source of truth (21 sections): problem, goals, personas, functional requirements as machine-readable <code>FR-*</code> blocks, acceptance criteria (positive/negative/permission), business rules, roles, states, edge cases, and a Definition of Ready.</p></div>
+    <div class="card"><h3>Feature Brief <span class="tag">feature-brief.md</span></h3><p class="muted">The light Intent output — one feature, ~2-minute read, still carrying mandatory AC, business rules, roles, states and edge cases.</p></div>
+    <div class="card"><h3>Design Document <span class="tag">design-doc-template.md</span></h3><p class="muted">15 sections: a plain-language solution summary a PO/BA can validate, plus engineering detail (architecture, data model, APIs, error handling, algorithms, test strategy, traceability).</p></div>
+    <div class="card"><h3>Work-item <span class="tag">work-item-template.md</span></h3><p class="muted">The GP-style Jira ticket body used for <b>both</b> Stories and Tasks: Overview, User Story, Scope, What to build, APIs, AC (Given/When/Then), Verification steps, Definition of Done, References.</p></div>
+    <div class="card"><h3>ADRs</h3><p class="muted">Architecture Decision Records for genuinely cross-cutting or shared-contract decisions — captured once, superseded not overwritten.</p></div>
+    <div class="card"><h3>Constitution <span class="tag">aidlc.constitution.md</span></h3><p class="muted">A one-page statement of project principles &amp; constraints that intent/design/verify check against. Links your standards rather than restating them.</p></div>
+  </div>
+</section>
+
+<section id="rigor">
+  <h2><span class="num">7</span>Execution rigor (the build half)</h2>
+  <p class="lead">When code gets written, these mechanisms keep AI output trustworthy. They scale with the gear.</p>
+  <div class="grid three">
+    <div class="card"><h3>Recovery ledger</h3><p class="muted">A machine-readable progress file that survives context compaction, so a resumed sprint never re-runs finished work.</p></div>
+    <div class="card"><h3>Task briefs &amp; context hygiene</h3><p class="muted">Subagents get files, not pasted history — keeps the controller's context lean and cheap.</p></div>
+    <div class="card"><h3>3-round fix-loop + adjudication</h3><p class="muted">Findings are fixed over up to 3 scoped rounds; at the cap each is parked-with-ruling or BLOCK — no silent discards.</p></div>
+    <div class="card"><h3>Review depth</h3><p class="muted">A fresh reviewer on a <b>different model</b>, plus security/accessibility/performance specialist passes and reusable review memory.</p></div>
+    <div class="card"><h3>Worktree isolation</h3><p class="muted">Genuinely independent work runs in its own git worktree/branch/PR so parallel agents don't overwrite each other.</p></div>
+    <div class="card"><h3>Evidence-led PRs</h3><p class="muted">Merge confidence comes from a visible evidence pack (intent, test matrix, results, scans, rollback), climbed on an evidence ladder.</p></div>
+    <div class="card"><h3>Test reliability</h3><p class="muted">Role-based locators, auto-wait, deterministic mocks, negative/permission coverage, and mutation testing to prove the suite is real.</p></div>
+    <div class="card"><h3>Token economics</h3><p class="muted">Frontier models to plan/review, efficient models to implement; one task per session; pointers not payloads.</p></div>
+    <div class="card"><h3>Agent toolchain</h3><p class="muted">Guardrails for the coding agent: AGENTS.md rules, deny rules for secrets, PreToolUse hooks, least-privilege MCP, a repo-context layer.</p></div>
+  </div>
+</section>
+
+<section id="roles">
+  <h2><span class="num">8</span>Who does what</h2>
+  <p class="lead">AI-DLC keeps a human at every gate. Roughly:</p>
+  <table>
+    <tr><th>Phase</th><th>Product owner / BA</th><th>Engineer</th></tr>
+    <tr><td>Intent</td><td>Owns the PRD — problem, goals, scope, acceptance criteria</td><td>Sanity-checks feasibility &amp; NFRs</td></tr>
+    <tr><td>Elaborate</td><td>Confirms the feature slice &amp; priorities</td><td>Shapes the Epic/Sprint/Task breakdown</td></tr>
+    <tr><td>Design</td><td>Validates the plain-language solution &amp; rules</td><td>Owns architecture, data model, ADRs, Task Specs</td></tr>
+    <tr><td>Verify</td><td>Approves readiness &amp; the tickets</td><td>Confirms the tickets are buildable</td></tr>
+    <tr><td>Sprint / Review</td><td>Accepts against acceptance criteria</td><td>Builds TDD-first, reviews, merges with evidence</td></tr>
+  </table>
+  <div class="callout ok"><b>The gate is always human.</b> The agent drafts and proposes; a person approves before anything is published or merged.</div>
+</section>
+
+<section id="example">
+  <h2><span class="num">9</span>Worked example — QMetry360 iGen Workspace Setup</h2>
+  <p class="lead">A real run at the <span class="pill s">Standard</span> gear. One PRD produced three feature briefs; those became one Epic with three sprints; each sprint got a design + Task Specs; then the whole thing landed in Jira as 14 richly-specified work items.</p>
+  <figure>
+    <svg viewBox="0 0 960 250" role="img" aria-label="QMetry360 worked example flow">
+      <defs>
+        <marker id="arw2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#59d3c4"/></marker>
+      </defs>
+      <g font-family="inherit" font-size="12.5" text-anchor="middle">
+        <rect x="10" y="90" width="150" height="60" rx="10" fill="#1e2236" stroke="#c58cff"/>
+        <text x="85" y="115" fill="#e8eaf2" font-weight="700">Workspace Setup</text>
+        <text x="85" y="133" fill="#a2a8c0" font-size="11">PRD (source)</text>
+
+        <rect x="210" y="20" width="170" height="46" rx="9" fill="#171a2b" stroke="#7c8cff"/><text x="295" y="42" fill="#e8eaf2">Create Workspace</text><text x="295" y="58" fill="#a2a8c0" font-size="10.5">brief · FR-WS-*</text>
+        <rect x="210" y="97" width="170" height="46" rx="9" fill="#171a2b" stroke="#7c8cff"/><text x="295" y="119" fill="#e8eaf2">Add Data Sources</text><text x="295" y="135" fill="#a2a8c0" font-size="10.5">brief · FR-DS-*</text>
+        <rect x="210" y="174" width="170" height="46" rx="9" fill="#171a2b" stroke="#7c8cff"/><text x="295" y="196" fill="#e8eaf2">Select Data Scope</text><text x="295" y="212" fill="#a2a8c0" font-size="10.5">brief · FR-SC-*</text>
+
+        <rect x="430" y="90" width="180" height="60" rx="10" fill="#1e2236" stroke="#7c8cff"/>
+        <text x="520" y="112" fill="#e8eaf2" font-weight="700">Epic: Workspace Setup</text>
+        <text x="520" y="130" fill="#a2a8c0" font-size="11">3 sprints + designs + 2 ADRs</text>
+
+        <rect x="660" y="90" width="180" height="60" rx="10" fill="#1e2236" stroke="#59d3c4"/>
+        <text x="750" y="112" fill="#e8eaf2" font-weight="700">Jira: 14 items</text>
+        <text x="750" y="130" fill="#a2a8c0" font-size="11">Epic · 3 Stories · 10 Tasks</text>
+      </g>
+      <g stroke="#59d3c4" stroke-width="1.8" fill="none">
+        <line x1="160" y1="112" x2="208" y2="43" marker-end="url(#arw2)"/>
+        <line x1="160" y1="120" x2="208" y2="120" marker-end="url(#arw2)"/>
+        <line x1="160" y1="128" x2="208" y2="197" marker-end="url(#arw2)"/>
+        <line x1="380" y1="120" x2="428" y2="120" marker-end="url(#arw2)"/>
+        <line x1="610" y1="120" x2="658" y2="120" marker-end="url(#arw2)"/>
+      </g>
+    </svg>
+    <figcaption>PRD → 3 briefs → one Epic (3 sprints, 3 designs, 2 ADRs) → 14 Jira items. Every ticket traces back to its FR in the PRD.</figcaption>
+  </figure>
+  <div class="card">
+    <h3>Two decisions that became ADRs (and must not be quietly re-made)</h3>
+    <ul class="tight">
+      <li><b>Permission ceiling</b> — the organisation's read grant is enforced <b>server-side</b> on every listing endpoint (a query predicate, not a UI filter), proven with a narrow-grant test fixture.</li>
+      <li><b><code>scopeSignature</code></b> — a deterministic hash over the selected assets + history window; a <b>shared contract</b> with the downstream Validation &amp; Activation feature, so changing it needs a new ADR.</li>
+    </ul>
+    <p class="muted">This is the pattern to copy: the light lane still <b>escalates genuine cross-cutting decisions to ADRs</b> instead of burying them, while everything else stays a short note.</p>
+  </div>
+</section>
+
+<section id="quickstart">
+  <h2><span class="num">10</span>Quick start</h2>
+  <div class="card">
+    <p><span class="stepnum">1</span><b>Install &amp; reload.</b> Add the marketplace, install <code>aidlc</code>, then <span class="kbd">/plugin</span> (Claude Code) or reload Cursor. Type <span class="kbd">/</span> and confirm the <code>/aidlc-*</code> commands appear.</p>
+    <p><span class="stepnum">2</span><b>Configure.</b> Run <code>/aidlc-init</code> once — it writes <code>aidlc.config.yaml</code> and offers the Constitution + agent toolchain for your code repo.</p>
+    <p><span class="stepnum">3</span><b>Capture the idea.</b> <code>/aidlc-intent</code> — answer its questions; it drafts a PRD/brief and waits for your approval before publishing.</p>
+    <p><span class="stepnum">4</span><b>Break it down.</b> <code>/aidlc-elaborate</code> → <code>/aidlc-design</code> — Epic + sprints, then design + Task Specs. Approve each.</p>
+    <p><span class="stepnum">5</span><b>Create tickets.</b> <code>/aidlc-verify</code> — readiness + coherence check, then it creates the Jira hierarchy (after you say go).</p>
+    <p><span class="stepnum">6</span><b>Build &amp; review.</b> <code>/aidlc-sprint</code> to implement TDD-first, <code>/aidlc-review</code> to merge with evidence. Close with <code>/aidlc-retro</code>.</p>
+  </div>
+  <div class="callout"><b>Cheat sheet:</b> <code>init</code> → <code>intent</code> → <code>elaborate</code> → <code>design</code> → <code>verify</code> → <code>sprint</code> → <code>review</code>. Anytime: <code>help</code>, <code>progress</code>, <code>refactor</code>, <code>retro</code>. Default gear <code>standard</code>; say "run this deep/quick" to change per feature.</div>
+</section>
+
+<section id="caveats">
+  <h2><span class="num">11</span>Good to know</h2>
+  <ul class="tight">
+    <li><b>The gates are instructions, not code.</b> The plugin's quality depends on the agent following its skills — the draft→approve→publish gate, the evidence pack, the retro loop are behaviours, not hard-enforced locks. Keep a human at the merge.</li>
+    <li><b>Jira estimates</b> use Original-Estimate hours where a project has no Story-Points field; enable the field if you plan in points.</li>
+    <li><b>Labels use hyphens</b> (<code>aidlc-sprint</code>) — Jira rejects colons.</li>
+    <li><b>Works in both editors.</b> Claude reads the <code>skills/*/SKILL.md</code>; Cursor reads mirrored <code>.cursor/rules/*.mdc</code> — same source of truth, kept in sync.</li>
+    <li><b>Config-driven.</b> No org details are hardcoded; everything resolves from <code>aidlc.config.yaml</code>.</li>
+  </ul>
+</section>
+
+<p class="foot">AI-DLC plugin v4.22.0 · Trigent · generated for the Workspace Setup hand-off. Commands, templates and gates are defined in the plugin's <code>skills/</code> and <code>references/</code>.</p>
+</main>
+</body>
+</html>
