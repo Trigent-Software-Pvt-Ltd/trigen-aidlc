@@ -7,6 +7,10 @@ description: Guide the Construction Phase with Domain Design, Logical Design, an
 
 Bridge from planning to implementation by creating Domain Designs, Logical Designs, and ADRs for approved Epics. Supports multiple backends: **GitLab** (markdown files in `design/` and `adrs/` directories), **Linear** (design doc Issues with "Design Doc" label), or **Confluence** (child pages).
 
+## Artifact consolidation & readability (read first)
+
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Per epic, produce exactly: **one readable Design page** (prose-first, BA/PO-validatable — not a bullet dump), **one consolidated "Decisions (ADRs)" page** with each decision a `## ADR-NN` section (NOT one page per ADR; give an ADR its own page only if it is a shared cross-feature contract), and **one Test Scope page**. When flipping In Review / Approved, update the **Status page** — do NOT re-publish the big Design page just to change a status cell. Confluence edits to existing pages use `contentFormat: html` with `<pre><code>` for code/mermaid (markdown full-replace is rejected on pages containing task-lists/macros).
+
 ## Ceremony gear (do this first)
 
 Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full model:

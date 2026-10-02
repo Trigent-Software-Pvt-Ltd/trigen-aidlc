@@ -7,6 +7,10 @@ description: Verify documentation completeness and assess AI-execution confidenc
 
 Verify that all documentation (Feature, Epics, Tasks, Design) is complete and provides sufficient context for AI tooling to execute successfully. Refine Sprint groupings. Backend-specific handling: GitLab/Confluence transfer to Jira; Linear updates Initiative status natively (no Jira transfer).
 
+## Artifact consolidation & readability (read first)
+
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Read the consolidated structure (one Feature doc, one Status page, one Epic by default with its Design / Decisions / Test Scope trio). Update the **Status page** when phases change — do NOT embed or re-publish status tables inside large pages. For Jira: detect project **style** (team-managed vs company-managed) and confirm the **Story Points field** is exposed on the Story/Task create screen **before** transfer, not mid-create.
+
 ## Ceremony gear (do this first)
 
 Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full model:

@@ -25,6 +25,10 @@ Produce the Feature documentation as the single source of truth for the project 
 > If there is NO source doc (pure green-field), the lightweight template below is enough and
 > the source-traceability/validation sections are optional.
 
+## Artifact consolidation & readability (read first)
+
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Few, focused pages beat many machine-dump pages, at **every gear**. For Intent specifically: create the Feature doc as a **well-written, prose-first** document, **and** create a single small **Status page** (child of the Feature) that holds the workflow-status table — do NOT embed the status table inside the Feature doc (status flips belong on the cheap-to-update Status page).
+
 ## Gear Selection (do this first)
 
 AI-DLC always runs the **same steps** (intent → elaborate → design → verify → build → review). What

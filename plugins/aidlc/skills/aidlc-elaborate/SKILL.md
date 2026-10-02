@@ -10,6 +10,10 @@ Break down an approved Feature into Epics using the AI-DLC Mob Elaboration ritua
 - **Linear**: Native Linear Projects (Epics only — Issues created in `/aidlc-design`)
 - **Confluence**: Pages with Jira integration (legacy)
 
+## Artifact consolidation & readability (read first)
+
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. **Default to ONE Epic** named for the area; skip the separate Epics Overview and "Service Context" pages in the single-epic case. Fan out into multiple epics **only** when all three triggers hold — genuinely independent, large, and parallelisable by different people — and record the one-line justification. This holds **even at Deep gear** (Deep buys deeper analysis, not automatically more pages). A small feature (e.g. a few UI cards) is one Epic with one or two Sprints, never a tower of epics.
+
 ## Ceremony gear (do this first)
 
 Read the gear carried from `/aidlc-intent` (config `ceremony.default`; full model:

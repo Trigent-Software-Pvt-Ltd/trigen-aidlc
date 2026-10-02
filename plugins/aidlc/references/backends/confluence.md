@@ -51,22 +51,45 @@ acli confluence --action storePage --space "<SPACE>" --title "<Title>" --content
 
 ## Page Hierarchy
 
+> **Follow the consolidated, human-readable layout** in @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md.
+> The default is **one of each** page — one Feature doc, one Status page, one Epic (with its Design /
+> Decisions / Test Scope trio) — not a page per ADR and no separate Epics Overview for a single epic.
+
+**Default (one Epic):**
+
 ```
-<Space Root>
-└── <Project Name>
-    └── Feature 1: <Title>
-        ├── Epics Overview
-        │   └── Epic 01: <Title>
-        │       └── Task U01-T01: <Title>
-        │       └── Task U01-T02: <Title>
-        │   └── Epic 02: <Title>
-        │       └── Task U02-T01: <Title>
-        ├── Design
-        │   ├── Domain Model
-        │   └── Logical Design
-        └── ADRs
-            └── ADR 001: <Title>
+<Space home>
+└── Feature: <Title>                     ← PRD/Intent, prose-first
+    ├── Status — <Title>                 ← the one workflow-status table (cheap to flip)
+    └── Epic: <Area>                     ← one by default
+        ├── Design — <Area>              ← readable HOW document (prose + earned tables/diagram)
+        ├── Decisions (ADRs) — <Area>    ← one page; each decision a `## ADR-NN` section
+        ├── Test Scope — <Area>          ← layered scenarios (per sprint + epic integration)
+        └── Task U0N-T0N: <title>        ← tight build units
 ```
+
+**Multiple epics (only when fan-out triggers fire — see artifact-consolidation.md):**
+
+```
+<Space home>
+└── Feature: <Title>
+    ├── Status — <Title>
+    ├── Epics Overview                   ← warranted only when there is >1 epic
+    │   └── Epic: <Area A> (+ Design / Decisions / Test Scope / Tasks)
+    │   └── Epic: <Area B> (+ Design / Decisions / Test Scope / Tasks)
+```
+
+### Page update mechanics (keep edits cheap and valid)
+
+- There is **no partial-update API** — editing a page re-publishes its whole body. Keep status on its
+  own small **Status page**, and ADRs/test-scope on their own pages, so routine flips touch little.
+- **Edit existing pages with `contentFormat: "html"`** and call `getContentFormatGuide` first. A
+  markdown full-replace is **rejected** when the page already contains a task-list or macro
+  ("content contains elements that cannot be represented in markdown").
+- In HTML, author code/diagrams as `<pre><code class="language-…">` (e.g. `language-mermaid`) — the
+  `<ac:structured-macro>` storage form is rejected by the HTML validator.
+- Creating a **new** page may use `contentFormat: "markdown"` (checkbox lists convert cleanly); the
+  limitation only bites on updates to pages that already contain task-lists/macros.
 
 ## Workflow: New Feature
 
