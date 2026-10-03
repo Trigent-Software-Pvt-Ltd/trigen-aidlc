@@ -12,7 +12,7 @@ Break down an approved Feature into Epics using the AI-DLC Mob Elaboration ritua
 
 ## Artifact consolidation & readability (read first)
 
-Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. **Default to ONE Epic** named for the area; skip the separate Epics Overview and "Service Context" pages in the single-epic case. Fan out into multiple epics **only** when all three triggers hold — genuinely independent, large, and parallelisable by different people — and record the one-line justification. This holds **even at Deep gear** (Deep buys deeper analysis, not automatically more pages). A small feature (e.g. a few UI cards) is one Epic with one or two Sprints, never a tower of epics.
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md, and **write every page as genuine human prose** (complete sentences and paragraphs, not fragment/bullet shorthand) per @${CLAUDE_PLUGIN_ROOT}/references/writing-style.md. **Default to ONE Epic** named for the area; skip the separate Epics Overview and "Service Context" pages in the single-epic case. Fan out into multiple epics **only** when all three triggers hold — genuinely independent, large, and parallelisable by different people — and record the one-line justification. This holds **even at Deep gear** (Deep buys deeper analysis, not automatically more pages). A small feature (e.g. a few UI cards) is one Epic with one or two Sprints, never a tower of epics.
 
 ## Ceremony gear (do this first)
 

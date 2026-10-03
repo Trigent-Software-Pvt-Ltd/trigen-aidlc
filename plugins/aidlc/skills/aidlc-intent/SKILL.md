@@ -27,7 +27,7 @@ Produce the Feature documentation as the single source of truth for the project 
 
 ## Artifact consolidation & readability (read first)
 
-Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Few, focused pages beat many machine-dump pages, at **every gear**. For Intent specifically: create the Feature doc as a **well-written, prose-first** document, **and** create a single small **Status page** (child of the Feature) that holds the workflow-status table — do NOT embed the status table inside the Feature doc (status flips belong on the cheap-to-update Status page).
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Few, focused pages beat many machine-dump pages, at **every gear**. **Write every document as genuine human prose** — complete sentences organised into paragraphs, leading with the why, using lists only for genuinely listable things — never telegraphic fragment/em-dash/bullet shorthand. Follow @${CLAUDE_PLUGIN_ROOT}/references/writing-style.md. For Intent specifically: create the Feature doc as a **well-written, prose-first** document, **and** create a single small **Status page** (child of the Feature) that holds the workflow-status table — do NOT embed the status table inside the Feature doc (status flips belong on the cheap-to-update Status page).
 
 ## Gear Selection (do this first)
 
