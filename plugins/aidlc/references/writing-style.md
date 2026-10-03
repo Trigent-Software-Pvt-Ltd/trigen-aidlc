@@ -68,6 +68,47 @@ trip someone up, the reason an alternative was rejected — in enough words to b
 not mean restating the same point three ways or filling space with ceremony. A good section is as
 long as the idea requires and no longer.
 
+## Choose the format that communicates best (prose is the default, not the only tool)
+
+Prose is the default because most of a design or a requirement is reasoning, and reasoning reads
+best as sentences. But "write in prose" does not mean "turn everything into long paragraphs."
+Detailed and readable also means **using the right shape for each piece of content and keeping it
+precise**:
+
+- **A short "at a glance" summary** at the top of any long document — three or four sentences, or a
+  handful of one-line bullets — so a busy reader gets the gist before the detail.
+- **Bullet lists** for things that are genuinely a set: options, steps, endpoints, a checklist of
+  criteria. Keep each item a complete thought; introduce the list with a sentence.
+- **Tables** for truly tabular material: data contracts, decision logs, requirement-to-test
+  matrices, status, comparisons.
+- **A diagram** (a Mermaid flowchart or sequence diagram) when a relationship or a flow is easier to
+  see than to read. One clear diagram often replaces three paragraphs.
+- **Precision over padding.** Say the thing once, in the fewest words that remove ambiguity. If a
+  paragraph is not adding information, cut it. A long document earns its length by covering more
+  cases, not by saying the same case at greater length.
+
+The test to apply to every section: *would a reader understand this faster as a paragraph, a short
+list, a table, or a diagram?* Use that shape. A document that is all prose can be as hard to use as
+one that is all fragments — aim for the mix a good human author would choose.
+
+## Acceptance criteria: write them in EARS, make them testable
+
+Acceptance criteria are where ambiguity does the most downstream damage, so write them to a
+standard. Use **EARS (Easy Approach to Requirements Syntax)** — a small set of sentence templates
+that make a requirement unambiguous and directly testable:
+
+- **Ubiquitous:** "THE SYSTEM SHALL <response>." (an always-true rule)
+- **Event-driven:** "WHEN <trigger> THE SYSTEM SHALL <response>."
+- **State-driven:** "WHILE <in a state> THE SYSTEM SHALL <response>."
+- **Optional feature:** "WHERE <feature is included> THE SYSTEM SHALL <response>."
+- **Unwanted behaviour:** "IF <condition>, THEN THE SYSTEM SHALL <response>." (errors, edge cases)
+
+Every criterion must be a **mechanical yes/no check** a reviewer can answer without interpretation,
+with **concrete values** (a real TTL, status code, threshold, enum), and must cover the negative and
+permission paths, not just the happy path. Prefer EARS for the crisp rule and add a Given/When/Then
+example when a worked scenario aids understanding. A criterion that cannot be turned into a passing
+or failing test is not done — rewrite it until it can.
+
 ## Voice and mechanics
 
 Write in plain, professional English, in the active voice, in the present tense for how the system

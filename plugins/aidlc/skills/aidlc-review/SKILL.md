@@ -7,6 +7,8 @@ description: Peer-review implementation work (GitLab merge requests) for a Sprin
 
 Review AI-DLC documentation or implementation work with thorough, sub-agent-driven analysis and confidence scoring. Supports multiple documentation backends: **GitLab** (markdown files), **Linear** (Initiatives/Projects/Issues), or **Confluence** (pages).
 
+> **For documentation reviews, use the `doc-quality-reviewer` agent** (${CLAUDE_PLUGIN_ROOT}/agents/doc-quality-reviewer.md). It checks each document for ambiguity, testability (EARS acceptance criteria), completeness (negative/permission paths, typed contracts), traceability (requirement → design → task → test coverage), readability (per writing-style.md), and — most importantly — the **downstream-implementation risk** of each weakness, returning severity-ranked findings and an Approve / Revise / Reject verdict. Requirement ambiguity caught here is cheap; caught in build it is not.
+
 ## AI-Drives-Conversation Pattern
 
 This skill follows the AI-DLC principle where AI initiates and directs the conversation:
