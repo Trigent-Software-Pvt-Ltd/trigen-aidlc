@@ -25,6 +25,19 @@ A Feature produces **one of each** of these, and nothing more unless a fan-out t
 | **Test Scope** | Layered scenarios per sprint + epic integration | one page per epic | `/aidlc-design` |
 | **Task Specs** | The build units — one per task is fine, kept tight | child pages of the epic | `/aidlc-design` |
 
+### The acceptance-criteria catalogue is required and must never be dropped
+
+Consolidation reduces the number of pages, but it must **never drop the acceptance-criteria
+catalogue**. Every feature keeps a single, authoritative list of acceptance criteria with **stable
+ids** (for example `AC-RHI-01`), written in **EARS** and carrying the governed values the criteria
+depend on (thresholds, gate percentages, retention periods, simulation parameters). It lives on the
+Feature doc or on a dedicated **"Acceptance Criteria" page** under the Epic, and it is the thing the
+Design, the Test Scope, and the verdict/metric logic all trace back to by id. The Test Scope's
+coverage matrix maps those ids to test cases in **both directions** (every criterion has a case;
+every case names a criterion). If you move behaviour into prose during consolidation, you still
+publish the AC catalogue — prose explains, the catalogue is what gets verified. Dropping it breaks
+traceability and makes "every AC has a test" an unprovable claim (a real defect caught in review).
+
 **Do NOT** create: a page per ADR; a separate "Epics Overview" page when there is one epic;
 status tables embedded inside the Feature/Epic/Design pages (they belong on the Status page);
 "Service Context" pages for green-field work.
