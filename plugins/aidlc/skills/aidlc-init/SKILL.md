@@ -67,6 +67,12 @@ workItemTemplate:            # rich 12-section leaf descriptions in /aidlc-verif
   productSlug: ""           # e.g. bench-resource-tracker
   references: { featureUrl: "", designUrl: "", adrsUrl: "", businessRulesUrl: "", boardUrl: "" }
   descriptionFormat: markdown
+guardrails:                  # enforced hooks (see references/guardrails.md). Mirrored to <project>/.aidlc/guardrails.env.
+  enabled: true
+  publishGate: { mode: block, approvalTtlSeconds: 600, singleUse: false, includeBashWrites: true }  # block|warn|off — tracker writes need an explicit user "go"
+  earsValidation: { mode: warn }    # block|warn|off — flag non-EARS acceptance criteria
+  secretScan: { mode: block }       # block|warn|off — block credentials in tool args
+  transferSentinel: { enabled: false, mode: warn }  # flag a Jira leaf missing labels/estimate/AC ref
 ```
 
 These placeholder tokens (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
@@ -138,7 +144,23 @@ Every skill resolves them by reading `aidlc.config.yaml`.
    - This is distinct from the Constitution: the Constitution holds project *principles*; the
      toolchain holds the agent's *guardrails and context*.
 
-7. **Next step**
+7. **Generate the guardrails env file (enforced hooks)**
+   - The `guardrails:` block in `aidlc.config.yaml` is the intent; the hook scripts read a flat env
+     file. From the approved block, write **`<project>/.aidlc/guardrails.env`** with these keys
+     (one per line, `KEY=value`), mapping the YAML to the env names the scripts use:
+     - `GUARDRAILS_ENABLED` ← `guardrails.enabled`
+     - `PUBLISH_GATE_MODE` ← `guardrails.publishGate.mode`; `PUBLISH_GATE_TTL` ← `.approvalTtlSeconds`;
+       `PUBLISH_GATE_SINGLE_USE` ← `.singleUse`; `PUBLISH_GATE_INCLUDE_BASH` ← `.includeBashWrites`
+     - `EARS_MODE` ← `guardrails.earsValidation.mode`
+     - `SECRET_SCAN_MODE` ← `guardrails.secretScan.mode`
+     - `SENTINEL_ENABLED` ← `guardrails.transferSentinel.enabled`; `SENTINEL_MODE` ← `.mode`
+   - If `guardrails` is absent, the hooks fall back to their shipped defaults
+     (`hooks/guardrails.defaults.env`) — this file only *overrides* them, so writing it is optional
+     but recommended so the project's choices are explicit and version-controlled.
+   - Remind the user that the hooks activate after a `/plugin` reload. Do **not** add
+     `.aidlc/guardrails.env` to `.gitignore` — it holds no secrets and is meant to be shared.
+
+8. **Next step**
    - Tell the user they can now run `/aidlc-intent` to capture the first **Feature**.
 
 ## Reading config from other skills
@@ -159,4 +181,6 @@ Other skills should resolve placeholders like this:
 
 - `aidlc.config.yaml` exists in the project root with the user-approved values.
 - The chosen default backend is recorded.
+- When `guardrails.enabled`, `<project>/.aidlc/guardrails.env` is written from the guardrails block
+  (or the user was told the shipped defaults apply).
 - The user knows the next step is `/aidlc-intent`.

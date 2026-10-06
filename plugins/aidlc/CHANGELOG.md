@@ -2,6 +2,29 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.27.0
+
+**Added — Guardrails (enforced hooks).** Converts load-bearing AI-DLC rules from prose into
+`hooks.json` command hooks under `plugins/aidlc/hooks/` (auto-discovered; need only bash + jq).
+See `references/guardrails.md`.
+
+- **Publish gate (HP-2, block):** `PreToolUse` blocks tracker writes (Jira/Confluence MCP tools and
+  `glab`/`acli`/`jira` via Bash) unless the user gave an explicit go. Approval is captured by HP-1
+  (`UserPromptSubmit`) as a short-lived token (`PUBLISH_GATE_TTL`, default 600s; strong phrases
+  approve at any length, weak imperatives only in a short message). Fails closed.
+- **EARS validation (HP-3, warn):** flags acceptance-criteria lines on an AC-catalogue publish that
+  lack an EARS keyword (WHEN/IF-THEN/SHALL/WHILE/WHERE).
+- **Secret scan (HP-4, block):** blocks tool arguments containing a credential pattern
+  (GitHub/Slack/AWS/Google/OpenAI tokens, private keys). Block-not-scrub under classic hooks.
+- **Transfer sentinel (HP-5, off by default):** flags a Jira leaf missing labels / estimate / AC ref.
+- **Status banner (HP-6):** SessionStart note that guardrails are active and in which mode.
+- **Config:** `guardrails:` block in `aidlc.config.example.yaml`, mirrored to
+  `<project>/.aidlc/guardrails.env` (the env file the scripts read). Every guardrail is block/warn/off.
+- **`/aidlc-init` wiring:** the init skill now captures the `guardrails:` block and writes
+  `<project>/.aidlc/guardrails.env` from it, so new projects get the hooks configured on setup
+  (falls back to shipped defaults when the block is absent).
+
+
 ## 4.22.0
 
 **Added — agentic-engineering competencies (bridges the CodeWalnut "12 competencies" gaps).** All

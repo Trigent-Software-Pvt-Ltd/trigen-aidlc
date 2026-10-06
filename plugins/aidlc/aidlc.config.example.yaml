@@ -129,3 +129,24 @@ workItemTemplate:
   # Description body format. "markdown" => create/edit issues with contentFormat:"markdown".
   # Never wrap the whole body in an ADF codeBlock.
   descriptionFormat: markdown
+
+# ---------------------------------------------------------------------------
+# Guardrails (enforced hooks) — see references/guardrails.md
+# Soft AI-DLC rules made enforced: the publish gate on tracker writes, EARS
+# validation before an AC-catalogue publish, and secret scanning. Each mode is
+# block | warn | off. /aidlc-init can mirror this block into
+# <project>/.aidlc/guardrails.env (the env file the hook scripts read).
+guardrails:
+  enabled: true
+  publishGate:
+    mode: block            # tracker writes require an explicit user "go"
+    approvalTtlSeconds: 600 # an approval covers a short burst (e.g. a batch transfer)
+    singleUse: false        # true = one approval unlocks exactly one write
+    includeBashWrites: true # also gate glab / acli / jira writes tunnelled through Bash
+  earsValidation:
+    mode: warn              # flag non-EARS acceptance criteria (warn until trusted, then block)
+  secretScan:
+    mode: block             # block tool args containing a credential pattern
+  transferSentinel:
+    enabled: false          # flag a Jira leaf missing labels / estimate / AC reference
+    mode: warn
