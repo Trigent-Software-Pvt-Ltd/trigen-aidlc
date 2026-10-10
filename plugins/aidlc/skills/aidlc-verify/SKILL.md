@@ -131,6 +131,7 @@ This skill follows the AI-DLC principle where AI initiates and directs the conve
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Templates, Jira tool names, operational guidance
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Scoring rubrics, quality checklists, confidence thresholds
 - @${CLAUDE_PLUGIN_ROOT}/references/test-reliability.md - Readiness must treat weak tests as a gap: reliable locators, deterministic mocks, permission/negative-path coverage, and mutation testing to prove the Test Scope is real
+- @${CLAUDE_PLUGIN_ROOT}/references/risk-governance.md - A readiness/confidence score NEVER overrides a failed mandatory security/compliance gate (enforced gates win). After readiness is approved, optionally emit `readiness.verified` via `hooks/qmetry-emit.sh` (references/qmetry360-events.md).
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend detection patterns
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab-specific operations
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear-specific operations

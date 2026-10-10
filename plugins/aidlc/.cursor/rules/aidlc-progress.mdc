@@ -13,5 +13,10 @@ Summary:
 2. Summarise status by phase: Intent → Elaborate → Design → Verify → Sprint → Review.
 3. Show Epic/Story/Task rollups and Sprint completion.
 4. Highlight blockers, unresolved risks, and next actions.
+5. **Traceability report (ENH-016, `references/traceability.md`):** walk Intent → Requirement (FR) →
+   Unit/Epic → Story → Design/ADR → Test → PR → Build → Release; flag missing links, unverified
+   requirements (AC with no executed test), and ungated changes (writes/merges with no recorded
+   approval; HIGH-risk with no specialist review/ADR). Output a per-FR coverage table + gap list. Report
+   only — a human acts on the gaps. Risk vocabulary: `references/risk-governance.md`.
 
 Read-only; resolve config placeholders from `aidlc.config.yaml`.

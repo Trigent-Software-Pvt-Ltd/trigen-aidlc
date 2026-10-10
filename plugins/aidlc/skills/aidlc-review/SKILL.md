@@ -79,6 +79,8 @@ The backend determines where to fetch documentation from:
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Scoring rubrics and checklists
 - @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md - Two-stage review (spec then quality), severity model, the fix-loop + adjudication protocol shared with `/aidlc-sprint`, and **§6 review depth** (fresh-agent/different-model reviewer, security/a11y/performance specialist subagents, review memory)
 - @${CLAUDE_PLUGIN_ROOT}/references/evidence-led-pr.md - The evidence pack an implementation PR must carry; the implementation-review path **requires it to be present** and treats a missing/played-down pack as a finding, not a pass
+- @${CLAUDE_PLUGIN_ROOT}/references/risk-governance.md - Risk class selects the specialist passes (security/a11y/perf) and reviewer depth; HIGH-risk needs proportionate review. After review, optionally emit `review.completed` via `hooks/qmetry-emit.sh` (references/qmetry360-events.md).
+- @${CLAUDE_PLUGIN_ROOT}/references/verification-checklist.md - Confirm completion (PASS/FAIL/NOT-RUN/N-A) before sign-off via `/aidlc-verify-completion`
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab operations (if GitLab backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear operations (if Linear backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md - Confluence operations (if Confluence backend)

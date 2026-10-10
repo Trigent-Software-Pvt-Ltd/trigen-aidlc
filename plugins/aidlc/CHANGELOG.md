@@ -2,6 +2,31 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.30.0 — Release C: enterprise delivery (ENH-012…016)
+
+Additive; optional capabilities, default-safe (QMetry local-only, risk/traceability are reports).
+
+- **ENH-012 Sprint 0 readiness** — `references/sprint0-readiness.md`; `/aidlc-init` writes an auditable
+  `.aidlc/readiness-report.md` (project type, repo/arch context, roles & approval ownership, integration
+  readiness, baseline metrics, quality/release gates, first-sprint readiness). No redundant stage.
+- **ENH-013 QMetry360 integration** — `hooks/qmetry-emit.sh` (dependency-light) + `references/qmetry360-events.md`
+  (stable event schema + correlation ids). **Local JSONL by default; live POST only against a configured,
+  verified contract — no endpoint/auth shipped, none invented.** `qmetry360` config block +
+  `QMETRY_*` env; emit points documented per skill. Tested (local record / off / missing-event / non-JSON
+  data coercion), no live calls in tests.
+- **ENH-014 Risk-based governance** — `references/risk-governance.md`: one risk taxonomy across
+  design/impl/review/release; HIGH-risk → specialist review + ADR; **a readiness/confidence score never
+  overrides a failed mandatory security/compliance gate** (ties to enforced gates). Referenced from
+  design/verify/review.
+- **ENH-015 Skill regression testing** — `references/skill-eval.md`; `/aidlc-retro` evaluates a proposed
+  skill-instruction change against a scenario set before adoption; never auto-rewrites a production skill.
+- **ENH-016 Traceability** — `references/traceability.md`; `/aidlc-progress` emits a traceability report
+  (Intent→Requirement→Unit→Story→Design/ADR→Test→PR→Build→Release) flagging missing links, unverified
+  requirements, and ungated changes. Report only.
+
+Cursor rules (init/progress/retro) + README references updated. Test suite 38 → 42 (adds qmetry-emit);
+all pass.
+
 ## 4.29.0 — Release B: execution engineering (ENH-004…011)
 
 Adds execution discipline as reusable capabilities. All additive; existing skills and advisory-mode

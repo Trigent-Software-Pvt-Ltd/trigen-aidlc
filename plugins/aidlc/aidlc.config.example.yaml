@@ -161,3 +161,15 @@ guardrails:
   transferSentinel:
     enabled: false          # flag a Jira leaf missing labels / estimate / AC reference
     mode: warn
+
+# ---------------------------------------------------------------------------
+# QMetry360 event emission (ENH-013) — OPTIONAL. See references/qmetry360-events.md.
+# Emits AI-DLC lifecycle events (intent.approved … release.gate.evaluated).
+# Default records locally; the live POST runs only against a VERIFIED contract —
+# no endpoint or auth is shipped. /aidlc-init maps this to .aidlc/guardrails.env.
+qmetry360:
+  enabled: false
+  emitMode: local            # off | local | live
+  # eventsFile: ""           # default: <project>/.aidlc/guardrails/qmetry-events.jsonl
+  # apiUrl: ""               # live only — a verified QMetry360 endpoint
+  # tokenEnv: ""             # live only — name of the env var holding the bearer token

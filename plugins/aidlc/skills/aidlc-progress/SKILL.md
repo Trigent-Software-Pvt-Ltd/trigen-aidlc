@@ -71,6 +71,8 @@ This skill detects the backend automatically from existing artifacts (it does NO
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Shared quality checklists and scoring foundations
 - @${CLAUDE_PLUGIN_ROOT}/references/sprint-conventions.md - Sprint naming, sizing, and sequencing conventions
 - @${CLAUDE_PLUGIN_ROOT}/references/dependency-analysis.md - Dependency mapping and risk assessment
+- @${CLAUDE_PLUGIN_ROOT}/references/traceability.md - **Traceability report (ENH-016):** walk Intent → Requirement (FR) → Unit/Epic → Story → Design/ADR → Test → PR → Build → Release; flag missing links, unverified requirements (AC with no executed test), and ungated changes (writes/merges with no recorded approval; HIGH-risk with no specialist review/ADR). Output a per-FR coverage table + the gap list. Report only — a human acts on gaps.
+- @${CLAUDE_PLUGIN_ROOT}/references/risk-governance.md - Shared risk taxonomy used in the assessment
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/gitlab.md - GitLab operations (if GitLab backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/linear.md - Linear operations (if Linear backend)
 - @${CLAUDE_PLUGIN_ROOT}/references/backends/confluence.md - Confluence operations (if Confluence backend)

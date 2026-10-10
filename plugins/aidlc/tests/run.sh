@@ -140,6 +140,20 @@ jq -n --arg d "$DIG_OK" '{op:"createJiraIssue",backend:"jira",target:"QI:Story:C
 printf '%s' '{"session_id":"s1","prompt":"yes"}' | bash "$HOOKS/approval-capture.sh" >/dev/null 2>&1
 run publish-gate.sh "$WRITE"; assert_allow "enforced e2e: manifest + 'yes' authorises the exact write"
 
+echo "== qmetry-emit (ENH-013) — local default, no live calls =="
+newproj
+bash "$HOOKS/qmetry-emit.sh" --event design.approved --project QI --story QI-137 >/dev/null 2>&1
+if [ -f "$STATE/qmetry-events.jsonl" ] && [ "$(jq -r '.event' "$STATE/qmetry-events.jsonl" | head -1)" = "design.approved" ]; then ok "local: event recorded as JSONL"; else bad "local: event recorded as JSONL"; fi
+newproj; projenv "QMETRY_EMIT_MODE=off"
+bash "$HOOKS/qmetry-emit.sh" --event x --project QI >/dev/null 2>&1
+assert_nofile "$STATE/qmetry-events.jsonl" "off mode: nothing recorded"
+newproj
+bash "$HOOKS/qmetry-emit.sh" --project QI >/dev/null 2>&1; rc=$?
+if [ "$rc" = 2 ]; then ok "missing --event -> error (rc 2)"; else bad "missing --event -> error (rc 2)" "rc=$rc"; fi
+newproj
+bash "$HOOKS/qmetry-emit.sh" --event tests.executed --data 'not json' >/dev/null 2>&1
+if [ -f "$STATE/qmetry-events.jsonl" ] && [ "$(jq -rc '.data' "$STATE/qmetry-events.jsonl" | head -1)" = "{}" ]; then ok "non-JSON data coerced to {} (no injection)"; else bad "non-JSON data coerced to {}"; fi
+
 echo
 echo "Total: $((PASS+FAIL)) | ${GRN}PASS $PASS${NC} | ${RED}FAIL $FAIL${NC}"
 [ "$FAIL" -eq 0 ]

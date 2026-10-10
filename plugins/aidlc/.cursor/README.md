@@ -27,7 +27,9 @@ cp -r /path/to/plugins/aidlc/.cursor/rules/* .cursor/rules/
 #  references/prd-template.md, references/design-doc-template.md, references/agent-toolchain.md,
 #  references/evidence-led-pr.md, references/test-reliability.md, references/token-economics.md,
 #  references/implementation-plan.md, references/verification-checklist.md, references/task-handoff.md,
-#  references/skill-structure.md, references/guardrails.md)
+#  references/skill-structure.md, references/guardrails.md, references/sprint0-readiness.md,
+#  references/qmetry360-events.md, references/risk-governance.md, references/skill-eval.md,
+#  references/traceability.md)
 mkdir -p references
 cp -r /path/to/plugins/aidlc/references/* references/
 # also copy the config template

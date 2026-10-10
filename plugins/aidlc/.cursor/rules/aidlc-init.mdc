@@ -42,7 +42,16 @@ Summary:
    (`architecture.md`, repo map, `conventions.md`). **Show a diff and get approval per file; never
    overwrite — extend.** Distinct from the Constitution: Constitution = project principles;
    toolchain = the agent's guardrails + context.
-6. Point the user to `/aidlc-intent` next.
+6. **Sprint 0 readiness (optional, recommended)** — run `references/sprint0-readiness.md` and write an
+   auditable `.aidlc/readiness-report.md` (project type, repo/arch context, project instructions, roles
+   & approval ownership, integration readiness, baseline metrics, quality/release gates, first-sprint
+   readiness — each READY/GAP/N-A + verdict). A mandatory security/compliance GAP follows
+   `references/risk-governance.md` (a score can't override a failed mandatory gate).
+7. **QMetry360 events (optional)** — if `qmetry360.enabled`, map the `qmetry360` block to env
+   (`QMETRY_EMIT_MODE`/`QMETRY_EVENTS_FILE`/`QMETRY_API_URL`/`QMETRY_TOKEN_ENV`) in
+   `.aidlc/guardrails.env`; events emit via `hooks/qmetry-emit.sh` (local default; live only against a
+   verified contract — `references/qmetry360-events.md`).
+8. Point the user to `/aidlc-intent` next.
 
 These values resolve the placeholders (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
 `<FEATURE_INDEX_PAGE_ID>`, `<GITLAB_DOCS_REPO_URL>`, `<GITLAB_DOCS_REPO_SSH>`,

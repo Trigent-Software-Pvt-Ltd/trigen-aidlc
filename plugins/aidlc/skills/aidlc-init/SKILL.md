@@ -163,7 +163,20 @@ Every skill resolves them by reading `aidlc.config.yaml`.
    - Remind the user that the hooks activate after a `/plugin` reload. Do **not** add
      `.aidlc/guardrails.env` to `.gitignore` — it holds no secrets and is meant to be shared.
 
-8. **Next step**
+8. **Sprint 0 readiness (optional, recommended)**
+   - Run the readiness pass in @${CLAUDE_PLUGIN_ROOT}/references/sprint0-readiness.md and write an
+     auditable **`.aidlc/readiness-report.md`**: project type (greenfield/brownfield), repo/architecture
+     context, project instructions, roles & approval ownership, integration readiness, baseline metrics,
+     quality/release gates, and first-sprint readiness — each READY / GAP / N-A with evidence and a
+     summary verdict. It informs; it does not auto-start a sprint. A **mandatory** security/compliance
+     GAP is handled per `references/risk-governance.md` (a score can't override a failed mandatory gate).
+   - **QMetry360 events (optional):** if `qmetry360.enabled`, note that lifecycle events will be emitted
+     via `hooks/qmetry-emit.sh` (local JSONL by default; live only against a verified contract — see
+     @${CLAUDE_PLUGIN_ROOT}/references/qmetry360-events.md). Map the `qmetry360` config block to env
+     (`QMETRY_EMIT_MODE`, `QMETRY_EVENTS_FILE`, `QMETRY_API_URL`, `QMETRY_TOKEN_ENV`) in
+     `.aidlc/guardrails.env`.
+
+9. **Next step**
    - Tell the user they can now run `/aidlc-intent` to capture the first **Feature**.
 
 ## Reading config from other skills

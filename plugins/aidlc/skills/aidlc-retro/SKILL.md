@@ -55,7 +55,16 @@ patterns (where it guessed wrong, where you re-prompted, where tokens went into 
 The same mistake stops recurring across sessions; rules and skills grow from real session evidence;
 cost and rework trend down cycle over cycle.
 
+## Evaluate skill changes before adoption (ENH-015)
+When a proposed fix edits a **skill's instructions**, run it against the scenario set in
+@${CLAUDE_PLUGIN_ROOT}/references/skill-eval.md (clear greenfield, ambiguous, brownfield, failed tests,
+unauthorized publish attempt, conflicting instructions, missing integration access, incomplete AC) and
+compare expected vs observed for the old and proposed versions. **Adopt only if it improves or holds
+every scenario and regresses none** — and never auto-rewrite a production skill; the human approves the
+diff (the publish/approve gate).
+
 ## References
 - @${CLAUDE_PLUGIN_ROOT}/references/agent-toolchain.md — where rules/hooks/guardrails live.
 - @${CLAUDE_PLUGIN_ROOT}/references/token-economics.md — the waste signals to watch for.
 - @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md — the ledger the retro reads from.
+- @${CLAUDE_PLUGIN_ROOT}/references/skill-eval.md — scenario harness for evaluating skill-instruction changes.
