@@ -51,6 +51,11 @@ The rest of this skill (the four-phase ritual) is the **Deep** path. **One-way r
 > any write to Confluence / GitLab / Linear / Jira.** Only after approval create/update the page,
 > file or issue. If the user only said "run elaborate", that means *produce the draft for review* —
 > not *publish it*. When unsure whether you have approval, you do not — ask.
+>
+> **Bind the approval (enforced/`approvalBinding` mode).** Before asking for the go, record the
+> pending write so the guardrail approval binds to it — e.g. `printf '%s' "<body>" | bash
+> "${CLAUDE_PLUGIN_ROOT}/hooks/propose.sh" --op createConfluencePage --backend confluence --target
+> "<Epic page title>"`. See `references/guardrails.md`. No-op in advisory mode.
 
 > **AIDLC 3.9+ flow: Epics first, Tasks second**
 >

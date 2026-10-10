@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 . "${CLAUDE_PLUGIN_ROOT}/hooks/common.sh"
-[ "${GUARDRAILS_ENABLED:-true}" = "true" ] || allow
-MODE="${SECRET_SCAN_MODE:-block}"; [ "$MODE" = "off" ] && allow
+protected_active || allow                                   # enforced keeps this on
+MODE="$(effective_mode "${SECRET_SCAN_MODE:-block}" yes)"   # secret scan is protected
+[ "$MODE" = "off" ] && allow
 BLOB="$(printf '%s' "$INPUT" | jq -c '.tool_input // {}' 2>/dev/null)"
 PAT='ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|AIza[0-9A-Za-z_-]{30,}|(^|[^A-Za-z0-9])sk-[A-Za-z0-9]{20,}|xoxp-[A-Za-z0-9-]{10,}'
 HIT="$(printf '%s' "$BLOB" | grep -oE "$PAT" | head -1)"

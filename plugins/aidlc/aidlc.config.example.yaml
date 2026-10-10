@@ -138,10 +138,21 @@ workItemTemplate:
 # <project>/.aidlc/guardrails.env (the env file the hook scripts read).
 guardrails:
   enabled: true
+  # Governance mode (ENH-002): advisory | enforced
+  #   advisory — per-gate modes apply; enabled:false disables gates (evaluation).
+  #   enforced — PROTECTED gates (publishGate, secretScan) are forced to block and
+  #              CANNOT be downgraded by a per-gate mode or enabled:false; and
+  #              approvals become action-bound (approvalBinding forced true).
+  governanceMode: advisory
+  # Action-bound approvals (ENH-001): bind each approval to one operation
+  # (backend + target + payload digest when the skill records a manifest via
+  # hooks/propose.sh; target/backend hints from the prompt otherwise). Single-use,
+  # expiring, consumed on use, fail-closed on mismatch. Forced true under enforced.
+  approvalBinding: false
   publishGate:
     mode: block            # tracker writes require an explicit user "go"
     approvalTtlSeconds: 600 # an approval covers a short burst (e.g. a batch transfer)
-    singleUse: false        # true = one approval unlocks exactly one write
+    singleUse: false        # legacy path only; the bound model is always single-use
     includeBashWrites: true # also gate glab / acli / jira writes tunnelled through Bash
   earsValidation:
     mode: warn              # flag non-EARS acceptance criteria (warn until trusted, then block)

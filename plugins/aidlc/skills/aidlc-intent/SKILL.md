@@ -229,6 +229,11 @@ Include in Confluence doc as a collapsible section or separate child page. See P
 
    > "Here is the complete Feature draft. Is everything captured and correct? Reply **'publish'** and I'll create the [Confluence page / GitLab MR / Linear Initiative]. I will not create or update anything until you confirm."
 
+   **Bind the approval (enforced/`approvalBinding` mode):** before this prompt, record the pending
+   write so the guardrail approval binds to it — e.g. `printf '%s' "<body>" | bash
+   "${CLAUDE_PLUGIN_ROOT}/hooks/propose.sh" --op createConfluencePage --backend confluence --target
+   "<page title>"`. See `references/guardrails.md`. No-op in advisory mode.
+
    Before/while iterating, when the Feature is source-derived, run the validation round from
    @${CLAUDE_PLUGIN_ROOT}/references/intent-validation-workflow.md:
    - Disposition each piece of feedback → **Confirmed decisions (§8.1, `R#`)** or **Open/pending (§8.2, `P#`)** with an owner.

@@ -43,6 +43,12 @@ creates tickets.
 > labels, estimate — in chat and get an explicit "go" before creating anything.** Running verify is
 > not consent to create tickets. This is in addition to the existing "Confirm Jira transfer" step.
 > When unsure whether you have approval, you do not — ask.
+>
+> **Bind the approval (enforced/`approvalBinding` mode).** Right before asking for the go on each
+> write, record the pending operation so the guardrail approval binds to *this exact* item — e.g.
+> `printf '%s' "<description>" | bash "${CLAUDE_PLUGIN_ROOT}/hooks/propose.sh" --op createJiraIssue
+> --backend jira --target "<PROJECT>:<type>:<summary>"`. One manifest per write (Epic, each Story,
+> each Task). See `references/guardrails.md`. Harmless in advisory mode.
 
 ## Coherence check (before creating any ticket — every gear except Quick)
 

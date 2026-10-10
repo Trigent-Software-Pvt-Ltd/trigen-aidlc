@@ -73,6 +73,12 @@ phase writes to a shared system of record (Confluence, GitLab, Linear, Jira) unt
 the drafted content in chat and said go. "Run the phase" is not consent to publish. When unsure
 whether you have approval, you do not — ask.
 
+In Claude Code this is **enforced by guardrail hooks** (`hooks/publish-gate.sh`); Cursor has no hook
+runtime, so here it is an instruction you must follow. When the project runs enforced/`approvalBinding`
+mode, record the pending write first so the approval binds to that exact operation — e.g. `printf '%s'
+"<body>" | bash "${CLAUDE_PLUGIN_ROOT}/hooks/propose.sh" --op <tool> --backend <jira|confluence|gitlab>
+--target "<id/title>"`. See `references/guardrails.md`.
+
 ## Configuration
 
 All organisation-specific values (Atlassian cloud id, Confluence space, GitLab docs repo,

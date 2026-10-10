@@ -40,6 +40,11 @@ turns out to need a real domain model or a cross-cutting ADR.
 > artifacts. If the user only said "run design", that means *produce the draft for review* — not
 > *publish it*. (The Deep checklist already has its "In Review" publish gates at Steps 8/16; this
 > makes the same rule explicit for the light path.) When unsure whether you have approval, ask.
+>
+> **Bind the approval (enforced/`approvalBinding` mode).** Before asking for the go on a publish,
+> record the pending write so the guardrail approval binds to it — e.g.
+> `printf '%s' "<body>" | bash "${CLAUDE_PLUGIN_ROOT}/hooks/propose.sh" --op createConfluencePage
+> --backend confluence --target "<page title>"`. See `references/guardrails.md`. No-op in advisory mode.
 
 ## Honor the project Constitution
 

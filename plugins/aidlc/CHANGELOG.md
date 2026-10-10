@@ -2,6 +2,31 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.28.0 — Release A: governance & security hardening (ENH-001/002/003)
+
+Hardens the existing guardrail-hook layer. **Fully backward-compatible:** new behaviour is off by
+default (`governanceMode: advisory`, `approvalBinding: false`) — existing projects are unchanged until
+they opt into `enforced`.
+
+- **ENH-001 Action-specific approval.** Approvals can now bind to a single operation instead of a
+  generic time-boxed token. `hooks/approval-capture.sh` records a bound, single-use, expiring approval
+  (from a `propose.sh` manifest — backend + target + payload digest — or from prompt target/backend
+  hints); `hooks/publish-gate.sh` requires the actual write to match and consumes it on use; new
+  `hooks/propose.sh` records the pending operation. Approving one Jira story can't authorise another;
+  a Confluence approval can't authorise a GitLab write; expired/reused/mismatched/missing → fail
+  closed. Legacy token path retained for advisory mode.
+- **ENH-002 Governance modes.** New `GOVERNANCE_MODE` (`advisory | enforced`). Under `enforced`, the
+  **protected** gates (publish gate, secret scan) are forced to block and **cannot be downgraded** by
+  a per-gate `off`/`warn` or `GUARDRAILS_ENABLED=false`; approvals become action-bound. Helpers
+  `effective_mode` / `protected_active` in `common.sh`.
+- **ENH-003 Hook tests.** New `plugins/aidlc/tests/run.sh` — 24 pure-bash cases (no live writes):
+  legacy + action-bound publish paths, cross-target/cross-backend denial, expiry/replay/single-use,
+  the enforced no-downgrade guarantee, secret-scan protection, malformed-input robustness, read-tool
+  pass-through, and approval binding/manifest promotion. **All 24 pass.**
+- Config: `guardrails.governanceMode` + `guardrails.approvalBinding` added to
+  `aidlc.config.example.yaml`, `guardrails.defaults.env`, and `/aidlc-init`'s env generation;
+  `references/guardrails.md` documents the model + migration.
+
 ## 4.27.0
 
 **Added — Guardrails (enforced hooks).** Converts load-bearing AI-DLC rules from prose into

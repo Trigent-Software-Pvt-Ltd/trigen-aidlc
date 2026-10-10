@@ -69,6 +69,8 @@ workItemTemplate:            # rich 12-section leaf descriptions in /aidlc-verif
   descriptionFormat: markdown
 guardrails:                  # enforced hooks (see references/guardrails.md). Mirrored to <project>/.aidlc/guardrails.env.
   enabled: true
+  governanceMode: advisory   # advisory | enforced — enforced forces protected gates to block (no downgrade) + action-bound approvals
+  approvalBinding: false     # bind each approval to one operation (forced true under enforced)
   publishGate: { mode: block, approvalTtlSeconds: 600, singleUse: false, includeBashWrites: true }  # block|warn|off — tracker writes need an explicit user "go"
   earsValidation: { mode: warn }    # block|warn|off — flag non-EARS acceptance criteria
   secretScan: { mode: block }       # block|warn|off — block credentials in tool args
@@ -149,6 +151,7 @@ Every skill resolves them by reading `aidlc.config.yaml`.
      file. From the approved block, write **`<project>/.aidlc/guardrails.env`** with these keys
      (one per line, `KEY=value`), mapping the YAML to the env names the scripts use:
      - `GUARDRAILS_ENABLED` ← `guardrails.enabled`
+     - `GOVERNANCE_MODE` ← `guardrails.governanceMode` (advisory|enforced); `APPROVAL_BINDING` ← `guardrails.approvalBinding`
      - `PUBLISH_GATE_MODE` ← `guardrails.publishGate.mode`; `PUBLISH_GATE_TTL` ← `.approvalTtlSeconds`;
        `PUBLISH_GATE_SINGLE_USE` ← `.singleUse`; `PUBLISH_GATE_INCLUDE_BASH` ← `.includeBashWrites`
      - `EARS_MODE` ← `guardrails.earsValidation.mode`
