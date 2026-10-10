@@ -15,6 +15,9 @@ mkdir -p "$STATE_DIR" 2>/dev/null || true
 # AIDLC_SKIP_STDIN=1 so sourcing this file does not block on / swallow their stdin.
 if [ -z "${AIDLC_SKIP_STDIN:-}" ]; then INPUT="$(cat)"; else INPUT="${AIDLC_INPUT:-}"; fi
 jqget() { printf '%s' "$INPUT" | jq -r "$1" 2>/dev/null; }
+# input_is_json: 0 when INPUT parses as JSON; used to fail closed on malformed
+# input under enforced governance for protected gates.
+input_is_json() { printf '%s' "$INPUT" | jq -e . >/dev/null 2>&1; }
 SESSION_ID="$(jqget '.session_id // "nosession"')"
 TOOL_NAME="$(jqget '.tool_name // ""')"
 

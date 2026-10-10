@@ -14,11 +14,28 @@ protected_active || allow
 MODE="$(effective_mode "${PUBLISH_GATE_MODE:-block}" yes)"   # publish is a protected gate
 [ "$MODE" = "off" ] && allow
 
+# ENH-003 fix #2: fail CLOSED on unparseable input under enforced governance — a
+# protected write must not slip through just because its call could not be classified.
+# Advisory keeps the previous non-blocking behaviour (safe for unrelated reads).
+if ! input_is_json; then
+  [ "$GOVERNANCE_MODE" = "enforced" ] && deny "AI-DLC publish gate: tool input could not be parsed under enforced governance — refusing a protected write. Fix the call and retry."
+  allow
+fi
+
 # Only gate recognised tracker WRITES.
 if [ "$TOOL_NAME" = "Bash" ]; then
   [ "${PUBLISH_GATE_INCLUDE_BASH:-true}" = "true" ] || allow
   CMD="$(jqget '.tool_input.command // ""')"
-  printf '%s' "$CMD" | grep -Eq 'glab[[:space:]]+mr[[:space:]]+(create|merge|update|close|note|approve|revoke)|jira[[:space:]]+workitem[[:space:]]+(create|update|edit|delete|link|transition|assign|comment)|acli[[:space:]]+confluence[[:space:]].*(addPage|storePage)|--action[[:space:]]+(addPage|storePage)' || allow
+  # Base set (always gated): the CLI write forms this plugin emits.
+  BASE='glab[[:space:]]+mr[[:space:]]+(create|merge|update|close|note|approve|revoke)|jira[[:space:]]+workitem[[:space:]]+(create|update|edit|delete|link|transition|assign|comment)|acli[[:space:]]+confluence[[:space:]].*(addPage|storePage)|--action[[:space:]]+(addPage|storePage)'
+  # ENH-003 fix #3: extended set applied under ENFORCED only (keeps advisory compat)
+  # so alternative command forms / other write-capable tools cannot bypass the gate:
+  #   glab api/issue, gh writes, acli jira writes, git push, and curl/wget mutating
+  #   HTTP (POST/PUT/PATCH/DELETE or a data body) to a tracker host.
+  EXT='glab[[:space:]]+(api|issue)|gh[[:space:]]+(pr|issue|api|release|repo)[[:space:]]+(create|edit|merge|comment|close|delete|ready|review)|acli[[:space:]]+jira[[:space:]].*(create|update|edit|transition|comment|delete|link|assign)|git[[:space:]]+push|(curl|wget|http|https)[^|;&]*(-X[[:space:]]*|--request[[:space:]]*|--method=)?(POST|PUT|PATCH|DELETE)|(curl|wget)[^|;&]*(atlassian\.net|/rest/api/|gitlab|github\.com)[^|;&]*(-d[[:space:]]|--data)'
+  PAT="$BASE"
+  [ "$GOVERNANCE_MODE" = "enforced" ] && PAT="$BASE|$EXT"
+  printf '%s' "$CMD" | grep -Eq "$PAT" || allow
 else
   printf '%s' "$TOOL_NAME" | grep -Eq 'createJiraIssue|editJiraIssue|createConfluencePage|updateConfluencePage|createIssueLink|transitionJiraIssue|addCommentToJiraIssue|deleteConfluencePage|createConfluenceFooterComment|createConfluenceInlineComment' || allow
 fi
@@ -59,6 +76,12 @@ DIG="$(printf '%s' "$DESC" | cut -f3)"
 ABK="$(jq -r '.backend // ""' "$APPROVAL_JSON" 2>/dev/null)"
 ATGT="$(jq -r '.target // ""' "$APPROVAL_JSON" 2>/dev/null)"
 ADIG="$(jq -r '.digest // ""' "$APPROVAL_JSON" 2>/dev/null)"
+
+# ENH-003 fix #1: under ENFORCED, an approval MUST be manifest-bound (carry a
+# payload digest). A generic "yes" with no pending manifest cannot authorise a write.
+if [ "$GOVERNANCE_MODE" = "enforced" ] && [ -z "$ADIG" ]; then
+  fail "enforced mode requires a manifest-bound approval for this write — record the exact operation first (hooks/propose.sh: op + backend + target + payload), then approve. A generic 'yes' cannot authorise an unspecified write"
+fi
 
 OK=0
 if [ -n "$ADIG" ]; then

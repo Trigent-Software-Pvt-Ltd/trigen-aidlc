@@ -60,6 +60,19 @@ Hooks are stateless, so approval state lives under `<project>/.aidlc/guardrails/
 So, under `enforced`: approving one Jira story cannot authorise another, a Confluence approval cannot
 authorise a GitLab write, and a reused or stale approval is rejected.
 
+**Enforced mode is strict by design:**
+- A **manifest is mandatory** — a bare "yes" or a prompt-hint-only approval does **not** authorise any
+  write; the skill must record the exact operation (via `propose.sh`) and the write must match its
+  payload digest. (The lenient hint/bare tier exists only when `approvalBinding:true` is set under
+  *advisory* governance.)
+- **Malformed / unparseable input** to a protected gate (publish gate, secret scan) **fails closed**
+  (deny) — a write is never let through just because its call could not be classified. Valid read-only
+  tool calls are unaffected.
+- **Extended Bash coverage** — beyond the plugin's own CLI write forms, enforced also gates
+  `glab api`, `gh` writes, `git push`, and `curl`/`wget` mutating HTTP (POST/PUT/PATCH/DELETE or a
+  data body) to a tracker host, so alternative command forms can't bypass the gate. Advisory keeps the
+  narrower base set for backward-compatibility.
+
 ### Binding a write (for skill authors)
 
 Right before showing a drafted change and asking "publish?", record the pending operation so the

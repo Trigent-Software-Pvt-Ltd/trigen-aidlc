@@ -2,6 +2,21 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.28.1 — Release A hardening follow-ups (review findings)
+
+Closes three enforced-mode gaps found in review; advisory behaviour unchanged.
+
+- **No unbound approvals under enforced.** A manifest-bound approval (payload digest via
+  `propose.sh`) is now **mandatory** in enforced mode — a bare "yes" or prompt-hint-only approval no
+  longer authorises any write (that lenient tier remains only under advisory + `approvalBinding`).
+- **Fail closed on malformed input.** `publish-gate.sh` and `secret-scan.sh` now **deny** unparseable
+  tool input under enforced governance (via `input_is_json` in `common.sh`); advisory stays
+  non-blocking; valid read-only calls are unaffected.
+- **Extended Bash publishing coverage.** Under enforced, the gate also catches `glab api`, `gh`
+  writes, `git push`, and `curl`/`wget` mutating HTTP to tracker hosts; advisory keeps the base set.
+- Tests grew **24 → 38** cases (new: manifest wrong-digest/cross-target/expired, enforced
+  unbound-deny, malformed fail-closed, Bash alternative forms, advisory compat, enforced e2e). All pass.
+
 ## 4.28.0 — Release A: governance & security hardening (ENH-001/002/003)
 
 Hardens the existing guardrail-hook layer. **Fully backward-compatible:** new behaviour is off by
