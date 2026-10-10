@@ -2,6 +2,37 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.29.0 — Release B: execution engineering (ENH-004…011)
+
+Adds execution discipline as reusable capabilities. All additive; existing skills and advisory-mode
+behaviour unchanged.
+
+- **ENH-004 TDD** — new skill `/aidlc-tdd`: red (failing test + captured evidence) → green (captured
+  pass) → refactor → regression; policy-logged exceptions. Wired into `/aidlc-sprint` and
+  `/aidlc-refactor`. Claims require the red/green evidence.
+- **ENH-005 Systematic debugging** — new skill `/aidlc-debug`: reproduce → evidence → localize →
+  test a root-cause hypothesis → smallest fix → regression test → verify + no collateral; stuck-rule
+  escalation. Covers app bugs, failing/flaky tests, integration and CI/CD failures.
+- **ENH-006 Implementation planning** — `references/implementation-plan.md`: per-story plan fields
+  (files, changes, tests, dependencies, risk class, verification commands, completion criteria); wired
+  into the Sprint Plan. No new approval gate for trivial work.
+- **ENH-007 Verify-before-completion** — new skill `/aidlc-verify-completion` + `references/verification-checklist.md`:
+  PASS/FAIL/NOT-RUN/N-A with evidence; **never** treats an unexecuted test as passed or claims an
+  unconfirmed merge. Distinct from `/aidlc-verify` (spec readiness).
+- **ENH-008 Two-stage review** — `/aidlc-review` now runs explicit **Stage 1 spec compliance** then
+  **Stage 2 engineering quality**, with fresh-model/specialist reviewers and an explicit
+  "reviewer never replaces the human approver" rule.
+- **ENH-009 Context isolation** — reinforced via the companion-skill split + execution-rigor §3/§5
+  (briefs, worktrees).
+- **ENH-010 Context-rot prevention** — `references/task-handoff.md`: read context before coding; keep a
+  compact handoff summary; prune as you add. Wired into `/aidlc-sprint`.
+- **ENH-011 Skill structure** — `references/skill-structure.md` sets the lean-skill convention; new
+  skills follow it; legacy skills converge incrementally (no requirement deleted).
+
+New Cursor rules: `aidlc-tdd.mdc`, `aidlc-debug.mdc`, `aidlc-verify-completion.mdc`; lifecycle-gate
+command table, sprint/review rules, and README references list updated. Guardrail hook suite unchanged
+(still 38/38).
+
 ## 4.28.1 — Release A hardening follow-ups (review findings)
 
 Closes three enforced-mode gaps found in review; advisory behaviour unchanged.

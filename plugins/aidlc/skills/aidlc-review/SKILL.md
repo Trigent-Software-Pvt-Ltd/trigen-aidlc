@@ -372,11 +372,26 @@ Act as a **constructive but rigorous senior engineer**. Tone is direct, professi
 
 ### Two-stage verdict (required)
 
-Return **two explicit verdicts, both required** (per @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md §4):
-1. **Spec compliance** — does the MR meet the Sprint/Task acceptance criteria? (AC-to-test coverage; missing AC = spec ❌)
-2. **Code quality** — clean, tested, secure, follows repo conventions?
+Return **two explicit verdicts, both required** (per @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md §4) — run them as **separate stages**, not one blended pass:
 
-A missing verdict = not reviewed. Use the shared severity model (Blocking / Important / Minor). When the caller acts on findings (e.g. from `/aidlc-sprint`), the **fix-loop + adjudication protocol** (execution-rigor §4) governs: scoped re-review each round, 3-round cap, then park-with-ruling or BLOCK — no silent discards.
+**Stage 1 — Specification compliance.** Does the implementation satisfy the approved story: acceptance
+criteria (AC-to-test coverage; a missing AC = spec ❌), business rules, **negative cases**, and
+applicable NFRs? Stage 1 is about *the right thing being built*.
+
+**Stage 2 — Engineering quality.** Architecture & maintainability, security, test quality (do the tests
+prove behaviour, not implementation), dependencies (incl. look-alike/AI-introduced packages),
+performance, and **unintended behaviour changes**. Stage 2 is about *it being built well*.
+
+A missing verdict = not reviewed. Use the shared severity model (Blocking / Important / Minor). When the
+caller acts on findings (e.g. from `/aidlc-sprint`), the **fix-loop + adjudication protocol**
+(execution-rigor §4) governs: scoped re-review each round, 3-round cap, then park-with-ruling or BLOCK —
+no silent discards.
+
+**Independence & review depth (execution-rigor §6).** Prefer a **fresh-context reviewer on a different
+model** than the implementer; spin up **security / accessibility / performance specialist** subagents
+when risk warrants (always a security pass for authz + external-integration changes). **A reviewer
+agent may recommend approval but never impersonates or replaces the required human approver** — the
+human owns the merge. Confirm completion with `/aidlc-verify-completion` before sign-off.
 
 ### Step B1: Detect Backend and Gather Inputs
 

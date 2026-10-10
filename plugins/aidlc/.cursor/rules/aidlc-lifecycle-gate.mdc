@@ -35,7 +35,10 @@ User Story). "Sprint" stays an internal scheduling concept, not a Jira issue typ
 | `/aidlc-design` | Domain design, ADRs, **Task** specs |
 | `/aidlc-verify` | Readiness check + create artifacts in Jira/Linear |
 | `/aidlc-sprint` | TDD build one Story/Task within a **Sprint** |
-| `/aidlc-review` | Peer review / PR review |
+| `/aidlc-tdd` | TDD loop for one behaviour — failing test first, red→green evidence, refactor, regression |
+| `/aidlc-debug` | Systematic debugging — reproduce → localize → confirmed root cause → smallest fix → regression |
+| `/aidlc-verify-completion` | Confirm work is actually DONE (PASS/FAIL/NOT-RUN/N-A + evidence) before merge |
+| `/aidlc-review` | Peer review / PR review (two-stage: spec compliance, then engineering quality) |
 | `/aidlc-refactor` | Test-first brownfield/tech-debt cleanup (characterization tests → small green steps) |
 | `/aidlc-retro` | Session/sprint retrospective — draft rule/skill/hook/constitution fixes for approval |
 | `/aidlc-progress` | Phase progress dashboard |

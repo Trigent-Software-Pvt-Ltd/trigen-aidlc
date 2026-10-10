@@ -38,4 +38,9 @@ Summary:
   **§6 review depth** (fresh-agent/different-model reviewer, security/a11y/perf specialists, review
   memory).
 
+**Companion skills:** `/aidlc-tdd` for each task (failing test first, red→green evidence);
+`/aidlc-debug` on a failing test/integration; `/aidlc-verify-completion` before declaring done
+(PASS/FAIL/NOT-RUN/N-A + evidence). The Sprint Plan carries the `references/implementation-plan.md`
+fields; keep a `references/task-handoff.md` summary so sessions/subagents don't reload everything.
+
 A Sprint groups related Stories/Tasks for scheduling. Resolve config from `aidlc.config.yaml`.

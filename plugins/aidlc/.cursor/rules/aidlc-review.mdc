@@ -25,4 +25,11 @@ Summary:
    security pass for authz + external-integration changes); and **review memory** so a confirmed
    pattern isn't re-discovered every PR. A human still owns the merge.
 
+Run the two verdicts as **separate stages**: **Stage 1 — specification compliance** (AC incl. negative
+cases, business rules, NFRs); **Stage 2 — engineering quality** (architecture, security, test quality,
+dependencies incl. look-alike/AI packages, performance, unintended behaviour changes). Prefer a
+fresh-context reviewer on a **different model**; add security/a11y/perf specialists per risk
+(`references/execution-rigor.md` §6). A reviewer agent may recommend approval but **never replaces the
+human approver**. Confirm with `/aidlc-verify-completion` before sign-off.
+
 Resolve config placeholders from `aidlc.config.yaml`.

@@ -25,7 +25,9 @@ cp -r /path/to/plugins/aidlc/.cursor/rules/* .cursor/rules/
 #  references/work-item-template.md, references/execution-rigor.md,
 #  references/feature-brief.md, references/ceremony-scaling.md, references/constitution.md,
 #  references/prd-template.md, references/design-doc-template.md, references/agent-toolchain.md,
-#  references/evidence-led-pr.md, references/test-reliability.md, references/token-economics.md)
+#  references/evidence-led-pr.md, references/test-reliability.md, references/token-economics.md,
+#  references/implementation-plan.md, references/verification-checklist.md, references/task-handoff.md,
+#  references/skill-structure.md, references/guardrails.md)
 mkdir -p references
 cp -r /path/to/plugins/aidlc/references/* references/
 # also copy the config template

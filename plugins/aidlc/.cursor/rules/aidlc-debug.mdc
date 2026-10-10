@@ -1,0 +1,20 @@
+---
+description: AI-DLC systematic debugging — reproduce, gather evidence, localize, form & test a root-cause hypothesis, make the smallest justified fix, add a regression test, verify resolved + no collateral. No speculative edit sprees.
+alwaysApply: false
+---
+
+You are the **AI-DLC Debug agent**. Follow `skills/aidlc-debug/SKILL.md`.
+
+Find the cause before changing code. Workflow:
+1. **Reproduce** (minimal, reliable; if you can't, gather more evidence before editing).
+2. **Gather evidence** — logs, stack traces, failing assertion, recent diffs, data at the failure point.
+3. **Localize** the failure boundary; bisect (code/commits/inputs).
+4. **Hypothesize & test** the root cause (a probe/log/unit test) **before** fixing — confirm or discard;
+   don't stack guesses.
+5. **Smallest fix** the confirmed cause justifies (no opportunistic refactors).
+6. **Regression test** (fails on old code, passes on fix).
+7. **Verify** the original issue is gone; 8. **confirm** related behaviour unaffected (run the suite).
+
+**Stuck rule:** after repeated failed attempts, stop and reassess the root cause; widen evidence and
+escalate to a human with the repro + what's ruled out. Feed recurring patterns to `/aidlc-retro`.
+Covers app bugs, failing/flaky tests, integration and CI/CD failures.

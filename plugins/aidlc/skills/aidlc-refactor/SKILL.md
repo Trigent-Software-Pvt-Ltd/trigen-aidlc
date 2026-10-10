@@ -54,7 +54,14 @@ behavior net first.
 A green baseline exists before a line moves; every chunk leaves the suite green; behavior is identical
 and only the structure improved.
 
+## Companion skills
+Use **`/aidlc-tdd`** to author the characterization tests (each shown red→green against current code
+before any change); **`/aidlc-debug`** if a characterization test reveals a latent bug; and
+**`/aidlc-verify-completion`** before declaring the refactor done (behaviour identical, suite green —
+with evidence).
+
 ## References
 - @${CLAUDE_PLUGIN_ROOT}/references/test-reliability.md — characterization + mutation testing.
 - @${CLAUDE_PLUGIN_ROOT}/references/execution-rigor.md — ledger, review, worktrees.
 - @${CLAUDE_PLUGIN_ROOT}/references/evidence-led-pr.md — put the green baseline + diff in the PR.
+- @${CLAUDE_PLUGIN_ROOT}/references/verification-checklist.md — confirm behaviour-preserved before done.

@@ -37,7 +37,15 @@ This skill follows the AI-DLC principle where AI initiates and directs the conve
 - @${CLAUDE_PLUGIN_ROOT}/references/test-reliability.md — **Make agent-written tests trustworthy:** the pyramid, reliable locators, auto-wait, deterministic mocks, permission/negative-path tests, and mutation testing to prove coverage is real. Apply during the TDD build.
 - @${CLAUDE_PLUGIN_ROOT}/references/evidence-led-pr.md — **Put the proof in the PR:** the evidence ladder (pre-commit → push → PR → CI → release) and the evidence pack (intent, test matrix, results, scans, boundaries, rollback). Produce this as you build; `/aidlc-review` expects it.
 - @${CLAUDE_PLUGIN_ROOT}/references/token-economics.md — **Spend tokens on judgment:** per-role model dispatch (frontier to plan/review, efficient to implement), context hygiene, one-task-per-session, feed pointers not payloads.
+- @${CLAUDE_PLUGIN_ROOT}/references/implementation-plan.md — **Per-story plan contents:** files, expected changes, tests, dependencies, risk class, verification commands, completion criteria. The Sprint Plan must carry these fields.
+- @${CLAUDE_PLUGIN_ROOT}/references/task-handoff.md — **Context-rot prevention:** read project/architecture context before coding; keep a compact handoff summary so sessions/subagents don't reload everything.
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md — Sprint guidance and templates
+
+**Companion skills (use, don't duplicate):** run **`/aidlc-tdd`** for each implementation task (write
+the failing test first, capture red→green evidence); use **`/aidlc-debug`** when a test or integration
+fails (reproduce → localize → confirmed root cause → smallest fix → regression test); and run
+**`/aidlc-verify-completion`** before declaring a task/sprint done (PASS/FAIL/NOT-RUN/N-A with
+evidence) — a green claim without executed-test evidence is not done.
 - @${CLAUDE_PLUGIN_ROOT}/references/vcs-detection.md — VCS provider detection and PR/MR commands
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md — Implementation review rubric ("Finding Severity Levels" and "Implementation Review Rubric" sections); used for plan quality checks and Step 13.5 self-review
 - @plugins/standards/references/technical-guidance/global.md — Universal standards (always load)

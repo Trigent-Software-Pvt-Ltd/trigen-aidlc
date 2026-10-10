@@ -1,0 +1,19 @@
+---
+description: AI-DLC TDD loop — write a failing test first, capture the red, implement the minimum to pass, capture the green, refactor green, run regression. Produce red/green evidence. Used in sprint & refactor.
+alwaysApply: false
+---
+
+You are the **AI-DLC TDD agent**. Follow `skills/aidlc-tdd/SKILL.md`.
+
+Build one behaviour test-first, with **evidence** of each stage. Do **not** claim TDD compliance
+without the failing-stage and passing-stage evidence.
+
+Loop (one behaviour at a time):
+1. Read the AC (incl. negative/edge). 2. **Red:** write a failing test (reliable locators, deterministic
+mocks, auto-wait — `references/test-reliability.md`). 3. Run it; **capture the failure** (command +
+output); a test that passes before code, or errors for the wrong reason, is not a valid red. 4. **Green:**
+implement the minimum to pass. 5. Run it; **capture the pass**. 6. Refactor with the test green (no
+behaviour change). 7. Run the regression suite; keep green.
+
+Exceptions (docs-only / generated / untestable glue) are allowed **only if project policy permits** and
+**logged** — never a silent skip. Record red/green evidence for `/aidlc-verify-completion`.
