@@ -69,7 +69,9 @@ This skill detects the backend automatically from existing artifacts (it does NO
 - @${CLAUDE_PLUGIN_ROOT}/references/planning-shared.md - Jira/Confluence tool guidance and templates
 - @${CLAUDE_PLUGIN_ROOT}/references/backend-selection.md - Backend detection logic
 - @${CLAUDE_PLUGIN_ROOT}/references/review-criteria.md - Shared quality checklists and scoring foundations
-- @${CLAUDE_PLUGIN_ROOT}/references/sprint-conventions.md - Sprint naming, sizing, and sequencing conventions
+- @${CLAUDE_PLUGIN_ROOT}/references/sprint-plan-template.md - Sprint naming and sequencing conventions
+- @${CLAUDE_PLUGIN_ROOT}/references/story-sizing.md - Story sizing conventions
+- @${CLAUDE_PLUGIN_ROOT}/references/task-sizing.md - Task sizing conventions
 - @${CLAUDE_PLUGIN_ROOT}/references/dependency-analysis.md - Dependency mapping and risk assessment
 - @${CLAUDE_PLUGIN_ROOT}/references/traceability.md - **Traceability report (ENH-016):** walk Intent → Requirement (FR) → Unit/Epic → Story → Design/ADR → Test → PR → Build → Release; flag missing links, unverified requirements (AC with no executed test), and ungated changes (writes/merges with no recorded approval; HIGH-risk with no specialist review/ADR). Output a per-FR coverage table + the gap list. Report only — a human acts on gaps.
 - @${CLAUDE_PLUGIN_ROOT}/references/risk-governance.md - Shared risk taxonomy used in the assessment

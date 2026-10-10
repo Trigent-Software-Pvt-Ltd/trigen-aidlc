@@ -2,6 +2,25 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.31.0 — Deferred items: skill-integrity harness + first ENH-011 slim
+
+Closes the two deferred items from the ENH-001…016 programme. Behaviour-preserving.
+
+- **Skill/reference integrity suite** — `tests/skills.sh` (pure bash, read-only). Checks
+  frontmatter `name == folder` + description, Cursor `.mdc` parity per skill, aidlc-internal
+  `@references/*.md` link resolution (cross-plugin `standards` links out of scope), referenced
+  hooks exist, and **required requirement anchors** per skill so a slimming pass can never silently
+  drop a load-bearing instruction. **74/74 pass.** This is the ENH-011 safety net.
+- **ENH-011 first slim** — relocated the `/aidlc-verify` Troubleshooting appendix (self-contained,
+  no requirement anchor) to `references/verify-troubleshooting.md` and linked it; skill body
+  1385 → 1340 lines, zero behaviour change (verified green by both suites). Core workflows left
+  intact — further slimming is incremental, anchor-guarded, never bulk.
+- **Fix** — repaired a pre-existing dangling link in `aidlc-progress` (`references/sprint-conventions.md`,
+  a file that never existed) → repointed to the real `sprint-plan-template.md` + `story-sizing.md`
+  + `task-sizing.md`. Surfaced by the new harness.
+
+Hook suite unchanged at 42/42. Cursor README reference list updated.
+
 ## 4.30.0 — Release C: enterprise delivery (ENH-012…016)
 
 Additive; optional capabilities, default-safe (QMetry local-only, risk/traceability are reports).
