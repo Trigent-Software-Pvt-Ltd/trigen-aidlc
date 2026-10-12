@@ -1,0 +1,95 @@
+---
+inclusion: always
+---
+
+> **Kiro steering — AI-DLC lifecycle gate.** Always loaded. This is the persistent terminology, phase order, and command map. Each `/aidlc-*` command is a Kiro Agent Skill under `.kiro/skills/`; type `/` in chat to run one, or describe the task and Kiro auto-activates the matching skill.
+
+# AI-DLC Lifecycle Gate (Kiro)
+
+This is the Kiro steering layer for the AI-DLC plugin. It mirrors the Kiro Agent Skills in `.kiro/skills/`. Each command below maps to a matching skill in `.kiro/skills/` and to the
+authoritative `SKILL.md` under `skills/<command>/`.
+
+## Terminology (Jira-aligned)
+
+```
+Feature   (top-level goal / initiative)     label aidlc:feature
+└── Epic   (self-contained work area)         label aidlc:epic
+    └── grouping  (was "Sprint")              label aidlc:sprint   type per config: Jira "Story" / ADO "User Story"
+        └── leaf  (implementation item)                            type per config: "Task"
+```
+
+The grouping work-item is created with the configured `jira.issueTypes.grouping` (default **Story**)
+and is always tagged `aidlc:sprint` — skills find groupings by that **label, not by issue type**.
+Leaf attaches per `leafAttach`: Jira `"link"` (leaf parented to the Epic, linked to its Story via
+`linkType`, default "Relates") since Story+Task are the same level; ADO `"parent"` (Task nests under
+User Story). "Sprint" stays an internal scheduling concept, not a Jira issue type.
+
+## Commands (use only these)
+
+| Command | Purpose |
+|---------|---------|
+| `/aidlc-help` | Methodology & workflow help |
+| `/aidlc-init` | Configure Jira/Confluence/GitLab/Linear into `aidlc.config.yaml` (run first) |
+| `/aidlc-intent` | Capture the goal as a **Feature** |
+| `/aidlc-elaborate` | Decompose Feature into **Epics** and **Stories** |
+| `/aidlc-design` | Domain design, ADRs, **Task** specs |
+| `/aidlc-verify` | Readiness check + create artifacts in Jira/Linear |
+| `/aidlc-sprint` | TDD build one Story/Task within a **Sprint** |
+| `/aidlc-tdd` | TDD loop for one behaviour — failing test first, red→green evidence, refactor, regression |
+| `/aidlc-debug` | Systematic debugging — reproduce → localize → confirmed root cause → smallest fix → regression |
+| `/aidlc-verify-completion` | Confirm work is actually DONE (PASS/FAIL/NOT-RUN/N-A + evidence) before merge |
+| `/aidlc-review` | Peer review / PR review (two-stage: spec compliance, then engineering quality) |
+| `/aidlc-refactor` | Test-first brownfield/tech-debt cleanup (characterization tests → small green steps) |
+| `/aidlc-retro` | Session/sprint retrospective — draft rule/skill/hook/constitution fixes for approval |
+| `/aidlc-progress` | Phase progress dashboard |
+
+## Phase order
+
+Init → Intent → Elaborate → Design → Verify → Sprint → Review
+(with `/aidlc-help`, `/aidlc-progress`, `/aidlc-refactor`, and `/aidlc-retro` available anytime;
+`/aidlc-retro` is best at session/sprint end, `/aidlc-refactor` for changing structure while
+preserving behavior)
+
+## Ceremony gear (applies to every phase)
+
+The phases above **always run**; a single **gear** scales how much output each one emits. Resolve it
+once from `ceremony.default` in `aidlc.config.yaml` (or the user's per-feature choice) and carry it
+through. Full model: `../../references/ceremony-scaling.md`.
+
+- **quick** — brief → build; elaborate/design/verify fold into the brief. Trivial/internal only.
+- **standard** (default) — **all** phases run **and the full Feature → Epic → Sprint → Story/Task
+  hierarchy is kept**, each artifact just compact (Intent = one-page Feature Brief; elaborate = one
+  Epic + a handful of Stories/Tasks in one Sprint; light design/verify). A feature is sized to ~one
+  two-week sprint / one Epic. This is the light lane: **structure and governance kept, tower dropped**
+  — light means less content and fewer items, never a flatter hierarchy.
+- **deep** — the full governed flow (§0–§9 Intent, Epics, domain model + ADRs, full verify). For
+  cross-cutting/regulated/multi-team work.
+
+One-way ratchet: any phase may **upgrade** the gear when hidden complexity surfaces, never downgrade.
+Invariants at every gear: a human approval per feature, a traceability link, TDD, one code review,
+the `aidlc:*` labels on created tickets, honoring the project **Constitution**
+(`aidlc.constitution.md` when present), and a **coherence check** (brief ↔ design ↔ tasks ↔
+constitution) before tickets are created.
+
+**Publish gate (every gear, every phase): show draft → get approval → publish, in that order.** No
+phase writes to a shared system of record (Confluence, GitLab, Linear, Jira) until the human has seen
+the drafted content in chat and said go. "Run the phase" is not consent to publish. When unsure
+whether you have approval, you do not — ask.
+
+In Claude Code this is **enforced by guardrail hooks** (`hooks/publish-gate.sh`); Cursor has no hook
+runtime, so here it is an instruction you must follow. When the project runs enforced/`approvalBinding`
+mode, record the pending write first so the approval binds to that exact operation — e.g. `printf '%s'
+"<body>" | bash ".kiro/aidlc/hooks/propose.sh" --op <tool> --backend <jira|confluence|gitlab>
+--target "<id/title>"`. See `.kiro/aidlc/references/guardrails.md`.
+
+## Configuration
+
+All organisation-specific values (Atlassian cloud id, Confluence space, GitLab docs repo,
+Jira project key, etc.) are read from `aidlc.config.yaml`. Never hardcode them. If a skill
+references a placeholder like `<CONFLUENCE_SPACE_KEY>` or `<ATLASSIAN_CLOUD_ID>` and no value
+is configured, run `/aidlc-init`.
+
+## Approval gates
+
+Each phase requires explicit human approval before proceeding. Use phrases like
+`approve intent`, `approve elaborate`, `approve design`, `approve verify`.

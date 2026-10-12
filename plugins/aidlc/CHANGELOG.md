@@ -2,6 +2,26 @@
 
 Notable changes. Versions follow SemVer; bump `plugin.json` **and** the root `marketplace.json`.
 
+## 4.32.0 — One Functional Specification per feature (doctrine change)
+
+Changes the **default artifact shape**: a feature's requirement is now **one BA/PO-authored
+Functional Specification** document instead of separate Design / Decisions / Data-lineage /
+Acceptance-Criteria / Test-Scope pages. Those become **sections** of the one spec. Only two pages stay
+separate, each for a mechanical reason: **Governed Values** (versioned numbers — independent cadence)
+and **Status** (phase state — flips constantly; Confluence has no partial update).
+
+- `references/artifact-consolidation.md` rewritten: default page set = Functional Spec + Governed
+  Values + Status; "single-home-per-fact preserves completeness"; acceptance criteria are a required
+  **section** (not a dropped catalogue); hierarchy + per-skill notes updated.
+- `references/functional-spec-template.md` (new): the 18-section order for the one document, plus the
+  two companion pages and the single-home-per-fact rules.
+- Rationale: a BA/PO reads one coherent document, not five fragments; completeness is kept by stable
+  ids (`FR-*`/`AC-*`/`TC-*`/`ADR-*`) and one canonical home per fact, not by page count. Epic + Stories
+  continue to live in the tracker.
+
+Behaviour of the lifecycle is unchanged; only the *layout* of the emitted pages changes.
+
+
 ## 4.31.0 — Deferred items: skill-integrity harness + first ENH-011 slim
 
 Closes the two deferred items from the ENH-001…016 programme. Behaviour-preserving.

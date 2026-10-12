@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "atlassian": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.atlassian.com/v1/sse"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": []
+    },
+    "gitlab": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-gitlab"
+      ],
+      "env": {
+        "GITLAB_PERSONAL_ACCESS_TOKEN": "${GITLAB_TOKEN}",
+        "GITLAB_API_URL": "https://gitlab.com/api/v4"
+      },
+      "disabled": true,
+      "autoApprove": []
+    }
+  }
+}

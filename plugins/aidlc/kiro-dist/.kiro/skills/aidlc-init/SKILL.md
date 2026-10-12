@@ -1,0 +1,202 @@
+---
+name: aidlc-init
+description: Initialize AI-DLC configuration for a project — capture Jira, Confluence, GitLab, and Linear settings and write them to aidlc.config.yaml so no organisation details are hardcoded. Run this ONCE before /aidlc-intent. (Triggers - aidlc init, initialize aidlc, configure aidlc, set up aidlc, aidlc config, aidlc setup, configure jira confluence gitlab)
+---
+
+# AI-DLC Init
+
+Set up the project's AI-DLC configuration. This skill collects the connection and
+backend details that every other AIDLC skill needs (Jira, Confluence, GitLab, Linear)
+and writes them to **`aidlc.config.yaml`** in the project root. All later skills read
+this file instead of any hardcoded organisation values.
+
+> **Run this first.** `/aidlc-init` should be run once per project, before `/aidlc-intent`.
+> If `aidlc.config.yaml` already exists, this skill offers to review and update it.
+
+## When to use
+
+- Starting AI-DLC in a new repository for the first time.
+- Onboarding a new team/organisation (different Jira site, Confluence space, or GitLab group).
+- Changing the default documentation backend.
+- Any AIDLC skill reports a missing config value (e.g. `<CONFLUENCE_SPACE_KEY>` unresolved).
+
+## Config schema
+
+The generated `aidlc.config.yaml` has this shape (see `aidlc.config.example.yaml` for the annotated version):
+
+```yaml
+backend:
+  default: "gitlab"          # gitlab | linear | confluence
+ceremony:
+  default: "standard"       # quick | standard | deep — how much each phase emits (steps always run). See .kiro/aidlc/references/ceremony-scaling.md
+constitution:
+  enabled: true             # one-page project principles/constraints intent/design/verify check against (.kiro/aidlc/references/constitution.md)
+  path: "aidlc.constitution.md"
+atlassian:
+  cloudId: ""                # e.g. yourcompany.atlassian.net   -> <ATLASSIAN_CLOUD_ID>
+confluence:
+  spaceKey: ""               # e.g. ENG                          -> <CONFLUENCE_SPACE_KEY>
+  featureIndexPageId: ""     # page id of the Features Index     -> <FEATURE_INDEX_PAGE_ID>
+jira:
+  projectKey: ""             # e.g. PROJ
+  issueTypes:                # stock Jira types by default (no custom types needed)
+    epic: "Epic"
+    grouping: "Story"        # groups tasks (formerly the "Sprint" type)
+    leaf: "Task"
+  leafAttach: "link"         # Jira: Story+Task are same level, so link (not nest); leaf parented to Epic
+  linkType: "Relates"
+ado:
+  project: ""                # ADO project name (only if work tracker is Azure DevOps)
+  issueTypes:
+    epic: "Epic"
+    grouping: "User Story"
+    leaf: "Task"
+  leafAttach: "parent"       # ADO nests Task under User Story natively
+gitlab:
+  docsRepoUrl: ""            # https://gitlab.com/org/group/ai-dlc-docs -> <GITLAB_DOCS_REPO_URL>
+  docsRepoSsh: ""            # git@gitlab.com:org/group/ai-dlc-docs.git -> <GITLAB_DOCS_REPO_SSH>
+  docsPath: ""               # local checkout path
+linear:
+  teamKey: ""                # e.g. ENG
+links:
+  performanceStandards: ""   # optional reference URL            -> <PERFORMANCE_STANDARDS_URL>
+workItemTemplate:            # rich 12-section leaf descriptions in /aidlc-verify (see .kiro/aidlc/references/work-item-template.md)
+  enabled: true             # false = legacy minimal description
+  labels: [aidlc, NoQA, "<leafType>", "<featureId>", "<productSlug>", "<layer>", "<epicId>", "sprint-<sprintNum>"]
+  estimation: { mode: both, pointsToHours: { 1: 2, 2: 4, 3: 8, 5: 16, 8: 24, 13: 40 } }  # points|hours|both
+  productSlug: ""           # e.g. bench-resource-tracker
+  references: { featureUrl: "", designUrl: "", adrsUrl: "", businessRulesUrl: "", boardUrl: "" }
+  descriptionFormat: markdown
+guardrails:                  # enforced hooks (see .kiro/aidlc/references/guardrails.md). Mirrored to <project>/.aidlc/guardrails.env.
+  enabled: true
+  governanceMode: advisory   # advisory | enforced — enforced forces protected gates to block (no downgrade) + action-bound approvals
+  approvalBinding: false     # bind each approval to one operation (forced true under enforced)
+  publishGate: { mode: block, approvalTtlSeconds: 600, singleUse: false, includeBashWrites: true }  # block|warn|off — tracker writes need an explicit user "go"
+  earsValidation: { mode: warn }    # block|warn|off — flag non-EARS acceptance criteria
+  secretScan: { mode: block }       # block|warn|off — block credentials in tool args
+  transferSentinel: { enabled: false, mode: warn }  # flag a Jira leaf missing labels/estimate/AC ref
+```
+
+These placeholder tokens (`<ATLASSIAN_CLOUD_ID>`, `<CONFLUENCE_SPACE_KEY>`,
+`<FEATURE_INDEX_PAGE_ID>`, `<GITLAB_DOCS_REPO_URL>`, `<GITLAB_DOCS_REPO_SSH>`,
+`<PERFORMANCE_STANDARDS_URL>`) appear throughout the other skills and reference docs.
+Every skill resolves them by reading `aidlc.config.yaml`.
+
+## Workflow
+
+1. **Check for existing config**
+   - Look for `aidlc.config.yaml` in the project root (and `$AIDLC_DOCS_PATH` if set).
+   - If found: show the current values and ask whether to keep or update each section. Skip to step 4 for confirmation.
+   - If not found: continue to step 2.
+
+2. **Choose the documentation backend** (use AskUserQuestion)
+   Ask which backend this project will use:
+   - **GitLab** (recommended) — markdown files in a git repo with MR review
+   - **Linear** — native Linear Initiatives/Projects/Issues (replaces docs AND Jira)
+   - **Confluence** — Confluence pages with Jira integration
+
+   Record as `backend.default`. Only prompt for the sections relevant to the chosen backend
+   (but still allow the user to fill others if they want).
+
+3. **Collect settings** (ask only what's relevant; one focused question at a time)
+
+   **Atlassian / Jira / Confluence** (if backend is Confluence, or Jira work-tracking is wanted):
+   - `atlassian.cloudId` — the Atlassian site host, e.g. `yourcompany.atlassian.net`
+   - `confluence.spaceKey` — the Confluence space key, e.g. `ENG`
+   - `confluence.featureIndexPageId` — leave blank on first run (the Features Index page is auto-created by `/aidlc-intent`)
+   - `jira.projectKey` — default Jira project key, e.g. `PROJ`
+   - `jira.issueTypes` / `jira.leafAttach` / `jira.linkType` — the issue types used at transfer. Defaults (Epic → Story → Task, `leafAttach: link`, `linkType: Relates`) work against a stock Jira project with no custom types. Only change these if your project uses different type names (e.g. a custom "Sprint" type: set `grouping: "Sprint"`, `leaf: "Task"`). Confirm the types exist via `getJiraProjectIssueTypesMetadata` before finalizing.
+   - **Azure DevOps** (if the work tracker is ADO): `ado.project`, and `ado.issueTypes` (defaults Epic → User Story → Task with `leafAttach: parent`, since ADO nests Task under User Story natively).
+
+   **GitLab** (if backend is GitLab):
+   - `gitlab.docsRepoUrl` — HTTPS URL of the `ai-dlc-docs` repo
+   - `gitlab.docsRepoSsh` — SSH URL of the same repo (optional)
+   - `gitlab.docsPath` — local checkout path (optional; can also be set via `AIDLC_DOCS_PATH`)
+
+   **Linear** (if backend is Linear):
+   - `linear.teamKey` — Linear team key, e.g. `ENG`
+
+   **Optional:**
+   - `links.performanceStandards` — a reference URL surfaced in planning docs
+
+   Do not invent values. Leave anything the user doesn't have as `""`.
+
+4. **Confirm and write**
+   - Show the assembled YAML for approval.
+   - On approval, write it to `aidlc.config.yaml` in the project root.
+   - Confirm the file path and remind the user this file may contain internal URLs/keys —
+     add it to `.gitignore` if those are sensitive (offer to do so).
+
+5. **Offer the project Constitution (optional, recommended)**
+   - When `constitution.enabled`, offer to create `aidlc.constitution.md` from the one-page template
+     in .kiro/aidlc/references/constitution.md. Ask a few short questions (non-negotiable
+     principles, key constraints incl. tenancy/data, and which `standards` links apply) and fill the
+     template — **keep it to one page; link the `standards` plugin instead of restating standards.**
+   - If the user declines or has nothing project-specific yet, skip it — intent/design/verify simply
+     run without a constitution. It can be added later by re-running this step.
+
+6. **Offer the agent toolchain bootstrap (optional, recommended for the target code repo)**
+   - Offer to scaffold the coding agent's operating environment in the **product repo(s)** the team
+     will build in, following .kiro/aidlc/references/agent-toolchain.md: a lean
+     `AGENTS.md`/`CLAUDE.md` (rules, scripts, do-not-touch, links to PRD/Design/Constitution),
+     deny rules for secrets/`.env`/force-push, a starter PreToolUse hook, least-privilege CLI/MCP
+     wiring, and repo-context stubs (`architecture.md`, a repo map, `conventions.md`).
+   - **Show a diff and get approval for each file; never overwrite an existing file — extend it.**
+     Skip anything the user declines. This is a one-time, team-inherited setup; re-run to refresh.
+   - This is distinct from the Constitution: the Constitution holds project *principles*; the
+     toolchain holds the agent's *guardrails and context*.
+
+7. **Generate the guardrails env file (enforced hooks)**
+   - The `guardrails:` block in `aidlc.config.yaml` is the intent; the hook scripts read a flat env
+     file. From the approved block, write **`<project>/.aidlc/guardrails.env`** with these keys
+     (one per line, `KEY=value`), mapping the YAML to the env names the scripts use:
+     - `GUARDRAILS_ENABLED` ← `guardrails.enabled`
+     - `GOVERNANCE_MODE` ← `guardrails.governanceMode` (advisory|enforced); `APPROVAL_BINDING` ← `guardrails.approvalBinding`
+     - `PUBLISH_GATE_MODE` ← `guardrails.publishGate.mode`; `PUBLISH_GATE_TTL` ← `.approvalTtlSeconds`;
+       `PUBLISH_GATE_SINGLE_USE` ← `.singleUse`; `PUBLISH_GATE_INCLUDE_BASH` ← `.includeBashWrites`
+     - `EARS_MODE` ← `guardrails.earsValidation.mode`
+     - `SECRET_SCAN_MODE` ← `guardrails.secretScan.mode`
+     - `SENTINEL_ENABLED` ← `guardrails.transferSentinel.enabled`; `SENTINEL_MODE` ← `.mode`
+   - If `guardrails` is absent, the hooks fall back to their shipped defaults
+     (`hooks/guardrails.defaults.env`) — this file only *overrides* them, so writing it is optional
+     but recommended so the project's choices are explicit and version-controlled.
+   - Remind the user that the hooks activate after a `/plugin` reload. Do **not** add
+     `.aidlc/guardrails.env` to `.gitignore` — it holds no secrets and is meant to be shared.
+
+8. **Sprint 0 readiness (optional, recommended)**
+   - Run the readiness pass in .kiro/aidlc/references/sprint0-readiness.md and write an
+     auditable **`.aidlc/readiness-report.md`**: project type (greenfield/brownfield), repo/architecture
+     context, project instructions, roles & approval ownership, integration readiness, baseline metrics,
+     quality/release gates, and first-sprint readiness — each READY / GAP / N-A with evidence and a
+     summary verdict. It informs; it does not auto-start a sprint. A **mandatory** security/compliance
+     GAP is handled per `.kiro/aidlc/references/risk-governance.md` (a score can't override a failed mandatory gate).
+   - **QMetry360 events (optional):** if `qmetry360.enabled`, note that lifecycle events will be emitted
+     via `hooks/qmetry-emit.sh` (local JSONL by default; live only against a verified contract — see
+     .kiro/aidlc/references/qmetry360-events.md). Map the `qmetry360` config block to env
+     (`QMETRY_EMIT_MODE`, `QMETRY_EVENTS_FILE`, `QMETRY_API_URL`, `QMETRY_TOKEN_ENV`) in
+     `.aidlc/guardrails.env`.
+
+9. **Next step**
+   - Tell the user they can now run `/aidlc-intent` to capture the first **Feature**.
+
+## Reading config from other skills
+
+Other skills should resolve placeholders like this:
+
+1. Read `aidlc.config.yaml` from the project root (or `$AIDLC_DOCS_PATH`).
+2. Substitute each `<TOKEN>` with the matching config value:
+   - `<ATLASSIAN_CLOUD_ID>` ← `atlassian.cloudId`
+   - `<CONFLUENCE_SPACE_KEY>` ← `confluence.spaceKey`
+   - `<FEATURE_INDEX_PAGE_ID>` ← `confluence.featureIndexPageId`
+   - `<GITLAB_DOCS_REPO_URL>` ← `gitlab.docsRepoUrl`
+   - `<GITLAB_DOCS_REPO_SSH>` ← `gitlab.docsRepoSsh`
+   - `<PERFORMANCE_STANDARDS_URL>` ← `links.performanceStandards`
+3. If a required value is blank, stop and tell the user to run `/aidlc-init`.
+
+## Definition of Done
+
+- `aidlc.config.yaml` exists in the project root with the user-approved values.
+- The chosen default backend is recorded.
+- When `guardrails.enabled`, `<project>/.aidlc/guardrails.env` is written from the guardrails block
+  (or the user was told the shipped defaults apply).
+- The user knows the next step is `/aidlc-intent`.

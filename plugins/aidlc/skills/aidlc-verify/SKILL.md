@@ -9,7 +9,7 @@ Verify that all documentation (Feature, Epics, Tasks, Design) is complete and pr
 
 ## Artifact consolidation & readability (read first)
 
-Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Read the consolidated structure (one Feature doc, one Status page, one Epic by default with its Design / Decisions / Test Scope trio). Update the **Status page** when phases change — do NOT embed or re-publish status tables inside large pages. For Jira: detect project **style** (team-managed vs company-managed) and confirm the **Story Points field** is exposed on the Story/Task create screen **before** transfer, not mid-create.
+Keep the output **lean and human-readable** — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md. Read the consolidated structure (one **Functional Specification** carrying the How-it-works / Decisions / Data-lineage / Acceptance-criteria / Test-scope sections, plus two small companion pages — **Status** and **Governed Values**; the Epic + Stories live in the tracker — see @${CLAUDE_PLUGIN_ROOT}/references/artifact-consolidation.md). Check the Acceptance-criteria section ↔ Test-scope coverage matrix close both ways. Update the **Status page** when phases change — do NOT embed or re-publish status tables inside large pages. For Jira: detect project **style** (team-managed vs company-managed) and confirm the **Story Points field** is exposed on the Story/Task create screen **before** transfer, not mid-create.
 
 ## Ceremony gear (do this first)
 

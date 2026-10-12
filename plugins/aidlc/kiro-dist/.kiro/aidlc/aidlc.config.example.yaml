@@ -1,0 +1,175 @@
+# AI-DLC configuration
+#
+# Copy this file to `aidlc.config.yaml` in your project root (or run `/aidlc-init`,
+# which will generate it for you by asking a few questions).
+#
+# All AIDLC skills read these values instead of hardcoded organisation details.
+# Leave a value blank ("") if you don't use that backend/integration.
+
+# Which documentation backend to use by default: gitlab | linear | confluence
+backend:
+  default: "gitlab"
+
+# Ceremony gear — how much output every phase produces. The AI-DLC *steps* always run
+# (intent -> elaborate -> design -> verify -> build -> review); this only scales the *volume*
+# each step emits. See references/ceremony-scaling.md.
+#   quick    -> brief -> build. Elaborate/Design/Verify fold into the brief. Trivial/internal only.
+#   standard -> ALL steps run, each producing a compact single-feature output (the light lane:
+#               governance kept, tower dropped). One or two features at a time, end-to-end.
+#   deep     -> the full governed flow (§0–§9 Intent, Epics, domain model + ADRs, full verify).
+# One-way ratchet: any phase may UPGRADE the gear if hidden complexity surfaces, never downgrade.
+# The user can also pick a gear per feature at the start of /aidlc-intent.
+ceremony:
+  default: "standard"    # quick | standard | deep
+
+# Project Constitution — a one-page, versioned statement of principles/constraints that intent,
+# design and verify are checked against (see references/constitution.md). `/aidlc-init` offers to
+# create it. Leave path as-is; set enabled:false to skip constitution checks entirely.
+constitution:
+  enabled: true
+  path: "aidlc.constitution.md"
+
+# Atlassian (Jira + Confluence) connection
+atlassian:
+  # Your Atlassian cloud id or site host, e.g. "yourcompany.atlassian.net"
+  cloudId: ""            # -> <ATLASSIAN_CLOUD_ID>
+
+# Confluence documentation backend
+confluence:
+  spaceKey: ""           # e.g. "ENG"        -> <CONFLUENCE_SPACE_KEY>
+  # Page id of the "Features Index" registry page.
+  # Leave blank on first run; /aidlc-intent will create it and you can paste the id here.
+  featureIndexPageId: "" # -> <FEATURE_INDEX_PAGE_ID>
+
+# Jira work tracking
+jira:
+  projectKey: ""         # default Jira project key, e.g. "PROJ"
+  # Issue types created when the AI-DLC hierarchy is transferred to Jira.
+  # Defaults use stock Jira types (no custom types needed): Epic → Story → Task.
+  issueTypes:
+    epic: "Epic"
+    grouping: "Story"    # the work-item that groups tasks (formerly the "Sprint" type)
+    leaf: "Task"         # implementation item under each grouping
+  # How the leaf attaches to its grouping:
+  #   "link"   -> leaf is parented to the Epic and joined to its grouping via an issue link.
+  #               REQUIRED in Jira when grouping+leaf are the same hierarchy level (Story+Task).
+  #   "parent" -> leaf is a native child of the grouping (use only if your leaf type is a
+  #               valid child of the grouping type).
+  leafAttach: "link"
+  linkType: "Relates"    # issue-link type used when leafAttach is "link" (present in every Jira project)
+
+# Azure DevOps work tracking (used when the work tracker is ADO instead of Jira)
+ado:
+  project: ""            # ADO project name
+  # ADO Agile process nests Task natively under User Story, so leafAttach is "parent".
+  issueTypes:
+    epic: "Epic"
+    grouping: "User Story"
+    leaf: "Task"
+  leafAttach: "parent"
+
+# GitLab documentation backend (the ai-dlc-docs repo, NOT your source code repo)
+gitlab:
+  docsRepoUrl: ""        # e.g. "https://gitlab.com/org/group/ai-dlc-docs"   -> <GITLAB_DOCS_REPO_URL>
+  docsRepoSsh: ""        # e.g. "git@gitlab.com:org/group/ai-dlc-docs.git"    -> <GITLAB_DOCS_REPO_SSH>
+  docsPath: ""           # local checkout path (also settable via AIDLC_DOCS_PATH env var)
+
+# Linear documentation/work backend
+linear:
+  teamKey: ""            # e.g. "ENG"
+
+# Optional reference links surfaced in planning docs
+links:
+  performanceStandards: "" # e.g. "https://yourcompany.atlassian.net/wiki/.../Performance+Standards" -> <PERFORMANCE_STANDARDS_URL>
+
+# Leaf work-item (Story/Task/Bolt) description template used in /aidlc-verify Phase 6 transfer.
+# Renders the rich 12-section GP-style description (see references/work-item-template.md).
+# Set enabled:false to restore the legacy minimal description (Behaviour + AC + link, no labels).
+workItemTemplate:
+  enabled: true
+
+  # Label set applied to every leaf work item. Tokens in <angle brackets> are resolved per
+  # item at transfer time; literal strings are applied as-is.
+  #   <leafType>    = jira.issueTypes.leaf, lower-cased (story|task|bolt)
+  #   <featureId>   = e.g. FI-0001
+  #   <productSlug> = e.g. bench-resource-tracker
+  #   <layer>       = backend|frontend|fullstack|platform (from sprint type)
+  #   <epicId>      = e.g. U01
+  #   <sprintNum>   = sprint grouping number
+  # Literal strings (aidlc, NoQA) are applied as-is; <tokens> are resolved per item.
+  # <layer> is derived per ticket from its files/behaviour (backend|frontend|fullstack|platform).
+  labels:
+    - aidlc
+    - NoQA
+    - "<leafType>"
+    - "<featureId>"
+    - "<productSlug>"
+    - "<layer>"
+    - "<epicId>"
+    - "sprint-<sprintNum>"
+
+  # Estimation written to each leaf from the task's Fibonacci size.
+  estimation:
+    mode: both              # points | hours | both
+    # Fibonacci size -> Original Estimate hours (used when mode is hours|both)
+    pointsToHours: { 1: 2, 2: 4, 3: 8, 5: 16, 8: 24, 13: 40 }
+
+  # Human-readable product slug used in labels and the References block.
+  productSlug: bench-resource-tracker
+
+  # References block deep-links. Any key left blank is omitted from the rendered References
+  # section. Normally resolved from BackendContext; set here to override.
+  references:
+    featureUrl: ""          # Intent / Feature page
+    designUrl: ""           # Design page
+    adrsUrl: ""             # ADR page
+    businessRulesUrl: ""    # Business Rules page (omit if project has none)
+    boardUrl: ""            # Jira board backlog URL
+
+  # Description body format. "markdown" => create/edit issues with contentFormat:"markdown".
+  # Never wrap the whole body in an ADF codeBlock.
+  descriptionFormat: markdown
+
+# ---------------------------------------------------------------------------
+# Guardrails (enforced hooks) — see references/guardrails.md
+# Soft AI-DLC rules made enforced: the publish gate on tracker writes, EARS
+# validation before an AC-catalogue publish, and secret scanning. Each mode is
+# block | warn | off. /aidlc-init can mirror this block into
+# <project>/.aidlc/guardrails.env (the env file the hook scripts read).
+guardrails:
+  enabled: true
+  # Governance mode (ENH-002): advisory | enforced
+  #   advisory — per-gate modes apply; enabled:false disables gates (evaluation).
+  #   enforced — PROTECTED gates (publishGate, secretScan) are forced to block and
+  #              CANNOT be downgraded by a per-gate mode or enabled:false; and
+  #              approvals become action-bound (approvalBinding forced true).
+  governanceMode: advisory
+  # Action-bound approvals (ENH-001): bind each approval to one operation
+  # (backend + target + payload digest when the skill records a manifest via
+  # hooks/propose.sh; target/backend hints from the prompt otherwise). Single-use,
+  # expiring, consumed on use, fail-closed on mismatch. Forced true under enforced.
+  approvalBinding: false
+  publishGate:
+    mode: block            # tracker writes require an explicit user "go"
+    approvalTtlSeconds: 600 # an approval covers a short burst (e.g. a batch transfer)
+    singleUse: false        # legacy path only; the bound model is always single-use
+    includeBashWrites: true # also gate glab / acli / jira writes tunnelled through Bash
+  earsValidation:
+    mode: warn              # flag non-EARS acceptance criteria (warn until trusted, then block)
+  secretScan:
+    mode: block             # block tool args containing a credential pattern
+  transferSentinel:
+    enabled: false          # flag a Jira leaf missing labels / estimate / AC reference
+    mode: warn
+
+# ---------------------------------------------------------------------------
+# QMetry360 event emission (ENH-013) — OPTIONAL. See references/qmetry360-events.md.
+# Emits AI-DLC lifecycle events (intent.approved … release.gate.evaluated).
+# Default records locally; the live POST runs only against a VERIFIED contract —
+# no endpoint or auth is shipped. /aidlc-init maps this to .aidlc/guardrails.env.
+qmetry360:
+  enabled: false
+  emitMode: local            # off | local | live
+  # eventsFile: ""           # default: <project>/.aidlc/guardrails/qmetry-events.jsonl
+  # apiUrl: ""               # live only — a verified QMetry360 endpoint
+  # tokenEnv: ""             # live only — name of the env var holding the bearer token
